@@ -7,12 +7,12 @@
 void setup()
 {
   //pin setup
-  pinMode(1,INPUT);  //int sensorFrontLeft
-  pinMode(2,INPUT);  //int sensorFrontRight
-  pinMode(3,INPUT);  //int sensorDiagonalLeft
-  pinMode(4,INPUT);  //int sensorDiagonalRight
-  pinMode(5,INPUT);  //int sensorSideLeft
-  pinMode(6,INPUT);  //int sensorSideRight
+  pinMode(1,INPUT_ANALOG);  //int sensorFrontLeft
+  pinMode(2,INPUT_ANALOG);  //int sensorFrontRight
+  pinMode(3,INPUT_ANALOG);  //int sensorDiagonalLeft
+  pinMode(4,INPUT_ANALOG);  //int sensorDiagonalRight
+  pinMode(5,INPUT_ANALOG);  //int sensorSideLeft
+  pinMode(6,INPUT_ANALOG);  //int sensorSideRight
   
   pinMode(9,OUTPUT);  //int ledFrontLeft
   pinMode(10,OUTPUT);  //int ledFrontRight
