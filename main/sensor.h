@@ -7,14 +7,14 @@ private:
   int idleVoltage;
   int activeVoltage;
   int distance;
-  int currentPosition;
+  int currentPos;
   
 public:
   SENSOR();
   int runAllSensor();
   int runSensor(int);
-  int convertDistance();
-  void setWall();
+  void convertDistance();
+  void setWall(int, int);
 }
 
 #endif

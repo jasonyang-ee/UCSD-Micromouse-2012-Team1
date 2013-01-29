@@ -10,22 +10,33 @@
 //Constructor
 void SENSOR::SENSOR() {voltageTemp = 0; idleVoltage = 0; activeVoltage = 0;}
 
+//called in main
 void SENSOR::runAllSensor()
-{
-  if (runSensor(sensorFrontLeft) > wallExistDist)
-    setWall(true);
-  if (runSensor(sensorFrontRight) > wallExistDist)
-    setWall(true);
-  if (runSensor(sensorDiagonalLeft) > wallExistDist)
-    setWall(true);
-  if (runSensor(sensorDiagonalRight) > wallExistDist)
-    setWall(true);
+{ 
+  //obtain more accurate wall reading for front
+  int frontReading[2];
+  while(abs(frontReading[0]-frontReading[1]) > 50)
+  {
+    frontReading[0] = runSensor(sensorFrontLeft);
+    frontReading[1] = runSensor(sensorFrontRight);
+  }
+  
+  //need to measure wallExistDist value, the dist between wall and mouse when mouse is in center
+  /*
+  Direction code
+            N          0
+          W   E  ==  3   1
+            S          2
+  */        
+  if((frontReading[0]+frontReading[1])/2 > wallExistDist)
+    setWall((currentPos+0)%4, true); 
   if (runSensor(sensorSideLeft) > wallExistDist)
-    setWall(true);
+    setWall((currentPos+3)%4, true);
   if (runSensor(sensorSideRight) > wallExistDist)
-    setWall(true);
+    setWall((currentPos+1)%4, true);
 }
 
+//controll individual sensor
 int SENSOR::runSensor(int sensorRef)
 {
   //obtain dark voltage with IR turned off
@@ -49,16 +60,17 @@ int SENSOR::runSensor(int sensorRef)
   activeVoltage /= sampleNum;
   //taking the voltage difference between dark and active mode of the receiver
   activeVoltage -= idleVoltage;
-  
+  convertDistance(activeVoltage);
   return distance;
 }
 
-int SENSOR::convertDistance()
+//converte voltage signal to distance value in mm (not very accurate)
+void SENSOR::convertDistance(int activeVoltage)
 {
-  
-  
+  distance = (1 / pow(activeVoltage, 2) + 4.28) / 66.4
 }
-void SENSOR::setWall()
+
+void SENSOR::setWall(int position, int existance)
 {
   
 }
