@@ -7,9 +7,10 @@ private:
   int idleVoltage;
   int activeVoltage;
   int distance;
-  int sampleNum;
+  int currentPosition;
   
 public:
+  SENSOR();
   int runAllSensor();
   int runSensor(int);
   int convertDistance();

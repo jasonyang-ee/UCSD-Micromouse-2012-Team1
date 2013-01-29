@@ -1,4 +1,9 @@
-class cell{
-  bool visit, northWall, eastWall, westWall, southWall, goal;
-  int floodValue;
+void CELL::CELL()
+{
+  visit = false;
+  northWall = false;
+  eastWall = false;
+  westWall = false;
+  southWall = false;
+  goal = false;
 }

@@ -6,7 +6,11 @@
 #define sensorSideLeft 5
 #define sensorSideRight 6
 */
-void runAllSensor()
+
+//Constructor
+void SENSOR::SENSOR() {voltageTemp = 0; idleVoltage = 0; activeVoltage = 0;}
+
+void SENSOR::runAllSensor()
 {
   if (runSensor(sensorFrontLeft) > wallExistDist)
     setWall(true);
@@ -22,12 +26,9 @@ void runAllSensor()
     setWall(true);
 }
 
-int runSensor(int sensorRef)
+int SENSOR::runSensor(int sensorRef)
 {
-  //initialize variables
-  voltageTemp = 0;
-  idleVoltage = 0;
-
+  //obtain dark voltage with IR turned off
   digitalWrite(sensorFrontLeft, LOW);
   for(int i=0; i<sampleNum; i++)
   {
@@ -37,6 +38,7 @@ int runSensor(int sensorRef)
   }
   idleVoltage /= sampleNum;
   
+  //obtain active voltage with IR turned on
   togglePin(sensorFrontLeft);
   for(int i=0; i<sampleNum; i++)
   {
@@ -45,17 +47,18 @@ int runSensor(int sensorRef)
     delay(sampleRate);
   }
   activeVoltage /= sampleNum;
+  //taking the voltage difference between dark and active mode of the receiver
   activeVoltage -= idleVoltage;
   
   return distance;
 }
 
-int convertDistance()
+int SENSOR::convertDistance()
 {
   
   
 }
-void setWall()
+void SENSOR::setWall()
 {
   
 }
