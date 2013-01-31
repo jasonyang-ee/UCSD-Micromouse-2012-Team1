@@ -1,8 +1,8 @@
 #include "HEAD_h"
-#include "maze_h"
 #include "maze.h"
 #include "sensor.h"
 #include "motor.h"
+#include "cell.h"
 
 void setup()
 {
@@ -35,7 +35,7 @@ void setup()
 
 void loop()
 {
-  blinkLED();
+  sensor.runAllSensor();
   
   
   

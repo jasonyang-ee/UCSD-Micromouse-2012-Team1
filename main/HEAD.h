@@ -9,6 +9,9 @@
 #define sampleNum 20
 #define sampleRate 1
 
+//minimun distance between wall and mouse in one cell
+#define wallExistDist 5
+
 //Reciever
 #define sensorFrontLeft 1
 #define sensorFrontRight 2
@@ -34,5 +37,7 @@ MAZE maze;
 SENSOR sensor;
 MOTOR motor;
 CELL cell[LENGTH][WIDTH];  //CELL cell[y][x];
+STATUS currentStatus;
+STATUS prevStatus;
 
 #endif

@@ -1,40 +1,70 @@
-/* refference of variable name  
+/* 
+-- Refference of variable name --
 #define sensorFrontLeft 1
 #define sensorFrontRight 2
 #define sensorDiagonalLeft 3
 #define sensorDiagonalRight 4
 #define sensorSideLeft 5
 #define sensorSideRight 6
-*/
+
+-- Direction code --
+    N          0
+  W   E  ==  3   1
+    S          2
+    
+*/ 
 
 //Constructor
-void SENSOR::SENSOR() {voltageTemp = 0; idleVoltage = 0; activeVoltage = 0;}
+
+SENSOR::SENSOR() {voltageTemp = 0; idleVoltage = 0; activeVoltage = 0;}
 
 //called in main
 void SENSOR::runAllSensor()
 { 
-  //obtain more accurate wall reading for front
-  int frontReading[2];
-  while(abs(frontReading[0]-frontReading[1]) > 50)
+  //obtain reading for front left right sensors.
+  int frontReading[3], leftReading, rightReading;
+  while(1)
   {
-    frontReading[0] = runSensor(sensorFrontLeft);
-    frontReading[1] = runSensor(sensorFrontRight);
+    frontReading[1] = runSensor(sensorFrontLeft);
+    frontReading[2] = runSensor(sensorFrontRight);
+    if(abs(frontReading[1]-frontReading[2]) > 10)
+    {
+      frontReading[0] = (frontReading[1]+frontReading[2])/2;
+      break;
+    }
   }
+  leftReading = runSensor(sensorSideLeft);
+  rightReading = runSensor(sensorSideRight);
   
-  //need to measure wallExistDist value, the dist between wall and mouse when mouse is in center
-  /*
-  Direction code
-            N          0
-          W   E  ==  3   1
-            S          2
-  */        
-  if((frontReading[0]+frontReading[1])/2 > wallExistDist)
-    setWall((currentPos+0)%4, true); 
-  if (runSensor(sensorSideLeft) > wallExistDist)
-    setWall((currentPos+3)%4, true);
-  if (runSensor(sensorSideRight) > wallExistDist)
-    setWall((currentPos+1)%4, true);
+  //update the current distance to each wall
+  frontWallDist = convertDistance(frontReading[0]);
+  leftWallDist = convertDistance(leftReading);
+  rightWallDist = convertDistance(rightReading);
 }
+
+void SENSOR::setWall(CELL currentCell)
+{
+  //if current distance with wall < the calibrated distance, then wall exist
+  if(frontWallDist < wallExistDist)
+    currentCell.wall[(currentPos+0)%4] = true;
+  if(leftWallDist < wallExistDist)
+    currentCell.wall[(currentPos+3)%4] = true;
+  if(rightWallDist < wallExistDist)
+    currentCell.wall[(currentPos+1)%4] = true;
+}
+
+void getOrientation()
+{
+  //obtain the distance reading
+  diagonalLeftDist = convertDistance(runSensor(sensorDiagonalLeft));
+  diagonalRightDist = convertDistance(runSensor(sensorDiagonalRight));
+  
+  if(diagonalLeftDist > diagonalRightDist)
+    return 
+}
+
+
+/*===============  private functions  =======================*/
 
 //controll individual sensor
 int SENSOR::runSensor(int sensorRef)
@@ -60,19 +90,12 @@ int SENSOR::runSensor(int sensorRef)
   activeVoltage /= sampleNum;
   //taking the voltage difference between dark and active mode of the receiver
   activeVoltage -= idleVoltage;
-  convertDistance(activeVoltage);
-  return distance;
+  return convertDistance(activeVoltage);
 }
 
 //converte voltage signal to distance value in mm (not very accurate)
-void SENSOR::convertDistance(int activeVoltage)
-{
-  distance = (1 / pow(activeVoltage, 2) + 4.28) / 66.4
-}
+int SENSOR::convertDistance(int activeVoltage)
+{ return ((1 / pow(activeVoltage, 2) + 4.28) / 66.4) }
 
-void SENSOR::setWall(int position, int existance)
-{
-  
-}
 
 

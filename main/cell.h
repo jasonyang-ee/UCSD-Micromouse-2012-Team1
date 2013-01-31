@@ -1,11 +1,11 @@
 #ifndef CELL_H
 #define CELL_H
 
-class cell{
+class CELL{
 public:
   CELL();
-  bool visit
-  bool northWall, eastWall, westWall, southWall;
+  bool visit;
+  bool wall[4];
   bool goal;
   int floodValue;
 }
