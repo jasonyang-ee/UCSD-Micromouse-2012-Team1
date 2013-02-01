@@ -1,6 +1,4 @@
-STATUS::STATUS()
-{
 
-//initialize the status for the beginning
-  
-}
+#include "status.h"
+
+//inlitialize function

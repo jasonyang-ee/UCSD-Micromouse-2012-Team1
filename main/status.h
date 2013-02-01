@@ -1,17 +1,18 @@
 #ifndef STATUS_H
 #define STATUS_H
 
-class STATUS{
+#include "global.h"
+
+class Status{
 public:
-  STATUS();
-  CELL position;
+  Cell position;
   int frontWallDist;
   int leftWallDist;
   int rightWallDist;
-  int orientation;
-  int centerDeviation;  //the centerness from the side wall
+  int orientation;      //0 is facing streaght
+  int centerDeviation;  //0 is in the center of the cell (sidewise)
   int direction;        //the current facing diraction
-}
+};
 
 
 #endif

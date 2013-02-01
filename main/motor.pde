@@ -1,3 +1,8 @@
+
+#include "motor.h"
+
+/*
+
 void motorLeft()
 {
   //controlling left motor
@@ -8,11 +13,15 @@ void motorRight()
     //controlling right motor
 }
 
+*/
+
 /*
 function above is to give order to mortor
 function below is to perform action
 */
 
+
+/*
 void stop()
 {
 }
@@ -44,4 +53,4 @@ void driveRightTurn()
 {
 }
 
-
+*/

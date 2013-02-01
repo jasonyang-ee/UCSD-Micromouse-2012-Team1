@@ -1,25 +1,9 @@
-/* 
--- Refference of variable name --
-#define sensorFrontLeft 1
-#define sensorFrontRight 2
-#define sensorDiagonalLeft 3
-#define sensorDiagonalRight 4
-#define sensorSideLeft 5
-#define sensorSideRight 6
 
--- Direction code --
-    N          0
-  W   E  ==  3   1
-    S          2
-    
-*/ 
 
-//Constructor
-
-SENSOR::SENSOR() {voltageTemp = 0; idleVoltage = 0; activeVoltage = 0;}
+#include "sensor.h"
 
 //called in main
-void SENSOR::runAllSensor()
+void Sensor::runAllSensor()
 { 
   //obtain reading for front left right sensors.
   int frontReading[3], leftReading, rightReading;
@@ -42,7 +26,7 @@ void SENSOR::runAllSensor()
   rightWallDist = convertDistance(rightReading);
 }
 
-void SENSOR::setWall(CELL currentCell)
+void Sensor::setWall(Cell currentCell)
 {
   //if current distance with wall < the calibrated distance, then wall exist
   if(frontWallDist < wallExistDist)
@@ -53,21 +37,18 @@ void SENSOR::setWall(CELL currentCell)
     currentCell.wall[(currentPos+1)%4] = true;
 }
 
-void getOrientation()
+void Sensor::getOrientation()
 {
   //obtain the distance reading
   diagonalLeftDist = convertDistance(runSensor(sensorDiagonalLeft));
   diagonalRightDist = convertDistance(runSensor(sensorDiagonalRight));
-  
-  if(diagonalLeftDist > diagonalRightDist)
-    return 
 }
 
 
 /*===============  private functions  =======================*/
 
 //controll individual sensor
-int SENSOR::runSensor(int sensorRef)
+int Sensor::runSensor(int sensorRef)
 {
   //obtain dark voltage with IR turned off
   digitalWrite(sensorFrontLeft, LOW);
@@ -94,8 +75,8 @@ int SENSOR::runSensor(int sensorRef)
 }
 
 //converte voltage signal to distance value in mm (not very accurate)
-int SENSOR::convertDistance(int activeVoltage)
-{ return ((1 / pow(activeVoltage, 2) + 4.28) / 66.4) }
+int Sensor::convertDistance(int activeVoltage)
+{ return ((1 / pow(activeVoltage, 2) + 4.28) / 66.4); }
 
 
 

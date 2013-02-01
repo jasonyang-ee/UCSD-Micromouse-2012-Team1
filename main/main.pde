@@ -1,8 +1,4 @@
-#include "HEAD_h"
-#include "maze.h"
-#include "sensor.h"
-#include "motor.h"
-#include "cell.h"
+#include "global.h"
 
 void setup()
 {
@@ -23,22 +19,12 @@ void setup()
   
   pinMode(7,OUTPUT);  //int motorLeft
   pinMode(8,OUTPUT);  //int motorRight
-  
-  //interrupt
-  void attachInterrupt(9, sensorRead(), RISING);
-  void attachInterrupt(10, sensorRead(), RISING);
-  void attachInterrupt(11, sensorRead(), RISING);
-  void attachInterrupt(12, sensorRead(), RISING);
-  void attachInterrupt(13, sensorRead(), RISING);
-  void attachInterrupt(14, sensorRead(), RISING);
+
 }
 
 void loop()
 {
   sensor.runAllSensor();
-  
-  
-  
 }
 
   

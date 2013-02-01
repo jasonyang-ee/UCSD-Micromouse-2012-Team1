@@ -1,9 +1,15 @@
-#ifndef HEAD_H
-#define HEAD_H
+#ifndef GLOBAL_H
+#define GLOBAL_H
+
+#include "cell.h"
+#include "maze.h"
+#include "motor.h"
+#include "sensor.h"
+#include "status.h"
 
 //setting size of maze
-#define WIDTH = 16
-#define LENGTH = 16
+#define WIDTH 16
+#define LENGTH 16
 
 //sensor sample rate and sample numbers
 #define sampleNum 20
@@ -32,12 +38,12 @@
 #define motorLeft 7
 #define motorRight 8
 
-//calling object of the class
-MAZE maze;
-SENSOR sensor;
-MOTOR motor;
-CELL cell[LENGTH][WIDTH];  //CELL cell[y][x];
-STATUS currentStatus;
-STATUS prevStatus;
+//object declear
+Maze maze;
+Sensor sensor;
+Motor motor;
+Cell cell[LENGTH][WIDTH];  //CELL cell[y][x];
+Status currentStatus;
+Status prevStatus;
 
 #endif

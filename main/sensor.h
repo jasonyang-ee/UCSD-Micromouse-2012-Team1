@@ -1,23 +1,34 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include "HEAD_h"
-#include "cell.h"
+#include "global.h"
 
-class SENSOR{
+/*
+-- Direction code --
+    N          0
+  W   E  ==  3   1
+    S          2
+*/
+
+class Sensor{
+public:
+  void runAllSensor();
+  void setWall(Cell);
+  void getOrientation();
+  
 private:
   int voltageTemp;
   int idleVoltage;
   int activeVoltage;
   int currentPos;
-public:
-  SENSOR();
-  int runAllSensor();
-  void setWall(int, int);
-  void getOrientation();
+  int frontWallDist;
+  int leftWallDist;
+  int rightWallDist;
+  int diagonalLeftDist;
+  int diagonalRightDist;
 private:
   int runSensor(int);
-  int convertDistance();
-}
+  int convertDistance(int);
+};
 
 #endif
