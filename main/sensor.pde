@@ -3,7 +3,7 @@
 #include "sensor.h"
 
 //called in main
-void Sensor::runAllSensor()
+void Sensor::runAllSensor(Status status)
 { 
   //obtain reading for front left right sensors.
   int frontReading[3], leftReading, rightReading;
@@ -21,31 +21,34 @@ void Sensor::runAllSensor()
   rightReading = runSensor(sensorSideRight);
   
   //update the current distance to each wall
-  frontWallDist = convertDistance(frontReading[0]);
-  leftWallDist = convertDistance(leftReading);
-  rightWallDist = convertDistance(rightReading);
+  status.frontWallDist = convertDistance(frontReading[0]);
+  status.leftWallDist = convertDistance(leftReading);
+  status.rightWallDist = convertDistance(rightReading);
+  setOrientation(status);
+  setWall(status.currentCell, status);
 }
 
-void Sensor::setWall(Cell currentCell)
+void Sensor::setWall(Cell currentCell, Status status)
 {
   //if current distance with wall < the calibrated distance, then wall exist
-  if(frontWallDist < wallExistDist)
-    currentCell.wall[(currentPos+0)%4] = true;
-  if(leftWallDist < wallExistDist)
-    currentCell.wall[(currentPos+3)%4] = true;
-  if(rightWallDist < wallExistDist)
-    currentCell.wall[(currentPos+1)%4] = true;
+  if(status.frontWallDist < wallExistDist)
+    currentCell.wall[(status.direction+0)%4] = true;
+  if(status.leftWallDist < wallExistDist)
+    currentCell.wall[(status.direction+3)%4] = true;
+  if(status.rightWallDist < wallExistDist)
+    currentCell.wall[(status.direction+1)%4] = true;
 }
-
-void Sensor::getOrientation()
-{
-  //obtain the distance reading
-  diagonalLeftDist = convertDistance(runSensor(sensorDiagonalLeft));
-  diagonalRightDist = convertDistance(runSensor(sensorDiagonalRight));
-}
-
 
 /*===============  private functions  =======================*/
+
+void Sensor::setOrientation(Status status)
+{
+  //obtain the distance reading
+  status.diagonalLeftDist = convertDistance(runSensor(sensorDiagonalLeft));
+  status.diagonalRightDist = convertDistance(runSensor(sensorDiagonalRight));
+  status.orientation = status.diagonalLeftDist - status.diagonalRightDist;
+}
+
 
 //controll individual sensor
 int Sensor::runSensor(int sensorRef)

@@ -19,24 +19,23 @@
 #define wallExistDist 5
 
 //Reciever
-#define sensorFrontLeft 1
-#define sensorFrontRight 2
-#define sensorDiagonalLeft 3
+#define sensorFrontLeft 6
+#define sensorFrontRight 5
+#define sensorDiagonalLeft 7
 #define sensorDiagonalRight 4
-#define sensorSideLeft 5
-#define sensorSideRight 6
+#define sensorSideLeft 8
+#define sensorSideRight 3
 
 //IR LED
-#define ledFrontLeft 9
-#define ledFrontRight 10
-#define ledDiagonalLeft 11
-#define ledDiagonalRight 12
-#define ledSideLeft 13
-#define ledSideRight 14
+#define ledOne 12
+#define ledTwo 13
+#define ledThree 14
 
 //motor
-#define motorLeft 7
-#define motorRight 8
+#define motorLeftP 28
+#define motorLeftN 29
+#define motorRightP 30
+#define motorRightN 31
 
 //object declear
 Maze maze;
