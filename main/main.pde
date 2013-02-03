@@ -23,7 +23,7 @@ void setup()
 
 void loop()
 {
-  sensor.runAllSensor(currentStatus);
+  sensor.runAllSensor();
 }
 
   

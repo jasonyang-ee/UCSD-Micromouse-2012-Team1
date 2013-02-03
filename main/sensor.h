@@ -14,9 +14,8 @@
 
 class Sensor{
 public:
-  void runAllSensor(Status);
-  void setWall(Cell, Status);
-  void setOrientation(Status);
+  void runAllSensor();
+  void setWall();
   
 private:
   int voltageTemp;
@@ -25,6 +24,8 @@ private:
 private:
   int runSensor(int);
   int convertDistance(int);
+  void setOrientation();
+  void setDeviation();
 };
 
 #endif

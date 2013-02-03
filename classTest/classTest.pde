@@ -1,14 +1,14 @@
-#include "blink.h"
+#include "c1.h"
+#include "c2.h"
 #include "global.h"
 
 
 void setup() {
-  pinMode(BOARD_LED_PIN, OUTPUT);
 }
 
 void loop() {
 
-  test.run();
-  
+  o1.func1();
+  o2.func2();
   
 }
