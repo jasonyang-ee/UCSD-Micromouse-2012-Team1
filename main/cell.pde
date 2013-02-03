@@ -7,9 +7,10 @@
 
 #include "cell.h"
 
+void Cell::initialize()
+{
 //initialize function
-
-
+}
 
 
 

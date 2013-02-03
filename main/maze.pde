@@ -1,6 +1,11 @@
 
 #include "maze.h"
 
+void Maze::initialize()
+{
+//initialize function
+}
+
 void Maze::setWall()
 {
   //if current distance with wall < the calibrated distance, then wall exist

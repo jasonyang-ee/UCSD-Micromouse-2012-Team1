@@ -7,10 +7,6 @@
 #include "sensor.h"
 #include "status.h"
 
-//setting size of maze
-#define WIDTH 16
-#define LENGTH 16
-
 //sensor interrupt
 #define sensorRate 1      // in period, 1 period = 1 ms
 
@@ -35,16 +31,20 @@
 #define ledThree 14
 
 //motor
-#define motorLeftP 28
-#define motorLeftN 29
-#define motorRightP 30
-#define motorRightN 31
+#define PWMLeft 25
+#define motorLeft1 21
+#define motorLeft2 22
+#define PWMRight 15
+#define motorRight1 18
+#define motorRight2 19
+#define STBY 20
 
 //object declear
 Maze maze;
 Sensor sensor;
 Motor motor;
-Cell cell[LENGTH][WIDTH];  //CELL cell[y][x];
+Cell cell[16][16];  //CELL cell[y][x];
 Status status;
+Status oldStatus[10];
 
 #endif

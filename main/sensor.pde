@@ -50,7 +50,7 @@ int Sensor::runSensor(int sensorRef)
     activeVoltage += voltageTemp;           //sum all the voltage reading
     delay(sampleRate);
   }
-  activeVoltage /= sampleNum;               //get average reading
+  activeVoltage /= sampleNum;                     //get average reading
   resultVoltage = activeVoltage - idleVoltage;    //get result of difference between dark and active voltage
   return convertDistance(activeVoltage);
 }
@@ -61,8 +61,7 @@ int Sensor::convertDistance(int activeVoltage)
 
 void Sensor::setOrientation()
 {
-  //obtain the distance reading
-  status.orientation = (status.diagonalLeftDist - status.diagonalRightDist) / 1.414;  //value*sin(45) = vale/sqrt(2)
+  status.orientation = status.diagonalLeftDist - status.diagonalRightDist;
 }
 
 void Sensor::setDeviation()

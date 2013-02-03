@@ -11,9 +11,9 @@ public:
   int sideRightDist;
   int diagonalLeftDist;
   int diagonalRightDist;
-  int orientation;      //0 is facing streaght
-  int deviation;        //0 is in the center of the cell (sidewise)
-  int compass;          //the current facing diraction
+  int orientation;      //0 is facing streaght, clockwise angle is positive
+  int deviation;        //0 is in the center, close to right wall is positive
+  int compass;
   
 public:
   void printAll();

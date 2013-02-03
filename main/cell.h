@@ -11,6 +11,7 @@ public:
   int floodValue;
   
 public:
+  void initialize();
   void printAll();
 };
 

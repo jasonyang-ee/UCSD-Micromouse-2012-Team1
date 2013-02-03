@@ -14,10 +14,14 @@ void setup()
   pinMode(13,OUTPUT);  //int led
   pinMode(12,OUTPUT);  //int led
   
-  pinMode(28,OUTPUT);  //int motorLeft+
-  pinMode(29,OUTPUT);  //int motorLeft-
-  pinMode(30,OUTPUT);  //int motorRight+
-  pinMode(31,OUTPUT);  //int motorRight-
+  pinMode(PWMLeft, PWM);
+  pinMode(motorLeft1, OUTPUT);
+  pinMode(motorLeft2, OUTPUT);
+  pinMode(PWMRight, PWM);
+  pinMode(motorRight1, OUTPUT);
+  pinMode(motorRight2, OUTPUT);  
+  pinMode(STBY, OUTPUT);
+  digitalWrite(STBY, HIGH);
 
   //global interrupts for sensor
   Timer4.pause();
@@ -30,15 +34,22 @@ void setup()
   Timer4.resume();                                     // Start the timer counting
 }
 
+void interruptFunction(void)
+{
+  //push back current status to old status array
+  for (int i=9; i>0; i--)
+    oldStatus[i] = oldStatus[i-1];
+  oldStatus[0] = status;
+  //updata current status
+  sensor.runAllSensor();
+}
+
 void loop()
 {
 
 }
   
-void interruptFunction(void)
-{
-  sensor.runAllSensor();
-}
+
 
 
 

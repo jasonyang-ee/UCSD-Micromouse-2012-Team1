@@ -8,6 +8,8 @@ int Motor::fixOrientation()
 
 void Motor::stop()
 {
+  motorLeft(0);
+  motorRight(0);
 }
 
 //for passing the first mouse test assignment
@@ -41,13 +43,35 @@ void Motor::driveRightTurn()
 
 /*===================  private functions  =======================*/
 
-void Motor::motorLeft()
+void Motor::motorLeft(int speed)
 {
-  //controlling left motor
+  if(speed>=0)
+  {
+    digitalWrite(motorLeft1, HIGH);
+    digitalWrite(motorLeft2, LOW);
+    pwmWrite(PWMLeft, speed);
+  }
+  else
+  {
+    digitalWrite(motorLeft1, LOW);
+    digitalWrite(motorLeft2, HIGH);
+    pwmWrite(PWMLeft, speed);
+  } 
 }
 
-void Motor::motorRight()
+void Motor::motorRight(int speed)
 {
-    //controlling right motor
+  if(speed>=0)
+  {
+    digitalWrite(motorRight1, HIGH);
+    digitalWrite(motorRight2, LOW);
+    pwmWrite(PWMRight, speed);
+  }
+  else
+  {
+    digitalWrite(motorRight1, LOW);
+    digitalWrite(motorRight2, HIGH);
+    pwmWrite(PWMRight, speed);
+  } 
 }
 

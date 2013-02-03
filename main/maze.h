@@ -5,6 +5,7 @@
 
 class Maze{
 public:
+  void initialize();
   void setWall();
   
 public:
