@@ -2,8 +2,6 @@
 #define SENSOR_H
 
 #include "global.h"
-#include "cell.h"
-#include "status.h"
 
 /*
 -- Direction code --
@@ -15,17 +13,19 @@
 class Sensor{
 public:
   void runAllSensor();
-  void setWall();
-  
 private:
   int voltageTemp;
   int idleVoltage;
   int activeVoltage;
+  int resultVoltage;
 private:
   int runSensor(int);
   int convertDistance(int);
   void setOrientation();
   void setDeviation();
+  
+public:
+  void printAll();
 };
 
 #endif

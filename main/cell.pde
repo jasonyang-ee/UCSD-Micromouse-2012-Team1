@@ -8,3 +8,15 @@
 #include "cell.h"
 
 //initialize function
+
+
+
+
+
+
+/*===================  debug functions  =======================*/
+
+void Cell::printAll()
+{
+//print all status variable for debug 
+}

@@ -1,51 +1,53 @@
 
 #include "motor.h"
 
-void motorLeft()
+int Motor::fixOrientation()
 {
-  //controlling left motor
+  return 0;    //return ?
 }
 
-void motorRight()
-{
-    //controlling right motor
-}
-
-/*
-function above is to give order to mortor
-function below is to perform action
-*/
-
-
-
-void stop()
+void Motor::stop()
 {
 }
 
 //for passing the first mouse test assignment
-void driveStright()
+void Motor::driveStright()
 {
   //if(front wall==0)
 }
 
-void turnLeft()
+void Motor::turnLeft()
 {
 }
 
-void turnRight()
+void Motor::turnRight()
 {
 }
 
 //if deadend then go turn back
-void turnBack()
+void Motor::turnBack()
 {
 }
 
-void driveLeftTurn()
+void Motor::driveLeftTurn()
 {
 }
 
-void driveRightTurn()
+void Motor::driveRightTurn()
 {
+}
+
+
+
+/*===================  private functions  =======================*/
+
+void Motor::motorLeft()
+{
+  //controlling left motor
+}
+
+void Motor::motorRight()
+{
+    //controlling right motor
 }
 

@@ -9,6 +9,9 @@ public:
   bool wall[4];
   bool goal;
   int floodValue;
+  
+public:
+  void printAll();
 };
 
 #endif

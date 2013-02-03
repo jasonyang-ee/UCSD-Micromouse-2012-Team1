@@ -1,17 +1,28 @@
+
 #include "maze.h"
 
-/*
-
-void explore()
+void Maze::setWall()
 {
-  //while wall==0 && visit==0 go to smallest flood value cell
+  //if current distance with wall < the calibrated distance, then wall exist
+  if(status.frontDist < wallExistDist)
+    status.currentCell.wall[(status.compass+0)%4] = true;
+  if(status.sideLeftDist < wallExistDist)
+    status.currentCell.wall[(status.compass+3)%4] = true;
+  if(status.sideRightDist < wallExistDist)
+    status.currentCell.wall[(status.compass+1)%4] = true;
 }
 
-void updateFloodValue()
-{
-  //if wall==1 flood value++
-}
 
-*/
+
+
+
+
+
+/*===================  debug functions  =======================*/
+
+void Maze::printAll()
+{
+//print all status variable for debug 
+}
 
 

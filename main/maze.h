@@ -5,7 +5,10 @@
 
 class Maze{
 public:
-  int test;
+  void setWall();
+  
+public:
+  void printAll();
 };
 
 

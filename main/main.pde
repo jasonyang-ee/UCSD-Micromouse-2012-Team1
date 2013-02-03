@@ -19,15 +19,26 @@ void setup()
   pinMode(30,OUTPUT);  //int motorRight+
   pinMode(31,OUTPUT);  //int motorRight-
 
+  //global interrupts for sensor
+  Timer4.pause();
+  Timer4.setPrescaleFactor(72);                        // set freq = system(72MHz) / 72000 = 1kHz
+  Timer4.setPeriod(sensorRate);                        // Set up period, 1period = 1 ms
+  Timer4.setChannel1Mode(TIMER_OUTPUT_COMPARE);        // CH1 of timer4 is pin D16
+  Timer4.setCompare(TIMER_CH1, 1);                     // Interrupt for every 1 update
+  Timer4.attachCompare1Interrupt(interruptFunction);   // the function that will be called
+  Timer4.refresh();                                    // Refresh the timer's count, prescale, and overflow
+  Timer4.resume();                                     // Start the timer counting
 }
 
 void loop()
 {
+
+}
+  
+void interruptFunction(void)
+{
   sensor.runAllSensor();
 }
-
-  
-  
 
 
 

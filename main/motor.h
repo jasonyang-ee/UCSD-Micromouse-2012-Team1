@@ -4,6 +4,12 @@
 #include "global.h"
 
 class Motor{
+private:
+  int speedRight;
+  int speedLeft;
+  int speedCorrect;
+public:
+  int fixOrientation();
 public:
   void stop();
   void driveStright();

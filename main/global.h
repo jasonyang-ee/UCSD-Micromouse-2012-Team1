@@ -11,6 +11,9 @@
 #define WIDTH 16
 #define LENGTH 16
 
+//sensor interrupt
+#define sensorRate 1      // in period, 1 period = 1 ms
+
 //sensor sample rate and sample numbers
 #define sampleNum 20
 #define sampleRate 1
@@ -42,7 +45,6 @@ Maze maze;
 Sensor sensor;
 Motor motor;
 Cell cell[LENGTH][WIDTH];  //CELL cell[y][x];
-Status currentStatus;
-Status prevStatus;
+Status status;
 
 #endif
