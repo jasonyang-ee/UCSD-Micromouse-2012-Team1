@@ -1,9 +1,11 @@
 
 #include "motor.h"
 
-int Motor::fixOrientation()
+void Motor::fixOrientation()
 {
-  return 0;    //return ?
+  int correction = orientationConstant * status.orientation;
+  motorRight(speedRight + correction);
+  motorLeft(speedLeft - correction);
 }
 
 void Motor::stop()
@@ -13,30 +15,41 @@ void Motor::stop()
 }
 
 //for passing the first mouse test assignment
-void Motor::driveStright()
+void Motor::driveStraight(int speed)
 {
-  //if(front wall==0)
+  motorRight(speed);
+  motorLeft(speed);
 }
 
-void Motor::turnLeft()
+void Motor::turnLeft(int speed)
 {
+  motorLeft(speed);
+  motorRight(0);
 }
 
-void Motor::turnRight()
+void Motor::turnRight(int speed)
 {
+  motorLeft(0);
+  motorRight(speed);
 }
 
 //if deadend then go turn back
-void Motor::turnBack()
+void Motor::turnBack(int speed)
 {
+  motorLeft(-speed);
+  motorRight(speed);
 }
 
-void Motor::driveLeftTurn()
+void Motor::driveLeftTurn(int speed)
 {
+  motorLeft(speed);
+  motorRight(speed/turnRatio);
 }
 
-void Motor::driveRightTurn()
+void Motor::driveRightTurn(int speed)
 {
+  motorLeft(speed/turnRatio);
+  motorRight(speed);
 }
 
 
@@ -45,11 +58,11 @@ void Motor::driveRightTurn()
 
 void Motor::motorLeft(int speed)
 {
-  if(speed>=0)
+  speedLeft = speed;    //update current motor speed
+  if(speed == 0)
   {
-    digitalWrite(motorLeft1, HIGH);
-    digitalWrite(motorLeft2, LOW);
-    pwmWrite(PWMLeft, speed);
+    digitalWrite(motorRight1, LOW);
+    digitalWrite(motorRight2, LOW);
   }
   else
   {
@@ -61,17 +74,17 @@ void Motor::motorLeft(int speed)
 
 void Motor::motorRight(int speed)
 {
-  if(speed>=0)
+  speedRight = speed;    //update current motor speed
+  if(speed == 0)
   {
-    digitalWrite(motorRight1, HIGH);
+    digitalWrite(motorRight1, LOW);
     digitalWrite(motorRight2, LOW);
-    pwmWrite(PWMRight, speed);
   }
   else
   {
-    digitalWrite(motorRight1, LOW);
-    digitalWrite(motorRight2, HIGH);
-    pwmWrite(PWMRight, speed);
-  } 
+    digitalWrite(motorRight1, HIGH);
+    digitalWrite(motorRight2, LOW);
+    pwmWrite(PWMRight, speed); 
+  }
 }
 

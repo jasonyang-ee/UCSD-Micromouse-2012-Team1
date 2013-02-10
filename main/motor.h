@@ -7,17 +7,17 @@ class Motor{
 private:
   int speedRight;
   int speedLeft;
-  int speedCorrect;
 public:
-  int fixOrientation();
+  void fixOrientation();
+  void fixDeviation();
 public:
   void stop();
-  void driveStright();
-  void turnLeft();
-  void turnRight();
-  void turnBack();
-  void driveLeftTurn();
-  void driveRightTurn();
+  void driveStraight(int);
+  void turnLeft(int);
+  void turnRight(int);
+  void turnBack(int);
+  void driveLeftTurn(int);
+  void driveRightTurn(int);
 private:
   void motorLeft(int);
   void motorRight(int);

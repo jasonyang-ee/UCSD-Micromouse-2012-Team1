@@ -7,12 +7,8 @@ class Cell{
 public:
   bool visit;
   bool wall[4];
-  bool goal;
+  bool deadEnd;
   int floodValue;
-  
-public:
-  void initialize();
-  void printAll();
 };
 
 #endif

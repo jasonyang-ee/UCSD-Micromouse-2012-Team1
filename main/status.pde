@@ -2,8 +2,6 @@
 #include "status.h"
 
 
-
-
 /*===================  debug functions  =======================*/
 
 void Status::printAll()

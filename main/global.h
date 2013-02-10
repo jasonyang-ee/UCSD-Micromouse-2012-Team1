@@ -7,6 +7,8 @@
 #include "sensor.h"
 #include "status.h"
 
+/*================== Sensor Constant ====================*/
+
 //sensor interrupt
 #define sensorRate 1      // in period, 1 period = 1 ms
 
@@ -16,6 +18,18 @@
 
 //minimun distance between wall and mouse in one cell
 #define wallExistDist 5
+
+
+/*================== Motor Constant ====================*/
+
+//orientation speed constant for fixOrientation
+#define orientationConstant 10
+#define deviationConstant 10
+#define turnRatio 10
+
+
+
+/*================== Pin Constant ====================*/
 
 //Reciever
 #define sensorFrontLeft 6
@@ -32,11 +46,11 @@
 
 //motor
 #define PWMLeft 25
-#define motorLeft1 21
-#define motorLeft2 22
+#define motorLeft1 21    //motorLeft +  LOW    }gives forward
+#define motorLeft2 22    //motorLeft -  HIGH   }
 #define PWMRight 15
-#define motorRight1 18
-#define motorRight2 19
+#define motorRight1 18   //motorRight + HIGH   }gives forward
+#define motorRight2 19   //motorRight - LOW    }
 #define STBY 20
 
 //object declear
@@ -46,5 +60,8 @@ Motor motor;
 Cell cell[16][16];  //CELL cell[y][x];
 Status status;
 Status oldStatus[10];
+
+//initializer
+bool initialize = false;
 
 #endif
