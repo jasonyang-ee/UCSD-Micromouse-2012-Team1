@@ -53,6 +53,12 @@
 #define motorRight2 19   //motorRight - LOW    }
 #define STBY 20
 
+//encoder
+#define encoderLeftDirc 31
+#define encoderLeftCLK 30
+#define encoderRightDirc 29
+#define encoderRightCLK 28
+
 //object declear
 Maze maze;
 Sensor sensor;

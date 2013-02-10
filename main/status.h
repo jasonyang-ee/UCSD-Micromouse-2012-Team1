@@ -21,6 +21,7 @@ public:
   int rightWheelCount;
   
 public:
+  void initialize();
   void printAll();
 };
 

@@ -68,6 +68,7 @@ void loop()
   {
     maze.initialize();
     status.initialize();
+    initialize=ture;
   }
   
   
