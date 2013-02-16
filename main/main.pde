@@ -22,6 +22,11 @@ void setup()
   pinMode(motorRight2, OUTPUT);  
   pinMode(STBY, OUTPUT);
   digitalWrite(STBY, HIGH);
+  
+  pinMode(encoderLeftCLK, INPUT);
+  pinMode(encoderLeftDirc, INPUT);
+  pinMode(encoderRightCLK, INPUT);
+  pinMode(encoderRightDirc, INPUT);
 
   //global interrupts for sensor
   Timer4.pause();
@@ -33,8 +38,9 @@ void setup()
   Timer4.refresh();                                    // Refresh the timer's count, prescale, and overflow
   Timer4.resume();                                     // Start the timer counting
   
-  attachInterrupt(/*left encoder CLK*/, decoderLeftInterrupts, CHANGE);
-  attachInterrupt(/*right encoder CLK*/, decoderRightInterrupts, CHANGE);
+  attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
+  attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
+
 }
 
 /*===================  Interrput functions  =======================*/
@@ -44,32 +50,56 @@ void sensorInterrupt(void)
   for (int i=9; i>0; i--)
     oldStatus[i] = oldStatus[i-1];
   oldStatus[0] = status;
-  //updata current status
+  //update current status
   sensor.runAllSensor();
 }
 
 void decoderLeftInterrupts(void)
 {
-  if(/*left encoder UP/DN CLK*/==HIGH)
+  if(digitalRead(encoderLeftDirc) == HIGH)
     status.leftWheelCount++;
+  else
+    status.leftWheelCount--;
 }
 
 void decoderRightInterrupts(void)
 {
-  if(/*left encoder UP/DN CLK*/==HIGH)
+  if(digitalRead(encoderLeftDirc) == HIGH)
     status.rightWheelCount++;
+  else
+    status.leftWheelCount--;
 }
 /*===================  End Interrput functions  =======================*/
 
 void loop()
 {
   //initialize for the beginning
-  if(initialize==false)
+  if(initialize == false)
   {
     maze.initialize();
     status.initialize();
-    initialize=ture;
+    initialize = true;
   }
+  
+  //if dist count % 14 == 0, cell++  (14 counts gives 18cm if 1 rotate = 150 counts)
+  
+  
+  //if side sensor has jump, cell++
+  
+  
+  
+  
+  
+  //go staright if no wall,
+  
+  
+  //if other path, turn right first
+  
+  
+  //if wall stop
+  
+  
+  //
   
   
 

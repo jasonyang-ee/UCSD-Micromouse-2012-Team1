@@ -24,20 +24,23 @@ void Motor::driveStraight(int speed)
 void Motor::turnLeft(int speed)
 {
   motorLeft(speed);
-  motorRight(0);
+  motorRight(speed*(5/16));
 }
 
 void Motor::turnRight(int speed)
 {
-  motorLeft(0);
+  motorLeft(speed*(5/16));
   motorRight(speed);
 }
 
 //if deadend then go turn back
-void Motor::turnBack(int speed)
+void Motor::turnBack()
 {
-  motorLeft(-speed);
-  motorRight(speed);
+  int currentLeftCount = status.leftWheelCount;
+  int currentRightCount = status.rightWheelCount
+  
+  motorLeft(-fullSpeed/10);
+  motorRight(fullSpeed/10);
 }
 
 void Motor::driveLeftTurn(int speed)

@@ -26,6 +26,7 @@
 #define orientationConstant 10
 #define deviationConstant 10
 #define turnRatio 10
+#define fullSpeed 65535
 
 
 
