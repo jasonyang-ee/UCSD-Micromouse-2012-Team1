@@ -8,6 +8,10 @@ public:
   void initialize();
   void setWall();
   
+private:
+  int currentX;
+  int currentY;
+  
 public:
   void printAll();
 };

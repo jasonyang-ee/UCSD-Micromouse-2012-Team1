@@ -37,19 +37,19 @@ void Motor::turnRight(int speed)
 void Motor::turnBack()
 {
   int currentLeftCount = status.leftWheelCount;
-  int currentRightCount = status.rightWheelCount
+  int currentRightCount = status.rightWheelCount;
   
-  motorLeft(-fullSpeed/10);
-  motorRight(fullSpeed/10);
+  motorLeft(-fullSpeed/1000);
+  motorRight(fullSpeed/1000);
 }
 
-void Motor::driveLeftTurn(int speed)
+void Motor::driveLeft(int speed)
 {
   motorLeft(speed);
   motorRight(speed/turnRatio);
 }
 
-void Motor::driveRightTurn(int speed)
+void Motor::driveRight(int speed)
 {
   motorLeft(speed/turnRatio);
   motorRight(speed);

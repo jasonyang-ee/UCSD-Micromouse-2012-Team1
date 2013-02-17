@@ -1,7 +1,7 @@
 int dir = 31;
 int clock = 30;
 
-int count = 0;
+volatile int count = 0;
 
 void setup()
 {

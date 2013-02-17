@@ -54,7 +54,7 @@ void sensorInterrupt(void)
   sensor.runAllSensor();
 }
 
-void decoderLeftInterrupts(void)
+void encoderLeftInterrupts(void)
 {
   if(digitalRead(encoderLeftDirc) == HIGH)
     status.leftWheelCount++;
@@ -62,7 +62,7 @@ void decoderLeftInterrupts(void)
     status.leftWheelCount--;
 }
 
-void decoderRightInterrupts(void)
+void encoderRightInterrupts(void)
 {
   if(digitalRead(encoderLeftDirc) == HIGH)
     status.rightWheelCount++;
@@ -81,28 +81,47 @@ void loop()
     initialize = true;
   }
   
-  //if dist count % 14 == 0, cell++  (14 counts gives 18cm if 1 rotate = 150 counts)
+  //slow donw for a wall
+  if(status.frontDist < 100)
+    motor.driveStraight(fullSpeed/500);
   
-  
-  //if side sensor has jump, cell++
-  
-  
-  
-  
-  
-  //go staright if no wall,
-  
-  
-  //if other path, turn right first
-  
-  
-  //if wall stop
-  
-  
-  //
-  
-  
+  //if path on right turn right and update compass
+  if(status.currentCell.wall[1]==false)
+  {
+    while(status.currentCell.wall[0]==true)
+      motor.driveRight(fullSpeed/500);
+    status.compass = (status.compass+1) % 4;
+  }
 
+  //if path on left turn left and update compass
+  if(status.currentCell.wall[3]==false)
+  {
+    while(status.currentCell.wall[0]==true)
+      motor.driveLeft(fullSpeed/500);
+    status.compass = (status.compass+3) % 4;
+  }
+  
+  //if no wall in front then go straight
+  if(status.currentCell.wall[0]==false)
+    motor.driveStraight(fullSpeed/100);
+  
+  //if no path in front then stop
+  if(status.currentCell.wall[0]==true)
+    motor.stop();
+  
+  //if dead end then turn back and update compass
+  if(status.currentCell.wall[0]==true && status.currentCell.wall[1]==true
+    && status.currentCell.wall[3]==true)
+  {
+    while(abs(status.sideLeftDist-status.sideRightDist)>50)
+      motor.turnBack();
+    status.compass = (status.compass+2) % 4;
+  }
+    
+    
+    
+    
+  //if dist count % 14 == 0, cell++  (14 counts gives 18cm if 1 rotate = 150 counts)
 }
   
 

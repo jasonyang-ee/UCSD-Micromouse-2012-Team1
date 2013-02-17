@@ -10,7 +10,4 @@
 
 /*===================  debug functions  =======================*/
 
-void Cell::printAll()
-{
-//print all status variable for debug 
-}
+

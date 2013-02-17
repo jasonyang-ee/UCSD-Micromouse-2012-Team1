@@ -16,8 +16,8 @@ public:
   void turnLeft(int);
   void turnRight(int);
   void turnBack();
-  void driveLeftTurn(int);
-  void driveRightTurn(int);
+  void driveLeft(int);
+  void driveRight(int);
 private:
   void motorLeft(int);
   void motorRight(int);
