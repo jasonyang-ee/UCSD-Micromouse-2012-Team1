@@ -1,14 +1,13 @@
-#include "c1.h"
-#include "c2.h"
+
 #include "global.h"
 
 
 void setup() {
+  pinMode(32, INPUT);
+  pinMode(33, OUTPUT);
 }
 
 void loop() {
 
-  o1.func1();
-  o2.func2();
-  
+    obj.c1_func1();
 }

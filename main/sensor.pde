@@ -10,12 +10,22 @@ void Sensor::runAllSensor()
   frontReading[2] = runSensor(sensorFrontRight);
   frontReading[0] = frontReading[1]<frontReading[2] ? frontReading[1] : frontReading[2];
   
+  status.frontVolt = frontReading[0];
+  status.sideLeftVolt = (runSensor(sensorSideLeft));
+  status.sideRightVolt = (runSensor(sensorSideRight));
+  status.diagonalLeftVolt = (runSensor(sensorDiagonalLeft));
+  status.diagonalRightVolt = (runSensor(sensorDiagonalRight));
+  
+  
+  /*
   //update the current distance to each wall
   status.frontDist = convertDistance(frontReading[0]);
   status.sideLeftDist = convertDistance(runSensor(sensorSideLeft));
   status.sideRightDist = convertDistance(runSensor(sensorSideRight));
   status.diagonalLeftDist = convertDistance(runSensor(sensorDiagonalLeft));
   status.diagonalRightDist = convertDistance(runSensor(sensorDiagonalRight));
+  */
+  
   
   setOrientation();
   setDeviation();
@@ -53,6 +63,13 @@ int Sensor::runSensor(int sensorRef)
   activeVoltage /= sampleNum;                     //get average reading
   resultVoltage = activeVoltage - idleVoltage;    //get result of difference between dark and active voltage
   return convertDistance(activeVoltage);
+  
+  //for going straight
+  int frontVolt;
+  int sideLeftVolt;
+  int sideRightVolt;
+  int diagonalLeftVolt;
+  int diagonalRightVolt;
 }
 
 //converte voltage signal to distance value in mm (not very accurate)
@@ -61,7 +78,7 @@ int Sensor::convertDistance(int activeVoltage)
 
 void Sensor::setOrientation()
 {
-  status.orientation = status.diagonalLeftDist - status.diagonalRightDist;
+  status.orientation = status.diagonalLeftVolt - status.diagonalRightVolt;
 }
 
 void Sensor::setDeviation()

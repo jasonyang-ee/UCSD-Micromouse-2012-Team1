@@ -27,7 +27,7 @@ void setup()
   pinMode(encoderLeftDirc, INPUT);
   pinMode(encoderRightCLK, INPUT);
   pinMode(encoderRightDirc, INPUT);
-
+/*
   //global interrupts for sensor
   Timer4.pause();
   Timer4.setPrescaleFactor(72);                        // set freq = system(72MHz) / 72000 = 1kHz
@@ -37,10 +37,14 @@ void setup()
   Timer4.attachCompare1Interrupt(sensorInterrupt);     // the function that will be called
   Timer4.refresh();                                    // Refresh the timer's count, prescale, and overflow
   Timer4.resume();                                     // Start the timer counting
-  
+  */
   attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
   attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
 
+digitalWrite(ledOne, HIGH);
+digitalWrite(ledTwo, HIGH);
+digitalWrite(led
+delay(2000);
 }
 
 /*===================  Interrput functions  =======================*/
@@ -52,6 +56,7 @@ void sensorInterrupt(void)
   oldStatus[0] = status;
   //update current status
   sensor.runAllSensor();
+  
 }
 
 void encoderLeftInterrupts(void)
@@ -73,6 +78,14 @@ void encoderRightInterrupts(void)
 
 void loop()
 {
+  
+  SerialUSB.print("V = ");
+  SerialUSB.print(status.frontVolt);
+  SerialUSB.print("\tX = ");
+  SerialUSB.print(status.frontDist);
+  SerialUSB.print("\n");
+  //motor.driveStraight(10);
+  /*
   //initialize for the beginning
   if(initialize == false)
   {
@@ -108,20 +121,12 @@ void loop()
   //if no path in front then stop
   if(status.currentCell.wall[0]==true)
     motor.stop();
-  
-  //if dead end then turn back and update compass
-  if(status.currentCell.wall[0]==true && status.currentCell.wall[1]==true
-    && status.currentCell.wall[3]==true)
-  {
-    while(abs(status.sideLeftDist-status.sideRightDist)>50)
-      motor.turnBack();
-    status.compass = (status.compass+2) % 4;
-  }
     
     
     
     
   //if dist count % 14 == 0, cell++  (14 counts gives 18cm if 1 rotate = 150 counts)
+*/
 }
   
 

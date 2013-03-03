@@ -17,7 +17,7 @@
 #define sampleRate 1
 
 //minimun distance between wall and mouse in one cell
-#define wallExistDist 5
+#define wallExistDist 50
 
 
 /*================== Motor Constant ====================*/

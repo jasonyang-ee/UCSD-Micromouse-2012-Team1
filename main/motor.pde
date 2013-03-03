@@ -3,9 +3,9 @@
 
 void Motor::fixOrientation()
 {
-  int correction = orientationConstant * status.orientation;
-  motorRight(speedRight + correction);
-  motorLeft(speedLeft - correction);
+//  int correction = orientationConstant * status.orientation;
+//  motorRight(speedRight + correction);
+//  motorLeft(speedLeft - correction);
 }
 
 void Motor::stop()
@@ -33,7 +33,7 @@ void Motor::turnRight(int speed)
   motorRight(speed);
 }
 
-//if deadend then go turn back
+/*
 void Motor::turnBack()
 {
   int currentLeftCount = status.leftWheelCount;
@@ -42,6 +42,7 @@ void Motor::turnBack()
   motorLeft(-fullSpeed/1000);
   motorRight(fullSpeed/1000);
 }
+*/
 
 void Motor::driveLeft(int speed)
 {

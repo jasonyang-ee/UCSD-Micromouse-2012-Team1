@@ -28,4 +28,21 @@ void loop()
   digitalWrite(BIN2, HIGH);
   pwmWrite(PWMA, 2768);
   pwmWrite(PWMB, 2768);
+  
+  delay (2000);
+  
+  digitalWrite(AIN1, LOW);
+  digitalWrite(AIN2, HIGH);
+  
+  digitalWrite(BIN1, HIGH);
+  digitalWrite(BIN2, LOW);
+  pwmWrite(PWMA, 5536);
+  pwmWrite(PWMB, 5536);
+  
+  delay(3000);
+  
+  pwmWrite(PWMA, 0);
+  pwmWrite(PWMB, 0);
+  
+  delay(2000);
 }

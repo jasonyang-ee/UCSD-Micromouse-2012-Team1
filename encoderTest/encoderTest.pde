@@ -1,5 +1,5 @@
-int dir = 31;
-int clock = 30;
+int dir = 29;
+int clock = 28;
 
 volatile int count = 0;
 
@@ -7,8 +7,7 @@ void setup()
 {
   pinMode(dir, INPUT);
   pinMode(clock, INPUT);
-  
-  attachInterrupt(clock, encode, RISING);
+  attachInterrupt(clock, encode, CHANGE);
 }
 
 void loop()
