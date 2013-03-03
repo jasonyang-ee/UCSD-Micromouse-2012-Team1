@@ -15,7 +15,7 @@ public:
   void driveStraight(int);
   void turnLeft(int);
   void turnRight(int);
-//  void turnBack();
+  void turnBack();
   void driveLeft(int);
   void driveRight(int);
 private:

@@ -63,13 +63,6 @@ int Sensor::runSensor(int sensorRef)
   activeVoltage /= sampleNum;                     //get average reading
   resultVoltage = activeVoltage - idleVoltage;    //get result of difference between dark and active voltage
   return convertDistance(activeVoltage);
-  
-  //for going straight
-  int frontVolt;
-  int sideLeftVolt;
-  int sideRightVolt;
-  int diagonalLeftVolt;
-  int diagonalRightVolt;
 }
 
 //converte voltage signal to distance value in mm (not very accurate)
