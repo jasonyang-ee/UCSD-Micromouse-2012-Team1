@@ -1,13 +1,16 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
+#include "global.h"
+
 class Sensor{
 public:
   void runAllSensor();
 private:
-  double darkV, activeV;
+  double SL, DL, FL, FR, DR, SR;
+  double voltageTemp;
 private:
-  int runSensor(int);
+  double runSensor(int);
 };
 
 #endif
