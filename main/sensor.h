@@ -3,13 +3,6 @@
 
 #include "global.h"
 
-/*
--- Direction code --
-    N          0
-  W   E  ==  3   1
-    S          2
-*/
-
 class Sensor{
 public:
   void runAllSensor();

@@ -19,6 +19,5 @@ void setup()
 
 void loop()
 {
-
   sensor.runAllSensor();
 }

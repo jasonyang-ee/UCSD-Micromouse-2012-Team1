@@ -1,5 +1,8 @@
 
 #include "status.h"
+
+
+/*===================  initialize functions  =======================*/
 void Status::initialize()
 {
   currentCell = cell[0][0];

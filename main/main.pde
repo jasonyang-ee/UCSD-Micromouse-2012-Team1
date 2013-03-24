@@ -29,14 +29,14 @@ void setup()
   pinMode(encoderRightDirc, INPUT);
 
   //global interrupts for sensor
-  Timer4.pause();
-  Timer4.setPrescaleFactor(72);                        // set freq = system(72MHz) / 72000 = 1kHz
-  Timer4.setPeriod(sensorRate);                        // Set up period, 1period = 1 ms
-  Timer4.setChannel1Mode(TIMER_OUTPUT_COMPARE);        // CH1 of timer4 is pin D16
-  Timer4.setCompare(TIMER_CH1, 1);                     // Interrupt for every 1 update
-  Timer4.attachCompare1Interrupt(sensorInterrupt);     // the function that will be called
-  Timer4.refresh();                                    // Refresh the timer's count, prescale, and overflow
-  Timer4.resume();                                     // Start the timer counting
+  Timer2.pause();
+  Timer2.setPrescaleFactor(72);                        // set freq = system(72MHz) / 72000 = 1kHz
+  Timer2.setPeriod(sensorRate);                        // Set up period, 1period = 1 ms
+  Timer2.setChannel1Mode(TIMER_OUTPUT_COMPARE);        // CH1 of timer4 is pin D16
+  Timer2.setCompare(TIMER_CH1, 1);                     // Interrupt for every 1 update
+  Timer2.attachCompare1Interrupt(sensorInterrupt);     // the function that will be called
+  Timer2.refresh();                                    // Refresh the timer's count, prescale, and overflow
+  Timer2.resume();                                     // Start the timer counting
 
   attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
   attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
@@ -77,7 +77,13 @@ void encoderRightInterrupts(void)
 
 void loop()
 {
-  //update current position of the cell (x y value)
+  //initail setup
+  status.initialize();
+  maze.initialize();
+  
+  //mapping
+  maze.mapping();
+  
   
 }
   
