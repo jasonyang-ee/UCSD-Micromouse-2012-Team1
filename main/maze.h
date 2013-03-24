@@ -5,15 +5,13 @@
 
 class Maze{
 public:
-  void initialize();
   void mapping();
   
 private:
   void setWall();
-  int currentX;
-  int currentY;
   
 public:
+  void initialize();
   void printAll();
 };
 

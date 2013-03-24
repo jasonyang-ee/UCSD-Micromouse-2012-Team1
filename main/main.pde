@@ -61,22 +61,26 @@ void sensorInterrupt(void)
 void encoderLeftInterrupts(void)
 {
   if(digitalRead(encoderLeftDirc) == HIGH)
-    status.leftWheelCount++;
+    status.wheelCountLeft++;
   else
-    status.leftWheelCount--;
+    status.wheelCountLeft--;
 }
 
 void encoderRightInterrupts(void)
 {
   if(digitalRead(encoderLeftDirc) == HIGH)
-    status.rightWheelCount++;
+    status.wheelCountRight++;
   else
-    status.leftWheelCount--;
+    status.wheelCountRight--;
 }
 /*===================  End Interrput functions  =======================*/
 
 void loop()
 {
+  //set map size
+  cell[8][8].goal = true;   cell[8][9].goal = true;
+  cell[9][8].goal = true;   cell[9][9].goal = true;
+  
   //initail setup
   status.initialize();
   maze.initialize();

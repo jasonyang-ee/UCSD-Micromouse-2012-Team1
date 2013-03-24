@@ -7,6 +7,8 @@
 #include "sensor.h"
 #include "status.h"
 
+/*================== Sensor Constant ====================*/
+#define cellLength 18
 
 /*================== Sensor Constant ====================*/
 
@@ -28,6 +30,7 @@
 #define deviationConstant 10
 #define turnRatio 10
 #define fullSpeed 65535
+#define mappingSpeed 500
 
 
 /*================== Pin Constant ====================*/

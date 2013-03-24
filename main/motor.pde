@@ -71,9 +71,9 @@ void Motor::goRight(int speed)
 
 /*===================  private functions  =======================*/
 
-void Motor::motorLeft(int speed)
+void Motor::leftMotor(int speed)
 {
-  status.speedLeft = speed;    //update current motor speed
+  status.leftSpeed = speed;    //update current motor speed
   if(speed == 0)
   {
     digitalWrite(motorRight1, LOW);
@@ -94,9 +94,9 @@ void Motor::motorLeft(int speed)
   
 }
 
-void Motor::motorRight(int speed)
+void Motor::rightMotor(int speed)
 {
-  status.speedRight = speed;    //update current motor speed
+  status.rightSpeed = speed;    //update current motor speed
   if(speed == 0)
   {
     digitalWrite(motorRight1, LOW);
