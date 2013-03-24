@@ -6,9 +6,10 @@
 class Maze{
 public:
   void initialize();
-  void setWall();
+  void mapping();
   
 private:
+  void setWall();
   int currentX;
   int currentY;
   

@@ -23,28 +23,27 @@ void setup()
   pinMode(STBY, OUTPUT);
   digitalWrite(STBY, HIGH);
   
-  pinMode(encoderLeftCLK, INPUT);
-  pinMode(encoderLeftDirc, INPUT);
+  pinMode(encoderLeftCLK, INPUT);  //encoder clock pin
+  pinMode(encoderLeftDirc, INPUT);  //encoder direction pin
   pinMode(encoderRightCLK, INPUT);
   pinMode(encoderRightDirc, INPUT);
-/*
+
   //global interrupts for sensor
-  Timer4.pause();
-  Timer4.setPrescaleFactor(72);                        // set freq = system(72MHz) / 72000 = 1kHz
-  Timer4.setPeriod(sensorRate);                        // Set up period, 1period = 1 ms
-  Timer4.setChannel1Mode(TIMER_OUTPUT_COMPARE);        // CH1 of timer4 is pin D16
-  Timer4.setCompare(TIMER_CH1, 1);                     // Interrupt for every 1 update
-  Timer4.attachCompare1Interrupt(sensorInterrupt);     // the function that will be called
-  Timer4.refresh();                                    // Refresh the timer's count, prescale, and overflow
-  Timer4.resume();                                     // Start the timer counting
-  */
+  Timer2.pause();
+  Timer2.setPrescaleFactor(72);                        // set freq = system(72MHz) / 72000 = 1kHz
+  Timer2.setPeriod(sensorRate);                        // Set up period, 1period = 1 ms
+  Timer2.setChannel1Mode(TIMER_OUTPUT_COMPARE);        // CH1 of timer4 is pin D16
+  Timer2.setCompare(TIMER_CH1, 1);                     // Interrupt for every 1 update
+  Timer2.attachCompare1Interrupt(sensorInterrupt);     // the function that will be called
+  Timer2.refresh();                                    // Refresh the timer's count, prescale, and overflow
+  Timer2.resume();                                     // Start the timer counting
+
   attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
   attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
 
-digitalWrite(ledOne, HIGH);
-digitalWrite(ledTwo, HIGH);
-digitalWrite(led
-delay(2000);
+  digitalWrite(ledOne, HIGH);
+  digitalWrite(ledTwo, HIGH);
+  digitalWrite(ledThree, HIGH);
 }
 
 /*===================  Interrput functions  =======================*/
@@ -78,55 +77,14 @@ void encoderRightInterrupts(void)
 
 void loop()
 {
+  //initail setup
+  status.initialize();
+  maze.initialize();
   
-  SerialUSB.print("V = ");
-  SerialUSB.print(status.frontVolt);
-  SerialUSB.print("\tX = ");
-  SerialUSB.print(status.frontDist);
-  SerialUSB.print("\n");
-  //motor.driveStraight(10);
-  /*
-  //initialize for the beginning
-  if(initialize == false)
-  {
-    maze.initialize();
-    status.initialize();
-    initialize = true;
-  }
+  //mapping
+  maze.mapping();
   
-  //slow donw for a wall
-  if(status.frontDist < 100)
-    motor.driveStraight(fullSpeed/500);
   
-  //if path on right turn right and update compass
-  if(status.currentCell.wall[1]==false)
-  {
-    while(status.currentCell.wall[0]==true)
-      motor.driveRight(fullSpeed/500);
-    status.compass = (status.compass+1) % 4;
-  }
-
-  //if path on left turn left and update compass
-  if(status.currentCell.wall[3]==false)
-  {
-    while(status.currentCell.wall[0]==true)
-      motor.driveLeft(fullSpeed/500);
-    status.compass = (status.compass+3) % 4;
-  }
-  
-  //if no wall in front then go straight
-  if(status.currentCell.wall[0]==false)
-    motor.driveStraight(fullSpeed/100);
-  
-  //if no path in front then stop
-  if(status.currentCell.wall[0]==true)
-    motor.stop();
-    
-    
-    
-    
-  //if dist count % 14 == 0, cell++  (14 counts gives 18cm if 1 rotate = 150 counts)
-*/
 }
   
 

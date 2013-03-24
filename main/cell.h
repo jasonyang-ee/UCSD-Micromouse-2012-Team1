@@ -7,7 +7,6 @@ class Cell{
 public:
   bool visit;
   bool wall[4];
-  bool deadEnd;
   int floodValue;
 };
 

@@ -12,12 +12,12 @@ public:
   void fixDeviation();
 public:
   void stop();
-  void driveStraight(int);
+  void goStraight(int);
   void turnLeft(int);
   void turnRight(int);
-//  void turnBack();
-  void driveLeft(int);
-  void driveRight(int);
+  void turnBack();
+  void goLeft(int);
+  void goRight(int);
 private:
   void motorLeft(int);
   void motorRight(int);
