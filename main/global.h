@@ -71,7 +71,8 @@ Cell cell[16][16];  //CELL cell[y][x];
 Status status;
 Status oldStatus[10];
 
-//initializer
-bool initialize = false;
+//mouse state
+bool initializeState = false;
+bool mappingState = false;
 
 #endif

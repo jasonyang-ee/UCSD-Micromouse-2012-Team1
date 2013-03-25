@@ -77,16 +77,31 @@ void encoderRightInterrupts(void)
 
 void loop()
 {
-  //set map size
-  cell[8][8].goal = true;   cell[8][9].goal = true;
-  cell[9][8].goal = true;   cell[9][9].goal = true;
-  
   //initail setup
-  status.initialize();
-  maze.initialize();
+  if(initializeState==false)
+  {
+    //set map size
+    cell[8][8].goal = true;   cell[8][9].goal = true;
+    cell[9][8].goal = true;   cell[9][9].goal = true;
+     
+    status.initialize();
+    maze.initialize();
+    
+    initializeState = true;
+  }
   
   //mapping
-  maze.mapping();
+  if(mappingState==false)
+  {
+    maze.mapping();
+    mappingState = true;
+  }
+  
+  //racing
+  
+  //after reach gaol in racing, map again
+  
+  //go back to start
   
   
 }

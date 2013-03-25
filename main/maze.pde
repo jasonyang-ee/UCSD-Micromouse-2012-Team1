@@ -22,16 +22,19 @@ void Maze::mapping()
     
     //turn right or left then loop until reach goal
   }
+  
+  //set wall info for the 4 goal cells
+  //then stop and turn back and map other place base on cell visit value
+  //then go back to start cell[0][0]
 }
 
 
-
-
 /*===================  private functions  =======================*/
-void Maze::setWall()
+
+void Maze::floodFill()
 {
   
-
+  
 }
 
 

@@ -8,7 +8,7 @@ public:
   void mapping();
   
 private:
-  void setWall();
+  void floodFill();
   
 public:
   void initialize();
