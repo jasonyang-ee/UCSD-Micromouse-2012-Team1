@@ -77,6 +77,8 @@ void encoderRightInterrupts(void)
 
 void loop()
 {
+  
+/*===================  one time instructions  =======================*/
   //initail setup
   if(initializeState==false)
   {
@@ -96,6 +98,9 @@ void loop()
     maze.mapping();
     mappingState = true;
   }
+  
+  
+/*===================  rascing instructions  =======================*/
   
   //racing
   

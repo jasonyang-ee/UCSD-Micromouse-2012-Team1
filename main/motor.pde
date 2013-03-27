@@ -38,9 +38,6 @@ void Motor::turnRight(int speed)
 //turn 180 degree
 void Motor::turnBack()
 {
-  int currentLeftCount = status.leftWheelCount;
-  int currentRightCount = status.rightWheelCount;
-  
   motorLeft(-fullSpeed/5000);
   motorRight(fullSpeed/5000);
 }
@@ -71,9 +68,9 @@ void Motor::goRight(int speed)
 
 /*===================  private functions  =======================*/
 
-void Motor::leftMotor(int speed)
+void Motor::motorLeft(int speed)
 {
-  status.leftSpeed = speed;    //update current motor speed
+  status.speedLeft = speed;    //update current motor speed
   if(speed == 0)
   {
     digitalWrite(motorRight1, LOW);
@@ -94,9 +91,9 @@ void Motor::leftMotor(int speed)
   
 }
 
-void Motor::rightMotor(int speed)
+void Motor::motorRight(int speed)
 {
-  status.rightSpeed = speed;    //update current motor speed
+  status.speedRight = speed;    //update current motor speed
   if(speed == 0)
   {
     digitalWrite(motorRight1, LOW);

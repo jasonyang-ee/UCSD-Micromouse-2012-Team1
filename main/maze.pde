@@ -8,16 +8,17 @@ void Maze::mapping()
   while(status.currentCell.goal == false)
   {
     while(status.sideLeftDist < wallExistDist && status.sideRightDist < wallExistDist)
-      motor.gostraight(speed);
+      motor.goStraight(speed);
     //taking the wheel count average
-    int wheelCount = (wheelCountLeft + wheelCountRight)/2;
+    int wheelCount = (status.wheelCountLeft + status.wheelCountRight)/2;
     //set wall
     for(int i=0; i<(wheelCount/cellLength); i++)
     {
-      cell[i].wall[0]=false;
-      cell[i].wall[1]=true;
-      cell[i].wall[2]=false;
-      cell[i].wall[3]=true;      
+      int x=0, y=0;
+      cell[x][y].wall[0]=false;
+      cell[x][y].wall[1]=true;
+      cell[x][y].wall[2]=false;
+      cell[x][y].wall[3]=true;      
     }
     
     //turn right or left then loop until reach goal
@@ -45,9 +46,9 @@ void Maze::initialize()
   for(int y=0; y<16; y++)
     for(int x=0; x<16; x++)
     {
-      //set visit and wall value to false
-      cell.x = x;
-      cell.y = y;
+      //set xy, visit, and wall value to false
+      cell[y][x].x=x;
+      cell[y][x].y=y;
       cell[y][x].visit = false;
       for(int i=0; i<4; i++) cell[y][x].wall[i] = false;
       
