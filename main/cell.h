@@ -4,8 +4,7 @@
 #include "global.h"
 
 class Cell{
-public:
-  void setCurrent();
+//elements
 public:
   bool visit;
   bool wall[4];
@@ -13,8 +12,13 @@ public:
   int x;
   int y;
   int floodValue;
+  bool existance;
+//link list siblings
 public:
-  Cell operator++(int);
+  Cell *north;
+  Cell *south;
+  Cell *east;
+  Cell *west;
 };
 
 #endif

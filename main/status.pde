@@ -5,7 +5,7 @@
 /*===================  initialize functions  =======================*/
 void Status::initialize()
 {
-  currentCell = cell[0][0];
+  currentCell = &cell[0][0];
   sensor.runAllSensor();
   compass = 0;
   wheelCountLeft = 0;

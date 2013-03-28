@@ -20,7 +20,7 @@ public:
   volatile int diagonalRightVolt;
   
   //position status
-  Cell currentCell;
+  Cell *currentCell;
   volatile int orientation;      //set by sensor class
   volatile int deviation;        //set by sensor class
   int compass;

@@ -7,6 +7,9 @@
 #include "sensor.h"
 #include "status.h"
 
+/*================== Maze Constant ====================*/
+#define mazeSize 16
+
 /*================== Sensor Constant ====================*/
 #define cellLength 18
 
@@ -63,15 +66,16 @@
 #define encoderRightDirc 29
 #define encoderRightCLK 28
 
-//object declear
+/*================== object declear ====================*/
 Maze maze;
 Sensor sensor;
 Motor motor;
 Cell cell[16][16];  //CELL cell[y][x];
+Cell emptyCell;
 Status status;
 Status oldStatus[10];
 
-//mouse state
+/*================== mouse state ====================*/
 bool initializeState = false;
 bool mappingState = false;
 
