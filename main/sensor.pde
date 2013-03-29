@@ -18,12 +18,11 @@ void Sensor::runAllSensor()
   status.diagonalRightVolt = (runSensor(sensorDiagonalRight));
  
   //update sensor value to status
-  // *** all converstion requrires a calibration ***
-  status.frontDist = convertDistance(frontReading[0]);
-  status.sideLeftDist = convertDistance(runSensor(sensorSideLeft));
-  status.sideRightDist = convertDistance(runSensor(sensorSideRight));
-  status.diagonalLeftDist = convertDistance(runSensor(sensorDiagonalLeft));
-  status.diagonalRightDist = convertDistance(runSensor(sensorDiagonalRight));
+  status.frontDist = convertDistance(status.frontVolt);
+  status.sideLeftDist = convertDistance(status.sideLeftVolt);
+  status.sideRightDist = convertDistance(status.sideRightVolt);
+  status.diagonalLeftDist = convertDistance(status.diagonalLeftVolt);
+  status.diagonalRightDist = convertDistance(status.diagonalRightVolt);
   
   //update position value to status
   setOrientation();
@@ -66,24 +65,14 @@ int Sensor::runSensor(int sensorRef)
 
 
 /*===================  conversion functions  =======================*/
-int Sensor::convertDistance(int activeVoltage)
-{ return (1 / pow(activeVoltage, 2) * 66.4 - 4.28); }  // X = 1/V^2 ; Dist = 66.4X - 4.28
+int Sensor::convertDistance(int voltage)
+{ return (1 / pow(voltage, 2) * 66.4 - 4.28); }  // X = 1/V^2 ; Dist = 66.4X - 4.28
 
 void Sensor::setOrientation()
-{
-  status.orientation = status.diagonalLeftVolt - status.diagonalRightVolt;
-}
+{ status.orientation = status.diagonalLeftDist - status.diagonalRightDist; }
 
 void Sensor::setDeviation()
-{
-  status.deviation = status.sideLeftDist - status.sideRightDist;
-}
+{ status.deviation = status.sideLeftDist - status.sideRightDist; }
 
 
-/*===================  debug functions  =======================*/
-
-void Sensor::printAll()
-{
-//print all status variable for debug 
-}
 

@@ -55,7 +55,6 @@ void sensorInterrupt(void)
   oldStatus[0] = status;
   //update current status
   sensor.runAllSensor();
-  
 }
 
 void encoderLeftInterrupts(void)
@@ -73,7 +72,8 @@ void encoderRightInterrupts(void)
   else
     status.wheelCountRight--;
 }
-/*===================  End Interrput functions  =======================*/
+
+
 
 void loop()
 {

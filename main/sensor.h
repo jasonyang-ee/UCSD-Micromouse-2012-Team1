@@ -16,9 +16,6 @@ private:
   int convertDistance(int);
   void setOrientation();
   void setDeviation();
-  
-public:
-  void printAll();
 };
 
 #endif
