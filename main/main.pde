@@ -55,34 +55,58 @@ void sensorInterrupt(void)
   oldStatus[0] = status;
   //update current status
   sensor.runAllSensor();
-  
 }
 
 void encoderLeftInterrupts(void)
 {
   if(digitalRead(encoderLeftDirc) == HIGH)
-    status.leftWheelCount++;
+    status.wheelCountLeft++;
   else
-    status.leftWheelCount--;
+    status.wheelCountLeft--;
 }
 
 void encoderRightInterrupts(void)
 {
   if(digitalRead(encoderLeftDirc) == HIGH)
-    status.rightWheelCount++;
+    status.wheelCountRight++;
   else
-    status.leftWheelCount--;
+    status.wheelCountRight--;
 }
-/*===================  End Interrput functions  =======================*/
+
+
 
 void loop()
 {
+  
+/*===================  one time instructions  =======================*/
   //initail setup
-  status.initialize();
-  maze.initialize();
+  if(initializeState==false)
+  {
+    //set map size
+    cell[8][8].goal = true;   cell[8][9].goal = true;
+    cell[9][8].goal = true;   cell[9][9].goal = true;
+     
+    status.initialize();
+    maze.initialize();
+    
+    initializeState = true;
+  }
   
   //mapping
-  maze.mapping();
+  if(mappingState==false)
+  {
+    maze.mapping();
+    mappingState = true;
+  }
+  
+  
+/*===================  rascing instructions  =======================*/
+  
+  //racing
+  
+  //after reach gaol in racing, map again
+  
+  //go back to start
   
   
 }

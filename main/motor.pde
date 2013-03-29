@@ -38,9 +38,6 @@ void Motor::turnRight(int speed)
 //turn 180 degree
 void Motor::turnBack()
 {
-  int currentLeftCount = status.leftWheelCount;
-  int currentRightCount = status.rightWheelCount;
-  
   motorLeft(-fullSpeed/5000);
   motorRight(fullSpeed/5000);
 }

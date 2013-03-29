@@ -20,19 +20,9 @@ public:
   volatile int diagonalRightVolt;
   
   //position status
-  Cell *currentCell;
   volatile int orientation;      //set by sensor class
   volatile int deviation;        //set by sensor class
-  int compass;
-  
-  //encoder status
-  volatile int wheelCountLeft;      //set by timmer2 ch1
-  volatile int wheelCountRight;     //set by timmer2 ch1
-  
-  //motor status
-  int speedLeft;
-  int speedRight;
-  
+
 public:
   void initialize();
   void printAll();
