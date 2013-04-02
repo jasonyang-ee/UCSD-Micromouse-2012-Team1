@@ -31,7 +31,7 @@
 //orientation speed constant for fixOrientation
 #define orientationConstant 10
 #define deviationConstant 10
-#define turnRatio 10
+#define turnRatio 6/15
 #define fullSpeed 65535
 #define mappingSpeed 500
 
@@ -56,15 +56,14 @@
 #define motorLeft1 21    //motorLeft +  LOW    }gives forward
 #define motorLeft2 22    //motorLeft -  HIGH   }
 #define PWMRight 15
-#define motorRight1 18   //motorRight + HIGH   }gives forward
-#define motorRight2 19   //motorRight - LOW    }
-#define STBY 20
+#define motorRight1 25   //motorRight + HIGH   }gives forward
+#define motorRight2 26   //motorRight - LOW    }
 
 //encoder
 #define encoderLeftDirc 31
 #define encoderLeftCLK 30
-#define encoderRightDirc 29
-#define encoderRightCLK 28
+#define encoderRightDirc 18
+#define encoderRightCLK 19
 
 /*================== object declear ====================*/
 Maze maze;

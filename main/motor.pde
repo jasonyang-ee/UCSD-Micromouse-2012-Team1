@@ -2,18 +2,16 @@
 #include "motor.h"
 
 
-//self position adjustment
+/*===============  position adjustment  ===================*/
 void Motor::fixOrientation()
 {
-/*
   int correction = orientationConstant * status.orientation;
   motorRight(status.speedRight + correction);
   motorLeft(status.speedLeft - correction);
-*/
 }
 
 
-/*===============  action in the same position   ===================*/
+/*===============  action in the same position  ===================*/
 void Motor::stop()
 {
   motorLeft(0);
@@ -23,16 +21,19 @@ void Motor::stop()
 //stop and turn left
 void Motor::turnLeft(int speed)
 {
-  motorLeft(speed);
-  motorRight(speed*(5/16));    //turnning ratial between left and right
+  stop();
+  int encoderTemp = status.
+  motorLeft(-5);
+  motorRight(50);
+  
 }
 
 //stop and turn right
 void Motor::turnRight(int speed)
 {
   stop();
-  motorLeft(speed*(5/16));     //turnning ratial between left and right
-  motorRight(speed);
+  motorLeft(50);     //turnning ratial between left and right
+  motorRight(-10);
 }
 
 //turn 180 degree
@@ -43,11 +44,12 @@ void Motor::turnBack()
 }
 
 
-/*===============  action with changing position   ===================*/
+/*===============  action with changing position  ===================*/
 void Motor::goStraight(int speed)
 {
   motorRight(speed);
   motorLeft(speed);
+  fixOrientation();
 }
 
 //turn left while moving forward

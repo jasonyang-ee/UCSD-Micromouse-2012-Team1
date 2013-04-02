@@ -20,8 +20,6 @@ void setup()
   pinMode(PWMRight, PWM);
   pinMode(motorRight1, OUTPUT);
   pinMode(motorRight2, OUTPUT);  
-  pinMode(STBY, OUTPUT);
-  digitalWrite(STBY, HIGH);
   
   pinMode(encoderLeftCLK, INPUT);  //encoder clock pin
   pinMode(encoderLeftDirc, INPUT);  //encoder direction pin
@@ -40,10 +38,6 @@ void setup()
 
   attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
   attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
-
-  digitalWrite(ledOne, HIGH);
-  digitalWrite(ledTwo, HIGH);
-  digitalWrite(ledThree, HIGH);
 }
 
 /*===================  Interrput functions  =======================*/

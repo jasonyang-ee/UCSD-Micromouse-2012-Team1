@@ -33,13 +33,14 @@ void Sensor::runAllSensor()
 
 /*===================  private functions  =======================*/
 
-//controll individual sensor
+/*------------------  Version 1: blinking sensor  -------------------------*/
 int Sensor::runSensor(int sensorRef)
 {
   //obtain dark voltage with IR turned off
   digitalWrite(ledOne, LOW);
   digitalWrite(ledTwo, LOW);
   digitalWrite(ledThree, LOW);
+  idleVoltage = 0;
   for(int i=0; i<sampleNum; i++)
   {
     voltageTemp = analogRead(sensorRef);   //read voltage
@@ -52,6 +53,7 @@ int Sensor::runSensor(int sensorRef)
   togglePin(ledOne);
   togglePin(ledTwo);
   togglePin(ledThree);
+  activeVoltage = 0;
   for(int i=0; i<sampleNum; i++)
   {
     voltageTemp = analogRead(sensorRef);    //read voltage
@@ -62,6 +64,26 @@ int Sensor::runSensor(int sensorRef)
   resultVoltage = activeVoltage - idleVoltage;    //get result of difference between dark and active voltage
   return convertDistance(activeVoltage);
 }
+
+/*------------------  Version 2: turn-on sensor  -------------------------
+int Sensor::runSensor(int sensorRef)
+{
+  //obtain dark voltage with IR turned off
+  digitalWrite(ledOne, HIGH);
+  digitalWrite(ledTwo, HIGH);
+  digitalWrite(ledThree, HIGH);
+  
+  activeVoltage = 0;
+  for(int i=0; i<sampleNum; i++)
+  {
+    voltageTemp = analogRead(sensorRef);   //read voltage
+    activeVoltage += voltageTemp;            //sum all the voltage reading
+    delay(sampleRate);
+  }
+  activeVoltage /= sampleNum;                //get average reading
+  return convertDistance(activeVoltage);
+}
+*/
 
 
 /*===================  conversion functions  =======================*/
