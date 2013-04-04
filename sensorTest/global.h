@@ -4,6 +4,9 @@
 #include "sensor.h"
 #include "status.h"
 
+
+bool printing = false;
+
 /*================== Maze Constant ====================*/
 #define mazeSize 16      //used in maze initialize function
 
@@ -13,7 +16,7 @@
 /*================== Sensor Constant ====================*/
 
 //sensor interrupt
-#define sensorRate 1      // in period, 1 period = 1 ms
+#define sensorRate 100      // in period, 1 period = 1 ms
 
 //sensor sample rate and sample numbers
 #define sampleNum 20

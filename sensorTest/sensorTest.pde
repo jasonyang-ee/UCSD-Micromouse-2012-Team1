@@ -1,8 +1,11 @@
 #include "global.h"
 
+void sensorInterrupt(void);
+
 void setup()
 {
   //pin setup
+  SerialUSB.print("set\n");
   pinMode(sensorFrontLeft,INPUT_ANALOG);  //int sensorFrontLeft
   pinMode(sensorFrontRight,INPUT_ANALOG);  //int sensorFrontRight
   pinMode(sensorDiagonalLeft,INPUT_ANALOG);  //int sensorDiagonalLeft
@@ -16,7 +19,7 @@ void setup()
 
   //global interrupts for sensor
   Timer2.pause();
-  Timer2.setPrescaleFactor(72);                        // set freq = system(72MHz) / 72000 = 1kHz
+  Timer2.setPrescaleFactor(720);                        // set freq = system(72MHz) / 72000 = 1kHz
   Timer2.setPeriod(sensorRate);                        // Set up period, 1period = 1 ms
   Timer2.setChannel1Mode(TIMER_OUTPUT_COMPARE);        // CH1 of timer2 is pin D11
   Timer2.setCompare(TIMER_CH1, 1);                     // Interrupt for every 1 update
@@ -30,20 +33,25 @@ void setup()
 }
 
 /*===================  Interrput functions  =======================*/
+
 void sensorInterrupt(void)
 {
-  //push back current status to old status array
-  for (int i=9; i>0; i--)
-    oldStatus[i] = oldStatus[i-1];
-  oldStatus[0] = status;
-  //update current status
-  sensor.runAllSensor();
+  if(printing == false)
+  {
+    sensor.runAllSensor();
+    printing = true;
+  }
 }
 
 
 
 void loop()
 {
-  status.printAll();
+  delay(100);
+  int voltageTemp = analogRead(6);   //read voltage
+  SerialUSB.println(voltageTemp);
+  
+  if(printing == true)
+    status.printAll();
 }
 
