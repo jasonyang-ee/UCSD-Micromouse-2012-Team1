@@ -16,7 +16,8 @@ void Status::printAll()
   SerialUSB.println("Volt:\tDistance:");
   SerialUSB.print(status.diagonalLeftVolt); SerialUSB.print("\t");  SerialUSB.println(status.diagonalLeftDist);
   SerialUSB.print(status.sideLeftVolt); SerialUSB.print("\t"); SerialUSB.println(status.sideLeftDist);
-  SerialUSB.print(status.frontVolt); SerialUSB.print("\t"); SerialUSB.println(status.frontDist);
+  SerialUSB.print(status.leftFrontVolt); SerialUSB.print("\t"); SerialUSB.println(status.leftFrontDist);
+  SerialUSB.print(status.rightFrontVolt); SerialUSB.print("\t"); SerialUSB.println(status.rightFrontDist);
   SerialUSB.print(status.sideRightVolt); SerialUSB.print("\t"); SerialUSB.println(status.sideRightDist);
   SerialUSB.print(status.diagonalRightVolt); SerialUSB.print("\t"); SerialUSB.println(status.diagonalRightDist);
   SerialUSB.println();
