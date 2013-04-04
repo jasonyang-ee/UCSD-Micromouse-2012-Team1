@@ -5,7 +5,6 @@ void sensorInterrupt(void);
 void setup()
 {
   //pin setup
-  SerialUSB.print("set\n");
   pinMode(sensorFrontLeft,INPUT_ANALOG);  //int sensorFrontLeft
   pinMode(sensorFrontRight,INPUT_ANALOG);  //int sensorFrontRight
   pinMode(sensorDiagonalLeft,INPUT_ANALOG);  //int sensorDiagonalLeft
@@ -47,11 +46,12 @@ void sensorInterrupt(void)
 
 void loop()
 {
-  delay(100);
-  int voltageTemp = analogRead(6);   //read voltage
-  SerialUSB.println(voltageTemp);
+  delay(500);
   
   if(printing == true)
+  {
     status.printAll();
+    printing = false;
+  }
 }
 

@@ -42,8 +42,7 @@ int Sensor::runSensor(int sensorRef)
   digitalWrite(ledThree, HIGH);
   
   activeVoltage = 0;
-  voltageTemp = analogRead(sensorRef);   //read voltage
-  activeVoltage = voltageTemp / sampleNum;                //get average reading
+  activeVoltage = analogRead(sensorRef);   //read voltage
   return activeVoltage;
 }
 
