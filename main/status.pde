@@ -18,14 +18,15 @@ void Status::printAll()
 {
   SerialUSB.println("============= Sensor Values =============");
   SerialUSB.println("Volt:\tDistance:");
-  SerialUSB.print(diagonalLeftVolt, diagonalLeftVolt); SerialUSB.print("\t");  SerialUSB.println(diagonalLeftDist, diagonalLeftDist);
-  SerialUSB.print(sideLeftVolt, sideLeftVolt); SerialUSB.print("\t"); SerialUSB.println(sideLeftDist, sideLeftDist);
-  SerialUSB.print(frontVolt, frontVolt); SerialUSB.print("\t"); SerialUSB.println(frontDist, frontDist);
-  SerialUSB.print(sideRightVolt, sideRightVolt); SerialUSB.print("\t"); SerialUSB.println(sideRightDist, sideRightDist);
-  SerialUSB.print(diagonalRightVolt, diagonalRightVolt); SerialUSB.print("\t"); SerialUSB.println(diagonalRightDist, diagonalRightDist);
+  SerialUSB.print(status.diagonalLeftVolt); SerialUSB.print("\t");  SerialUSB.println(status.diagonalLeftDist);
+  SerialUSB.print(status.sideLeftVolt); SerialUSB.print("\t"); SerialUSB.println(status.sideLeftDist);
+  SerialUSB.print(status.leftFrontVolt); SerialUSB.print("\t"); SerialUSB.println(status.leftFrontDist);
+  SerialUSB.print(status.rightFrontVolt); SerialUSB.print("\t"); SerialUSB.println(status.rightFrontDist);
+  SerialUSB.print(status.sideRightVolt); SerialUSB.print("\t"); SerialUSB.println(status.sideRightDist);
+  SerialUSB.print(status.diagonalRightVolt); SerialUSB.print("\t"); SerialUSB.println(status.diagonalRightDist);
   SerialUSB.println();
   SerialUSB.println("============= Datas =============");
-  SerialUSB.print("Orientation: "); SerialUSB.println(orientation, orientation);
-  SerialUSB.print("Deviation: "); SerialUSB.println(deviation, deviation);
+  SerialUSB.print("Orientation: "); SerialUSB.println(status.orientation);
+  SerialUSB.print("Deviation: "); SerialUSB.println(status.deviation);
   SerialUSB.println();
 }

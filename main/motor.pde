@@ -21,26 +21,37 @@ void Motor::stop()
 //stop and turn left
 void Motor::turnLeft(int speed)
 {
-  stop();
-  int encoderTemp = status.
-  motorLeft(-5);
-  motorRight(50);
-  
+  int encoderTemp1, encoderTemp2;
+  stop();                                         //stop before turn
+  encoderTemp1 = status.wheelCountRight;          //store count
+  motorLeft(-5); motorRight(50);                  //speed for left and right
+  while(encoderTemp2 - encoderTemp1 < turnRatio)    
+    int encoderTemp2 = status.wheelCountRight;    //turnning
+  stop();                                         //stop after turn
 }
 
 //stop and turn right
 void Motor::turnRight(int speed)
 {
-  stop();
-  motorLeft(50);     //turnning ratial between left and right
-  motorRight(-10);
+  int encoderTemp1, encoderTemp2;
+  stop();                                         //stop before turn
+  encoderTemp1 = status.wheelCountRight;          //store count
+  motorLeft(50); motorRight(-10);                 //speed for left and right
+  while(encoderTemp2 - encoderTemp1 < turnRatio)    
+    int encoderTemp2 = status.wheelCountRight;    //turnning
+  stop();                                         //stop after turn
 }
 
 //turn 180 degree
 void Motor::turnBack()
 {
-  motorLeft(-fullSpeed/5000);
-  motorRight(fullSpeed/5000);
+  int encoderTemp1, encoderTemp2;
+  stop();                                                   //stop before turn
+  encoderTemp1 = status.wheelCountRight;                    //store count
+  motorLeft(-fullSpeed/5000); motorRight(fullSpeed/5000);   //speed for left and right
+  while(encoderTemp2 - encoderTemp1 < turnRatio)    
+    int encoderTemp2 = status.wheelCountRight;              //turnning
+  stop();                                                   //stop after turn
 }
 
 
@@ -56,13 +67,13 @@ void Motor::goStraight(int speed)
 void Motor::goLeft(int speed)
 {
   motorLeft(speed);
-  motorRight(speed/turnRatio);
+  motorRight(speed/driveRatio);
 }
 
 //turn right while moving forward
 void Motor::goRight(int speed)
 {
-  motorLeft(speed/turnRatio);
+  motorLeft(speed/driveRatio);
   motorRight(speed);
 }
 

@@ -18,7 +18,7 @@ void setup()
 
   //global interrupts for sensor
   Timer2.pause();
-  Timer2.setPrescaleFactor(720);                        // set freq = system(72MHz) / 72000 = 1kHz
+  Timer2.setPrescaleFactor(72);                        // set freq = system(72MHz) / 72000 = 1kHz
   Timer2.setPeriod(sensorRate);                        // Set up period, 1period = 1 ms
   Timer2.setChannel1Mode(TIMER_OUTPUT_COMPARE);        // CH1 of timer2 is pin D11
   Timer2.setCompare(TIMER_CH1, 1);                     // Interrupt for every 1 update

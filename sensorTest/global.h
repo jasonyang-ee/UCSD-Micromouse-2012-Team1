@@ -16,7 +16,7 @@ bool printing = false;
 /*================== Sensor Constant ====================*/
 
 //sensor interrupt
-#define sensorRate 100      // in period, 1 period = 1 ms
+#define sensorRate 5      // in period, 1 period = 1 ms
 
 //sensor sample rate and sample numbers
 #define sampleNum 20
@@ -32,7 +32,7 @@ bool printing = false;
 #define orientationConstant 10
 #define deviationConstant 10
 #define turnRatio 10
-#define fullSpeed 65535
+#define fullSpeed 65536  //2^16
 #define mappingSpeed 500
 
 

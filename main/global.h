@@ -16,11 +16,10 @@
 /*================== Sensor Constant ====================*/
 
 //sensor interrupt
-#define sensorRate 1      // in period, 1 period = 1 ms
+#define sensorRate 5      // in period, 1 period = 1 ms
 
 //sensor sample rate and sample numbers
 #define sampleNum 20
-#define sampleRate 1
 
 //minimun distance between wall and mouse in one cell
 #define wallExistDist 50
@@ -28,11 +27,14 @@
 
 /*================== Motor Constant ====================*/
 
-//orientation speed constant for fixOrientation
+//for fixOrientation
 #define orientationConstant 10
 #define deviationConstant 10
+
+//speed constant
 #define turnRatio 6/15
-#define fullSpeed 65535
+#define driveRatio 6/15
+#define fullSpeed 65536
 #define mappingSpeed 500
 
 
