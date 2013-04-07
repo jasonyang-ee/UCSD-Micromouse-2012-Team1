@@ -55,7 +55,6 @@ bool printing = false;
 /*================== object declear ====================*/
 Sensor sensor;
 Status status;
-Status oldStatus[10];
 
 
 #endif

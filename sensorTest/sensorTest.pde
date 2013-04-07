@@ -46,8 +46,7 @@ void sensorInterrupt(void)
 
 void loop()
 {
-  delay(500);
-  
+  delay(100);
   if(printing == true)
   {
     status.printAll();

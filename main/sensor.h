@@ -10,7 +10,7 @@ private:
   volatile int voltage;
 private:
   int runSensor(int);
-  int convertDistance(int, int);
+  void convertDistance(int, int);
   void setOrientation();
   void setDeviation();
 };

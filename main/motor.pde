@@ -5,9 +5,11 @@
 /*===============  position adjustment  ===================*/
 void Motor::fixOrientation()
 {
+  /*
   int correction = orientationConstant * status.orientation;
   motorRight(status.speedRight + correction);
   motorLeft(status.speedLeft - correction);
+  */
 }
 
 
@@ -23,9 +25,9 @@ void Motor::turnLeft(int speed)
 {
   int encoderTemp1, encoderTemp2;
   stop();                                         //stop before turn
-  encoderTemp1 = status.wheelCountRight;          //store count
-  motorLeft(-5); motorRight(50);                  //speed for left and right
-  while(encoderTemp2 - encoderTemp1 < turnRatio)    
+  encoderTemp1 = status.wheelCountRight;          //store counts
+  motorLeft(-turnSpeed); motorRight(turnSpeed);                  //speed for left and right
+  while(encoderTemp2 - encoderTemp1 < 56)    
     int encoderTemp2 = status.wheelCountRight;    //turnning
   stop();                                         //stop after turn
 }
@@ -35,9 +37,9 @@ void Motor::turnRight(int speed)
 {
   int encoderTemp1, encoderTemp2;
   stop();                                         //stop before turn
-  encoderTemp1 = status.wheelCountRight;          //store count
-  motorLeft(50); motorRight(-10);                 //speed for left and right
-  while(encoderTemp2 - encoderTemp1 < turnRatio)    
+  encoderTemp1 = status.wheelCountRight;          //store counts
+  motorLeft(turnSpeed); motorRight(-turnSpeed);                 //speed for left and right
+  while(encoderTemp2 - encoderTemp1 < 56)    
     int encoderTemp2 = status.wheelCountRight;    //turnning
   stop();                                         //stop after turn
 }
@@ -47,9 +49,9 @@ void Motor::turnBack()
 {
   int encoderTemp1, encoderTemp2;
   stop();                                                   //stop before turn
-  encoderTemp1 = status.wheelCountRight;                    //store count
-  motorLeft(-fullSpeed/5000); motorRight(fullSpeed/5000);   //speed for left and right
-  while(encoderTemp2 - encoderTemp1 < turnRatio)    
+  encoderTemp1 = status.wheelCountRight;                    //store counts
+  motorLeft(-turnSpeed); motorRight(turnSpeed);   //speed for left and right
+  while(encoderTemp2 - encoderTemp1 < 109)    
     int encoderTemp2 = status.wheelCountRight;              //turnning
   stop();                                                   //stop after turn
 }
@@ -58,8 +60,15 @@ void Motor::turnBack()
 /*===============  action with changing position  ===================*/
 void Motor::goStraight(int speed)
 {
-  motorRight(speed);
+   motorRight(speed);
   motorLeft(speed);
+  //fixOrientation();
+}
+
+void Motor::goBack(int speed)
+{
+  motorRight(-speed);
+  motorLeft(-speed);
   fixOrientation();
 }
 
@@ -86,8 +95,8 @@ void Motor::motorLeft(int speed)
   status.speedLeft = speed;    //update current motor speed
   if(speed == 0)
   {
-    digitalWrite(motorRight1, LOW);
-    digitalWrite(motorRight2, LOW);
+    digitalWrite(motorLeft1, LOW);
+    digitalWrite(motorLeft2, LOW);
   }
   else if(speed > 0)
   {
@@ -106,6 +115,7 @@ void Motor::motorLeft(int speed)
 
 void Motor::motorRight(int speed)
 {
+  SerialUSB.println("motor Right!!?");
   status.speedRight = speed;    //update current motor speed
   if(speed == 0)
   {
@@ -114,15 +124,16 @@ void Motor::motorRight(int speed)
   }
   else if(speed > 0)
   {
+    SerialUSB.println("Positive Speeed");
     digitalWrite(motorRight1, HIGH);
     digitalWrite(motorRight2, LOW);
     pwmWrite(PWMRight, speed); 
   }
   else if(speed < 0)
   {
-    digitalWrite(motorLeft1, LOW);
-    digitalWrite(motorLeft2, HIGH);
-    pwmWrite(PWMLeft, speed);
+    digitalWrite(motorRight1, LOW);
+    digitalWrite(motorRight2, HIGH);
+    pwmWrite(PWMRight, speed);
   }
   
 }

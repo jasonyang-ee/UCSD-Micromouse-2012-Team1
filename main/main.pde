@@ -43,11 +43,6 @@ void setup()
 /*===================  Interrput functions  =======================*/
 void sensorInterrupt(void)
 {
-  //push back current status to old status array
-  for (int i=9; i>0; i--)
-    oldStatus[i] = oldStatus[i-1];
-  oldStatus[0] = status;
-  //update current status
   sensor.runAllSensor();
 }
 
@@ -74,6 +69,7 @@ void loop()
   
 /*===================  one time instructions  =======================*/
   //initail setup
+/*
   if(initializeState==false)
   {
     //set map size
@@ -85,13 +81,28 @@ void loop()
     
     initializeState = true;
   }
-  
+*/  
+/*
   //mapping
   if(mappingState==false)
   {
     maze.mapping();
     mappingState = true;
   }
+*/
+  motor.goStraight(5000);
+  delay(2000);
+  motor.stop();
+  delay(2000);
+  motor.goBack(5000);
+  delay(2000);
+  motor.stop();
+  //delay(200);
+  //motor.turnLeft(5000);
+  //motor.turnRight(5000);
+  //motor.stop();
+  
+  
   
   
 /*===================  rascing instructions  =======================*/

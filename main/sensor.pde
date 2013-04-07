@@ -13,12 +13,12 @@ void Sensor::runAllSensor()
   status.diagonalRightVolt = (runSensor(sensorDiagonalRight));
  
   //update sensor value to status
-  status.leftFrontDist = convertDistance(status.leftFrontVolt, 1);
-  status.rightFrontDist = convertDistance(status.rightFrontVolt, 2);
-  status.sideLeftDist = convertDistance(status.sideLeftVolt, 3);
-  status.sideRightDist = convertDistance(status.sideRightVolt, 4);
-  status.diagonalLeftDist = convertDistance(status.diagonalLeftVolt, 5);
-  status.diagonalRightDist = convertDistance(status.diagonalRightVolt, 6);
+  convertDistance(status.leftFrontVolt, 1);
+  convertDistance(status.rightFrontVolt, 2);
+  convertDistance(status.sideLeftVolt, 3);
+  convertDistance(status.sideRightVolt, 4);
+  convertDistance(status.diagonalLeftVolt, 5);
+  convertDistance(status.diagonalRightVolt, 6);
   
   //update position value to status
   setOrientation();
@@ -51,22 +51,35 @@ int Sensor::runSensor(int sensorRef)
 
 
 /*===================  conversion functions  =======================*/
-int Sensor::convertDistance(int voltage, int cases)
+void Sensor::convertDistance(int v, int c)
 {
-  switch(cases)
+  double x = 1.0/v;
+  switch(c)
   {
+    //Front Left
     case 1:
-      return (1 / pow(voltage, 2) * 66.4 - 4.28);  // X = 1/V^2 ; Dist = 66.4X - 4.28
+      status.leftFrontDist = ( -493.24*x*x + 160.96*x + 0.0749 );  // dist = -493.24(1/V)^2 + 160.94(1/V) + 0.0749
+      break;
+    //Front Right
     case 2:
-      return (1 / pow(voltage, 2) * 66.4 - 4.28);  // X = 1/V^2 ; Dist = 66.4X - 4.28
+      status.rightFrontDist = ( -1142.4*x*x + 310.3*x - 1.0298 );  // dist = -1142.4(1/V)^2 + 310.3(1/V) - 1.0298
+      break;
+    //Side Left
     case 3:
-      return (1 / pow(voltage, 2) * 66.4 - 4.28);  // X = 1/V^2 ; Dist = 66.4X - 4.28
+      status.sideLeftDist = ( -414.6*x*x + 143*x - 0.9423 );  // dist = -414.6(1/V)^2 + 143(1/V) - 0.9423
+      break;
+    //Side Right
     case 4:
-      return (1 / pow(voltage, 2) * 66.4 - 4.28);  // X = 1/V^2 ; Dist = 66.4X - 4.28
+      status.sideRightDist = ( 773.41*x*x + 96.525*x - 0.6535 );  // dist = 773.41(1/V)^2 + 96.525(1/V) - 0.6535
+      break;
+    //Diagonal Left
     case 5:
-      return (1 / pow(voltage, 2) * 66.4 - 4.28);  // X = 1/V^2 ; Dist = 66.4X - 4.28
+      status.diagonalLeftDist = ( -284.62*x*x + 157.72*x - 0.21 );  // dist = -284.62(1/V)^2 + 157.72(1/V) - 0.21
+      break;
+    //Diagonal Left
     case 6:
-      return (1 / pow(voltage, 2) * 66.4 - 4.28);  // X = 1/V^2 ; Dist = 66.4X - 4.28
+      status.diagonalRightDist = ( 172.43*x*x + 151.56*x + 0.1636 );  // dist = 172.43(1/V)^2 + 151.56(1/V) + 0.1636
+      break;
   }
 }
 
