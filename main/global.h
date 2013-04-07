@@ -28,7 +28,7 @@
 /*================== Motor Constant ====================*/
 
 //for fixOrientation
-#define orientationConstant 10
+#define orientationConstant 500
 #define deviationConstant 10
 
 //speed constant

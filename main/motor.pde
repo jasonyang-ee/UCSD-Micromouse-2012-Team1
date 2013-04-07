@@ -5,11 +5,11 @@
 /*===============  position adjustment  ===================*/
 void Motor::fixOrientation()
 {
-  /*
+  
   int correction = orientationConstant * status.orientation;
   motorRight(status.speedRight + correction);
   motorLeft(status.speedLeft - correction);
-  */
+  
 }
 
 
@@ -92,11 +92,13 @@ void Motor::goRight(int speed)
 
 void Motor::motorLeft(int speed)
 {
+  speed *= 1.025;
   status.speedLeft = speed;    //update current motor speed
   if(speed == 0)
   {
     digitalWrite(motorLeft1, LOW);
     digitalWrite(motorLeft2, LOW);
+    pwmWrite(PWMLeft, 0);
   }
   else if(speed > 0)
   {
@@ -115,16 +117,15 @@ void Motor::motorLeft(int speed)
 
 void Motor::motorRight(int speed)
 {
-  SerialUSB.println("motor Right!!?");
   status.speedRight = speed;    //update current motor speed
   if(speed == 0)
   {
     digitalWrite(motorRight1, LOW);
     digitalWrite(motorRight2, LOW);
+    pwmWrite(PWMRight, 0);
   }
   else if(speed > 0)
   {
-    SerialUSB.println("Positive Speeed");
     digitalWrite(motorRight1, HIGH);
     digitalWrite(motorRight2, LOW);
     pwmWrite(PWMRight, speed); 

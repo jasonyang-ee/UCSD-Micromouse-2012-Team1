@@ -20,6 +20,8 @@ void setup()
   pinMode(PWMRight, PWM);
   pinMode(motorRight1, OUTPUT);
   pinMode(motorRight2, OUTPUT);  
+  pwmWrite(PWMLeft, 0);
+  pwmWrite(PWMRight, 0);
   
   pinMode(encoderLeftCLK, INPUT);  //encoder clock pin
   pinMode(encoderLeftDirc, INPUT);  //encoder direction pin
@@ -36,8 +38,9 @@ void setup()
   Timer2.refresh();                                    // Refresh the timer's count, prescale, and overflow
   Timer2.resume();                                     // Start the timer counting
 
-  attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
-  attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
+
+  //attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
+  //attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
 }
 
 /*===================  Interrput functions  =======================*/
@@ -56,7 +59,7 @@ void encoderLeftInterrupts(void)
 
 void encoderRightInterrupts(void)
 {
-  if(digitalRead(encoderLeftDirc) == HIGH)
+  if(digitalRead(encoderRightDirc) == HIGH)
     status.wheelCountRight++;
   else
     status.wheelCountRight--;
@@ -66,6 +69,20 @@ void encoderRightInterrupts(void)
 
 void loop()
 {
+  
+
+  if(status.rightFrontDist > 8)
+    motor.goStraight(5000);
+  else
+    motor.stop();
+  
+  status.printAll();
+  
+  /*
+  SerialUSB.print(status.wheelCountRight);
+  SerialUSB.print("\t");
+  SerialUSB.println(status.wheelCountLeft);
+  */
   
 /*===================  one time instructions  =======================*/
   //initail setup
@@ -90,18 +107,7 @@ void loop()
     mappingState = true;
   }
 */
-  motor.goStraight(5000);
-  delay(2000);
-  motor.stop();
-  delay(2000);
-  motor.goBack(5000);
-  delay(2000);
-  motor.stop();
-  //delay(200);
-  //motor.turnLeft(5000);
-  //motor.turnRight(5000);
-  //motor.stop();
-  
+
   
   
   

@@ -25,8 +25,12 @@ void Status::printAll()
   SerialUSB.print("DR"); SerialUSB.print("\t"); SerialUSB.print(status.diagonalRightVolt); SerialUSB.print("\t"); SerialUSB.println(status.diagonalRightDist);
   SerialUSB.print("SR"); SerialUSB.print("\t"); SerialUSB.print(status.sideRightVolt); SerialUSB.print("\t"); SerialUSB.println(status.sideRightDist);
   SerialUSB.println();
-  SerialUSB.println("============= Datas =============");
+  SerialUSB.println("================ Datas ================");
   SerialUSB.print("Orientation: "); SerialUSB.println(status.orientation);
   SerialUSB.print("Deviation: "); SerialUSB.println(status.deviation);
+  SerialUSB.println();
+  SerialUSB.println("=============== Encoder ===============");
+  SerialUSB.print("Encoder Left: "); SerialUSB.println(status.wheelCountLeft);
+  SerialUSB.print("Encoder Right: "); SerialUSB.println(status.wheelCountRight);
   SerialUSB.println();
 }
