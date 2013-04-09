@@ -5,17 +5,18 @@
 
 class Motor{
 public:
-  void fixOrientation();
+  void fixOrientation(int);
   void fixDeviation();
 public:
   void stop();
   void goStraight(int);
+  void goBack(int);
   void turnLeft(int);
   void turnRight(int);
   void turnBack();
   void goLeft(int);
   void goRight(int);
-private:
+public:
   void motorLeft(int);
   void motorRight(int);
 };

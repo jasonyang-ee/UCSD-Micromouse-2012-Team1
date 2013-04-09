@@ -1,4 +1,5 @@
 #include "global.h"
+boolean check;
 
 void setup()
 {
@@ -9,18 +10,20 @@ void setup()
   pinMode(sensorDiagonalRight,INPUT_ANALOG);  //int sensorDiagonalRight
   pinMode(sensorSideLeft,INPUT_ANALOG);  //int sensorSideLeft
   pinMode(sensorSideRight,INPUT_ANALOG);  //int sensorSideRight
-  
+
   pinMode(ledOne,OUTPUT);  //int led
   pinMode(ledTwo,OUTPUT);  //int led
   pinMode(ledThree,OUTPUT);  //int led
-  
+
   pinMode(PWMLeft, PWM);
   pinMode(motorLeft1, OUTPUT);
   pinMode(motorLeft2, OUTPUT);
   pinMode(PWMRight, PWM);
   pinMode(motorRight1, OUTPUT);
   pinMode(motorRight2, OUTPUT);  
-  
+  pwmWrite(PWMLeft, 0);
+  pwmWrite(PWMRight, 0);
+
   pinMode(encoderLeftCLK, INPUT);  //encoder clock pin
   pinMode(encoderLeftDirc, INPUT);  //encoder direction pin
   pinMode(encoderRightCLK, INPUT);
@@ -36,24 +39,27 @@ void setup()
   Timer2.refresh();                                    // Refresh the timer's count, prescale, and overflow
   Timer2.resume();                                     // Start the timer counting
 
+
   attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
   attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
+  check = false;
 }
 
 /*===================  Interrput functions  =======================*/
 void sensorInterrupt(void)
 {
-  //push back current status to old status array
-  for (int i=9; i>0; i--)
-    oldStatus[i] = oldStatus[i-1];
-  oldStatus[0] = status;
-  //update current status
   sensor.runAllSensor();
+  
+  if(status.rightFrontDist > 5)
+    motor.goStraight(5000);
+  else
+    motor.stop();
+  
 }
 
 void encoderLeftInterrupts(void)
 {
-  if(digitalRead(encoderLeftDirc) == HIGH)
+  if(digitalRead(encoderLeftDirc) == LOW)
     status.wheelCountLeft++;
   else
     status.wheelCountLeft--;
@@ -61,50 +67,76 @@ void encoderLeftInterrupts(void)
 
 void encoderRightInterrupts(void)
 {
-  if(digitalRead(encoderLeftDirc) == HIGH)
+  if(digitalRead(encoderRightDirc) == LOW)
     status.wheelCountRight++;
   else
     status.wheelCountRight--;
 }
 
-
-
 void loop()
 {
-  
-/*===================  one time instructions  =======================*/
+  status.printAll();
+  /*
+  if (check == false)
+   {
+   motor.turnRight(5000);
+   check = true;
+   }
+   else
+   motor.stop();
+   motor.stop();
+   */
+
+
+  /*
+  SerialUSB.print(status.rightFrontDist);
+   SerialUSB.print("\t");
+   SerialUSB.print(status.diagonalLeftDist);
+   SerialUSB.print("\t");
+   SerialUSB.print(status.diagonalRightDist);
+   SerialUSB.println("\t");
+   */
+
+
+/*  if(status.rightFrontDist > 5)
+    motor.goStraight(5000);
+  else
+    motor.stop();
+  */  
+  /*
+  SerialUSB.print(status.wheelCountRight);
+   SerialUSB.print("\t");
+   SerialUSB.println(status.wheelCountLeft);
+   */
+
+  /*===================  one time instructions  =======================*/
   //initail setup
+  /*
   if(initializeState==false)
-  {
-    //set map size
-    cell[8][8].goal = true;   cell[8][9].goal = true;
-    cell[9][8].goal = true;   cell[9][9].goal = true;
-     
-    status.initialize();
-    maze.initialize();
-    
-    initializeState = true;
-  }
-  
+   {
+   //set map size
+   cell[8][8].goal = true;   cell[8][9].goal = true;
+   cell[9][8].goal = true;   cell[9][9].goal = true;
+   
+   status.initialize();
+   maze.initialize();
+   
+   initializeState = true;
+   }
+   */
+  /*
   //mapping
-  if(mappingState==false)
-  {
-    maze.mapping();
-    mappingState = true;
-  }
-  
-  
-/*===================  rascing instructions  =======================*/
-  
-  //racing
-  
-  //after reach gaol in racing, map again
-  
-  //go back to start
-  
-  
+   if(mappingState==false)
+   {
+   maze.mapping();
+   mappingState = true;
+   }
+   */
+
+
 }
-  
+
+
 
 
 
