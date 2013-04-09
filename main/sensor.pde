@@ -3,22 +3,26 @@
 
 /*===================  public function  =======================*/
 void Sensor::runAllSensor()
-{   
+{ 
+  //run both front sensor to get better reading
+  int frontReading[3];
+  frontReading[1] = runSensor(sensorFrontLeft);
+  frontReading[2] = runSensor(sensorFrontRight);
+  frontReading[0] = frontReading[1]<frontReading[2] ? frontReading[1] : frontReading[2];
+  
   //update raw value to status
-  status.leftFrontVolt = (runSensor(sensorFrontLeft));
-  status.rightFrontVolt = (runSensor(sensorFrontRight));
+  status.frontVolt = frontReading[0];
   status.sideLeftVolt = (runSensor(sensorSideLeft));
   status.sideRightVolt = (runSensor(sensorSideRight));
   status.diagonalLeftVolt = (runSensor(sensorDiagonalLeft));
   status.diagonalRightVolt = (runSensor(sensorDiagonalRight));
  
   //update sensor value to status
-  convertDistance(status.leftFrontVolt, 1);
-  convertDistance(status.rightFrontVolt, 2);
-  convertDistance(status.sideLeftVolt, 3);
-  convertDistance(status.sideRightVolt, 4);
-  convertDistance(status.diagonalLeftVolt, 5);
-  convertDistance(status.diagonalRightVolt, 6);
+  status.frontDist = convertDistance(status.frontVolt);
+  status.sideLeftDist = convertDistance(status.sideLeftVolt);
+  status.sideRightDist = convertDistance(status.sideRightVolt);
+  status.diagonalLeftDist = convertDistance(status.diagonalLeftVolt);
+  status.diagonalRightDist = convertDistance(status.diagonalRightVolt);
   
   //update position value to status
   setOrientation();
@@ -29,59 +33,62 @@ void Sensor::runAllSensor()
 
 /*===================  private functions  =======================*/
 
-//controll individual sensor
+/*------------------  Version 1: blinking sensor  -------------------------*/
 int Sensor::runSensor(int sensorRef)
 {
-  //turn on IR
+  //obtain dark voltage with IR turned off
+  digitalWrite(ledOne, LOW);
+  digitalWrite(ledTwo, LOW);
+  digitalWrite(ledThree, LOW);
+  idleVoltage = 0;
+  for(int i=0; i<sampleNum; i++)
+  {
+    voltageTemp = analogRead(sensorRef);   //read voltage
+    idleVoltage += voltageTemp;            //sum all the voltage reading
+    delay(sampleRate);
+  }
+  idleVoltage /= sampleNum;                //get average reading
+  
+  //obtain active voltage with IR turned on
+  togglePin(ledOne);
+  togglePin(ledTwo);
+  togglePin(ledThree);
+  activeVoltage = 0;
+  for(int i=0; i<sampleNum; i++)
+  {
+    voltageTemp = analogRead(sensorRef);    //read voltage
+    activeVoltage += voltageTemp;           //sum all the voltage reading
+    delay(sampleRate);
+  }
+  activeVoltage /= sampleNum;                     //get average reading
+  resultVoltage = activeVoltage - idleVoltage;    //get result of difference between dark and active voltage
+  return convertDistance(activeVoltage);
+}
+
+/*------------------  Version 2: turn-on sensor  -------------------------
+int Sensor::runSensor(int sensorRef)
+{
+  //obtain dark voltage with IR turned off
   digitalWrite(ledOne, HIGH);
   digitalWrite(ledTwo, HIGH);
   digitalWrite(ledThree, HIGH);
   
-  voltage = 0;
+  activeVoltage = 0;
   for(int i=0; i<sampleNum; i++)
-    voltage += analogRead(sensorRef);
-  voltage /= sampleNum;
-  
-  //turn off IR
-  digitalWrite(ledOne, LOW);
-  digitalWrite(ledTwo, LOW);
-  digitalWrite(ledThree, LOW);
-  return voltage;
+  {
+    voltageTemp = analogRead(sensorRef);   //read voltage
+    activeVoltage += voltageTemp;            //sum all the voltage reading
+    delay(sampleRate);
+  }
+  activeVoltage /= sampleNum;                //get average reading
+  return convertDistance(activeVoltage);
 }
+*/
 
 
 /*===================  conversion functions  =======================*/
-void Sensor::convertDistance(int v, int c)
-{
-  double x = 1.0/v;
-  switch(c)
-  {
-    //Front Left
-    case 1:
-      status.leftFrontDist = ( -493.24*x*x + 160.96*x + 0.0749 );  // dist = -493.24(1/V)^2 + 160.94(1/V) + 0.0749
-      break;
-    //Front Right
-    case 2:
-      status.rightFrontDist = ( -1142.4*x*x + 310.3*x - 1.0298 );  // dist = -1142.4(1/V)^2 + 310.3(1/V) - 1.0298
-      break;
-    //Side Left
-    case 3:
-      status.sideLeftDist = ( -414.6*x*x + 143*x - 0.9423 );  // dist = -414.6(1/V)^2 + 143(1/V) - 0.9423
-      break;
-    //Side Right
-    case 4:
-      status.sideRightDist = ( 773.41*x*x + 96.525*x - 0.6535 );  // dist = 773.41(1/V)^2 + 96.525(1/V) - 0.6535
-      break;
-    //Diagonal Left
-    case 5:
-      status.diagonalLeftDist = ( -284.62*x*x + 157.72*x - 0.21 );  // dist = -284.62(1/V)^2 + 157.72(1/V) - 0.21
-      break;
-    //Diagonal Left
-    case 6:
-      status.diagonalRightDist = ( 172.43*x*x + 151.56*x + 0.1636 );  // dist = 172.43(1/V)^2 + 151.56(1/V) + 0.1636
-      break;
-  }
-}
+int Sensor::convertDistance(int voltage)
+{ return (1 / pow(voltage, 2) * 66.4 - 4.28); }  // X = 1/V^2 ; Dist = 66.4X - 4.28
 
 void Sensor::setOrientation()
 { status.orientation = status.diagonalLeftDist - status.diagonalRightDist; }

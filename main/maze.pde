@@ -70,7 +70,7 @@ void Maze::initialize()
       for(int i=0; i<4; i++) cell[y][x].wall[i] = false;
       cell[y][x].goal = false;
       cell[y][x].existance = true;
-    } 
+    }
   
   //assign goal to 4 cells
   cell[mazeSize/2-1][mazeSize/2-1].goal = true;

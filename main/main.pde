@@ -20,8 +20,6 @@ void setup()
   pinMode(PWMRight, PWM);
   pinMode(motorRight1, OUTPUT);
   pinMode(motorRight2, OUTPUT);  
-  pwmWrite(PWMLeft, 0);
-  pwmWrite(PWMRight, 0);
   
   pinMode(encoderLeftCLK, INPUT);  //encoder clock pin
   pinMode(encoderLeftDirc, INPUT);  //encoder direction pin
@@ -38,14 +36,18 @@ void setup()
   Timer2.refresh();                                    // Refresh the timer's count, prescale, and overflow
   Timer2.resume();                                     // Start the timer counting
 
-
-  //attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
-  //attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
+  attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
+  attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
 }
 
 /*===================  Interrput functions  =======================*/
 void sensorInterrupt(void)
 {
+  //push back current status to old status array
+  for (int i=9; i>0; i--)
+    oldStatus[i] = oldStatus[i-1];
+  oldStatus[0] = status;
+  //update current status
   sensor.runAllSensor();
 }
 
@@ -59,7 +61,7 @@ void encoderLeftInterrupts(void)
 
 void encoderRightInterrupts(void)
 {
-  if(digitalRead(encoderRightDirc) == HIGH)
+  if(digitalRead(encoderLeftDirc) == HIGH)
     status.wheelCountRight++;
   else
     status.wheelCountRight--;
@@ -70,23 +72,8 @@ void encoderRightInterrupts(void)
 void loop()
 {
   
-
-  if(status.rightFrontDist > 8)
-    motor.goStraight(5000);
-  else
-    motor.stop();
-  
-  status.printAll();
-  
-  /*
-  SerialUSB.print(status.wheelCountRight);
-  SerialUSB.print("\t");
-  SerialUSB.println(status.wheelCountLeft);
-  */
-  
 /*===================  one time instructions  =======================*/
   //initail setup
-/*
   if(initializeState==false)
   {
     //set map size
@@ -98,17 +85,13 @@ void loop()
     
     initializeState = true;
   }
-*/  
-/*
+  
   //mapping
   if(mappingState==false)
   {
     maze.mapping();
     mappingState = true;
   }
-*/
-
-  
   
   
 /*===================  rascing instructions  =======================*/

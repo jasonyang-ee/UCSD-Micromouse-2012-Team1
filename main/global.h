@@ -8,18 +8,19 @@
 #include "status.h"
 
 /*================== Maze Constant ====================*/
-#define mazeSize 16 //cells
+#define mazeSize 16
 
 /*================== Sensor Constant ====================*/
-#define cellLength 18 //cm
+#define cellLength 18
 
 /*================== Sensor Constant ====================*/
 
 //sensor interrupt
-#define sensorRate 5      // in period, 1 period = 1 ms
+#define sensorRate 1      // in period, 1 period = 1 ms
 
 //sensor sample rate and sample numbers
 #define sampleNum 20
+#define sampleRate 1
 
 //minimun distance between wall and mouse in one cell
 #define wallExistDist 50
@@ -27,16 +28,12 @@
 
 /*================== Motor Constant ====================*/
 
-//for fixOrientation
-#define orientationConstant 500
+//orientation speed constant for fixOrientation
+#define orientationConstant 10
 #define deviationConstant 10
-
-//speed constant
 #define turnRatio 6/15
-#define driveRatio 6/15
-#define fullSpeed 65536
+#define fullSpeed 65535
 #define mappingSpeed 500
-#define turnSpeed 3000
 
 
 /*================== Pin Constant ====================*/
@@ -55,10 +52,10 @@
 #define ledThree 14
 
 //motor
-#define PWMLeft 15
-#define motorLeft1 22    //motorLeft +  LOW    }gives forward
-#define motorLeft2 21    //motorLeft -  HIGH   }
-#define PWMRight 27
+#define PWMLeft 25
+#define motorLeft1 21    //motorLeft +  LOW    }gives forward
+#define motorLeft2 22    //motorLeft -  HIGH   }
+#define PWMRight 15
 #define motorRight1 25   //motorRight + HIGH   }gives forward
 #define motorRight2 26   //motorRight - LOW    }
 
@@ -66,7 +63,7 @@
 #define encoderLeftDirc 31
 #define encoderLeftCLK 30
 #define encoderRightDirc 18
-#define encoderRightCLK 16
+#define encoderRightCLK 19
 
 /*================== object declear ====================*/
 Maze maze;
