@@ -5,16 +5,16 @@
 void Sensor::runAllSensor()
 {   
   //update raw value to status
-  status.leftFrontVolt = (runSensor(sensorFrontLeft));
-  status.rightFrontVolt = (runSensor(sensorFrontRight));
+  status.frontLeftVolt = (runSensor(sensorFrontLeft));
+  status.frontRightVolt = (runSensor(sensorFrontRight));
   status.sideLeftVolt = (runSensor(sensorSideLeft));
   status.sideRightVolt = (runSensor(sensorSideRight));
   status.diagonalLeftVolt = (runSensor(sensorDiagonalLeft));
   status.diagonalRightVolt = (runSensor(sensorDiagonalRight));
  
   //update sensor value to status
-  convertDistance(status.leftFrontVolt, 1);
-  convertDistance(status.rightFrontVolt, 2);
+  convertDistance(status.frontLeftVolt, 1);
+  convertDistance(status.frontRightVolt, 2);
   convertDistance(status.sideLeftVolt, 3);
   convertDistance(status.sideRightVolt, 4);
   convertDistance(status.diagonalLeftVolt, 5);
@@ -58,11 +58,11 @@ void Sensor::convertDistance(int v, int c)
   {
     //Front Left
     case 1:
-      status.leftFrontDist = ( -493.24*x*x + 160.96*x + 0.0749 );  // dist = -493.24(1/V)^2 + 160.94(1/V) + 0.0749
+      status.frontLeftDist = ( -493.24*x*x + 160.96*x + 0.0749 );  // dist = -493.24(1/V)^2 + 160.94(1/V) + 0.0749
       break;
     //Front Right
     case 2:
-      status.rightFrontDist = ( -1142.4*x*x + 310.3*x - 1.0298 );  // dist = -1142.4(1/V)^2 + 310.3(1/V) - 1.0298
+      status.frontRightDist = ( -1142.4*x*x + 310.3*x - 1.0298 );  // dist = -1142.4(1/V)^2 + 310.3(1/V) - 1.0298
       break;
     //Side Left
     case 3:
@@ -88,6 +88,9 @@ void Sensor::setOrientation()
 
 void Sensor::setDeviation()
 { status.deviation = status.sideLeftDist - status.sideRightDist; }
+
+void Sensor::setBalance()
+{ status.balance = status.frontLeftDist - status.frontRightDist; }
 
 
 

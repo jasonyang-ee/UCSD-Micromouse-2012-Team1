@@ -6,16 +6,16 @@
 class Status{
 public:
   //sensor status
-  volatile double leftFrontDist;
-  volatile double rightFrontDist;
+  volatile double frontLeftDist;
+  volatile double frontRightDist;
   volatile double sideLeftDist;
   volatile double sideRightDist;
   volatile double diagonalLeftDist;
   volatile double diagonalRightDist;
   
   //raw sensor status
-  volatile int leftFrontVolt;
-  volatile int rightFrontVolt;
+  volatile int frontLeftVolt;
+  volatile int frontRightVolt;
   volatile int sideLeftVolt;
   volatile int sideRightVolt;
   volatile int diagonalLeftVolt;
@@ -25,6 +25,7 @@ public:
   Cell *currentCell;
   volatile double orientation;      //set by sensor class
   volatile double deviation;        //set by sensor class
+  volatile double balance;
   int compass;
   
   //encoder status

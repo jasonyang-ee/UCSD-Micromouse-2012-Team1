@@ -1,5 +1,4 @@
 #include "global.h"
-boolean check;
 
 void setup()
 {
@@ -42,7 +41,6 @@ void setup()
 
   attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
   attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
-  check = false;
 }
 
 /*===================  Interrput functions  =======================*/
@@ -50,11 +48,72 @@ void sensorInterrupt(void)
 {
   sensor.runAllSensor();
   
-  if(status.rightFrontDist > 5)
-    motor.goStraight(5000);
-  else
-    motor.stop();
+  //
   
+  
+  int scenario;
+
+  switch (scenario)
+  {
+    case 1: //straightaway, walls on both left and right side
+      if (status.frontRightDist > 5 && (status.diagonalRightDist < 5 && status.diagonalLeftDist < 5))
+        motor.goStraight (5000);
+      else
+      {
+        //need a function here to cruise into the middle of the cell or soemthing, idk
+        //from there, jump to scenario -1
+        //scenario = -1;
+      }
+      break;
+    case 2:	// left turn
+                //modify turnLeft to keep turning, bring the if statement here;
+                //since global interupt runs every millisecond, and turning left takes longer than that
+      if (status.wheelCountLeft < turnCount)
+        motor.turnLeft (5000); 
+      else
+      {
+        motor.stop();
+        scenario = -1;			
+      }
+      break;
+    case 3: // right turn
+            //same as above
+      if (status.wheelCountLeft < turnCount)
+        motor.turnRight (5000);
+      else
+      {
+        motor.stop();
+        scenario = -1;
+      }
+      break;
+    case 4: //180 Degree Turn
+      if (status.wheelCountLeft < UturnCount)
+        motor.turnRight (5000);
+      else
+      {
+        motor.stop();
+        scenario = -1;
+      }
+      break;
+    case 5: //floodfill?
+            //floodfill();
+      break;
+    default:
+            // checks front to see that there's no wall there, and the left/right diagonals to be sure there are walls there
+      if (status.frontRightDist > 5 && (status.diagonalRightDist < 5 && status.diagonalLeftDist < 5))  
+        scenario = 1;
+            //also need a scenario to like... drive up to the middle of a cell without wobbling.
+            //right/left diagonals will flag higher than 5 before the mouse actually gets into the cell
+      else
+      {
+        if (status.sideRightDist > 5)
+          scenario = 3;
+        else if (status.sideLeftDist > 5)
+          scenario = 2;
+        else 
+          scenario = 4;
+      }
+  }
 }
 
 void encoderLeftInterrupts(void)
@@ -75,7 +134,11 @@ void encoderRightInterrupts(void)
 
 void loop()
 {
-  status.printAll();
+  while(status.frontRightDist > 5)
+    motor.goStraight(5000);
+  motor.stop();
+  delay(1000);  
+    motor.turnLeft(3000);
   /*
   if (check == false)
    {

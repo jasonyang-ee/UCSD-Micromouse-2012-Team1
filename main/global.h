@@ -22,7 +22,7 @@
 #define sampleNum 20
 
 //minimun distance between wall and mouse in one cell
-#define wallExistDist 50
+#define wallExistDist 7
 
 
 /*================== Motor Constant ====================*/
@@ -38,6 +38,8 @@
 #define fullSpeed 65536
 #define mappingSpeed 5000
 #define turnSpeed 3000
+#define turnCount 23
+#define UturnCount 56
 
 
 /*================== Pin Constant ====================*/

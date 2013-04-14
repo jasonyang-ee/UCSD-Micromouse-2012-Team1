@@ -13,6 +13,7 @@ private:
   void convertDistance(int, int);
   void setOrientation();
   void setDeviation();
+  void setBalance();
 };
 
 #endif

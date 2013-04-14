@@ -5,11 +5,25 @@
 /*===============  position adjustment  ===================*/
 void Motor::fixOrientation(int speed)
 {
-  
-  int correction = round(orientationConstant * status.orientation);
-  motorRight(speed + correction);
-  motorLeft(speed - correction);
-  
+  int correction;
+  if(status.diagonalLeftDist < wallExistDist && status.diagonalRightDist < wallExistDist)
+  {
+    correction = round(orientationConstant * status.orientation);
+    motorRight(speed + correction);
+    motorLeft(speed - correction);
+  }
+  else if(status.sideLeftDist < wallExistDist && status.sideRightDist < wallExistDist)
+  {
+    correction = round(orientationConstant * status.deviation);
+    motorRight(speed + correction);
+    motorLeft(speed - correction);
+  }
+  else if(status.frontLeftDist < wallExistDist && status.frontRightDist < wallExistDist)
+  {
+    correction = round(orientationConstant * status.balance);
+    motorRight(speed + correction);
+    motorLeft(speed - correction);
+  }
 }
 
 
@@ -61,9 +75,9 @@ void Motor::turnBack()
 /*===============  action with changing position  ===================*/
 void Motor::goStraight(int speed)
 {
-//   motorRight(speed);
-//  motorLeft(speed);
-  fixOrientation(speed);
+   motorRight(speed);
+  motorLeft(speed);
+//  fixOrientation(speed);
 }
 
 void Motor::goBack(int speed)
