@@ -2,7 +2,7 @@
 #include "maze.h"
 
 /*===================  public functions  =======================*/
-void Maze::mapping()
+void Maze::floodFill()
 {
   int speed = mappingSpeed;
   while(status.currentCell->goal == false)
@@ -30,13 +30,7 @@ void Maze::mapping()
 }
 
 
-/*===================  private functions  =======================*/
 
-void Maze::floodFill()
-{
-  
-  
-}
 
 
 /*===================  initialize functions  =======================*/
