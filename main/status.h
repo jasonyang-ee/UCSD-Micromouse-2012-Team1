@@ -21,12 +21,20 @@ public:
   volatile int diagonalLeftVolt;
   volatile int diagonalRightVolt;
   
+  //running mode
+  int mode;
+  
   //position status
   Cell *currentCell;
   volatile double orientation;      //set by sensor class
   volatile double deviation;        //set by sensor class
   volatile double balance;
   int compass;
+  
+  //old position
+  double oldOrientation;
+  double oldDeviation;
+  double oldBalance;
   
   //encoder status
   volatile int wheelCountLeft;      //set by timmer2 ch1

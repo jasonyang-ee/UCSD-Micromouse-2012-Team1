@@ -9,7 +9,8 @@ void Status::initialize()
   sensor.runAllSensor();
   compass = 0;
   wheelCountLeft = 0;
-  wheelCountRight = 0; 
+  wheelCountRight = 0;
+  mode = mapping;
 }
 
 /*===================  debug functions  =======================*/
@@ -28,6 +29,7 @@ void Status::printAll()
   SerialUSB.println("================ Datas ================");
   SerialUSB.print("Orientation: "); SerialUSB.println(status.orientation);
   SerialUSB.print("Deviation: "); SerialUSB.println(status.deviation);
+  SerialUSB.print("Balance: "); SerialUSB.println(status.balance);
   SerialUSB.println();
   SerialUSB.println("=============== Encoder ===============");
   SerialUSB.print("Encoder Left: "); SerialUSB.println(status.wheelCountLeft);

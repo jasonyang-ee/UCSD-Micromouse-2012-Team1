@@ -38,8 +38,8 @@
 #define fullSpeed 65536
 #define mappingSpeed 5000
 #define turnSpeed 3000
-#define turnCount 23
-#define UturnCount 56
+#define turnCount 100
+#define UturnCount 200
 
 
 /*================== Pin Constant ====================*/
@@ -78,10 +78,10 @@ Motor motor;
 Cell cell[16][16];  //CELL cell[y][x];
 Cell emptyCell;
 Status status;
-Status oldStatus[10];
 
 /*================== mouse state ====================*/
 bool initializeState = false;
-bool mappingState = false;
+#define mapping 1
+#define racing 2
 
 #endif
