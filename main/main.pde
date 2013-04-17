@@ -3,7 +3,7 @@
 
 void setup()
 {
-test
+test on mac
   //pin setup
   pinMode(sensorFrontLeft,INPUT_ANALOG);  //int sensorFrontLeft
   pinMode(sensorFrontRight,INPUT_ANALOG);  //int sensorFrontRight
