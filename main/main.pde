@@ -1,7 +1,9 @@
 #include "global.h"
 
+
 void setup()
 {
+test
   //pin setup
   pinMode(sensorFrontLeft,INPUT_ANALOG);  //int sensorFrontLeft
   pinMode(sensorFrontRight,INPUT_ANALOG);  //int sensorFrontRight
