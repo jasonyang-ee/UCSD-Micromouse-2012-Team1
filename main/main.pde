@@ -50,7 +50,7 @@ void globalInterrupt(void)
   sensor.runAllSensor();
   
   //Mapping motor handling
-  mortor.applyMotorMapping();
+  //motor.applyMotorMapping();
 
 }
 
@@ -75,6 +75,7 @@ void encoderRightInterrupts(void)
 void loop()
 {
 /*===================  one time instructions  =======================*/
+/*
   //initail setup
   if(initializeState==false)
    {
@@ -85,20 +86,26 @@ void loop()
 
 
 /*===================  Encoder testing  =======================*/
+
   SerialUSB.print(status.wheelCountRight);
   SerialUSB.print("\t");
   SerialUSB.println(status.wheelCountLeft);
 
 
 /*===================  Turnning test  =======================*/
-/*
-  while(status.frontRightDist > 5)
-    motor.goStraight(5000);
-  motor.stop();
-  delay(1000);
-    motor.turnLeft(3000);
-*/
 
+  if(status.frontRightDist > 5)
+    while(status.frontRightDist > 5)
+      motor.goStraight(8000);
+  motor.stop();
+  if(status.frontRightDist > 5)
+    while(status.frontRightDist > 5)
+      motor.goBack(8000);
+  motor.stop();
+
+
+
+/*===================  END  =======================*/
 }
 
 

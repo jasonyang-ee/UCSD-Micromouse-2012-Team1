@@ -309,14 +309,14 @@ void Motor::motorLeft(int speed)
   }
   else if(speed > 0)
   {
-    digitalWrite(motorLeft1, LOW);
-    digitalWrite(motorLeft2, HIGH);
+    digitalWrite(motorLeft1, HIGH);
+    digitalWrite(motorLeft2, LOW);
     pwmWrite(PWMLeft, speed);
   }
   else
   {
-    digitalWrite(motorLeft1, HIGH);
-    digitalWrite(motorLeft2, LOW);
+    digitalWrite(motorLeft1, LOW);
+    digitalWrite(motorLeft2, HIGH);
     pwmWrite(PWMLeft, abs(speed));
   }
   
