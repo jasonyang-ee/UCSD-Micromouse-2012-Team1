@@ -2,7 +2,7 @@
 #include "maze.h"
 
 /*===================  public functions  =======================*/
-void Maze::mapping()
+void Maze::floodFill()
 {
   int speed = mappingSpeed;
   while(status.currentCell->goal == false)
@@ -30,13 +30,7 @@ void Maze::mapping()
 }
 
 
-/*===================  private functions  =======================*/
 
-void Maze::floodFill()
-{
-  
-  
-}
 
 
 /*===================  initialize functions  =======================*/
@@ -70,7 +64,7 @@ void Maze::initialize()
       for(int i=0; i<4; i++) cell[y][x].wall[i] = false;
       cell[y][x].goal = false;
       cell[y][x].existance = true;
-    }
+    } 
   
   //assign goal to 4 cells
   cell[mazeSize/2-1][mazeSize/2-1].goal = true;

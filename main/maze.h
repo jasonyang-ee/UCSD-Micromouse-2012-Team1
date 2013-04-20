@@ -5,9 +5,6 @@
 
 class Maze{
 public:
-  void mapping();
-  
-private:
   void floodFill();
   
 public:

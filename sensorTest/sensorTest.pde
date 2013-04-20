@@ -1,5 +1,7 @@
 #include "global.h"
 
+void sensorInterrupt(void);
+
 void setup()
 {
   //pin setup
@@ -30,20 +32,25 @@ void setup()
 }
 
 /*===================  Interrput functions  =======================*/
+
 void sensorInterrupt(void)
 {
-  //push back current status to old status array
-  for (int i=9; i>0; i--)
-    oldStatus[i] = oldStatus[i-1];
-  oldStatus[0] = status;
-  //update current status
-  sensor.runAllSensor();
+  if(printing == false)
+  {
+    sensor.runAllSensor();
+    printing = true;
+  }
 }
 
 
 
 void loop()
 {
-  status.printAll();
+  delay(100);
+  if(printing == true)
+  {
+    status.printAll();
+    printing = false;
+  }
 }
 

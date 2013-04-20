@@ -7,18 +7,12 @@ class Sensor{
 public:
   void runAllSensor();
 private:
-  volatile int voltageTemp;
-  volatile int idleVoltage;
-  volatile int activeVoltage;
-  volatile int resultVoltage;
+  volatile int voltage;
 private:
   int runSensor(int);
-  int convertDistance(int);
+  void convertDistance(int, int);
   void setOrientation();
   void setDeviation();
-  
-public:
-  void printAll();
 };
 
 #endif

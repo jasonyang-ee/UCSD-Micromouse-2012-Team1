@@ -1,24 +1,38 @@
-int dir = 29;
-int clock = 28;
-
-volatile int count = 0;
+#include "global.h"
 
 void setup()
 {
-  pinMode(dir, INPUT);
-  pinMode(clock, INPUT);
-  attachInterrupt(clock, encode, CHANGE);
+  //pin setup
+  pinMode(encoderLeftCLK, INPUT);  //encoder clock pin
+  pinMode(encoderLeftDirc, INPUT);  //encoder direction pin
+  pinMode(encoderRightCLK, INPUT);
+  pinMode(encoderRightDirc, INPUT);
+
+  attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
+  attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
 }
+
+
+/*===================  Interrput functions  =======================*/
+void encoderLeftInterrupts(void)
+{
+  if(digitalRead(encoderLeftDirc) == HIGH)
+    status.wheelCountLeft++;
+  else
+    status.wheelCountLeft--;
+}
+
+void encoderRightInterrupts(void)
+{
+  if(digitalRead(encoderLeftDirc) == HIGH)
+    status.wheelCountRight++;
+  else
+    status.wheelCountRight--;
+}
+
+
 
 void loop()
 {
-  SerialUSB.println(count);
-}
-
-void encode()
-{
-  if (digitalRead(dir) == HIGH)
-    count++;
-  else
-    count--;
+  status.printAll();
 }

@@ -8,32 +8,40 @@
 #include "status.h"
 
 /*================== Maze Constant ====================*/
-#define mazeSize 16
+#define mazeSize 16 //cells
 
 /*================== Sensor Constant ====================*/
-#define cellLength 18
+#define cellLength 18 //cm
 
 /*================== Sensor Constant ====================*/
 
 //sensor interrupt
-#define sensorRate 1      // in period, 1 period = 1 ms
+#define sensorRate 5      // in period, 1 period = 1 ms
 
 //sensor sample rate and sample numbers
 #define sampleNum 20
-#define sampleRate 1
 
 //minimun distance between wall and mouse in one cell
-#define wallExistDist 50
+#define wallExistDist 7
 
 
 /*================== Motor Constant ====================*/
 
-//orientation speed constant for fixOrientation
-#define orientationConstant 10
+//for fixOrientation
+#define orientationConstant 1800 //for mapping, might need to
+                                 //increase for speed run
 #define deviationConstant 10
-#define turnRatio 10
-#define fullSpeed 65535
-#define mappingSpeed 500
+
+//speed constant
+#define fullSpeed 65536
+#define mappingSpeed 5000
+#define turnSpeed 3000
+
+#define driveRatio 6/15
+
+#define turnCount 100
+#define UturnCount 200
+#define driveTurnCount 300
 
 
 /*================== Pin Constant ====================*/
@@ -52,19 +60,18 @@
 #define ledThree 14
 
 //motor
-#define PWMLeft 25
-#define motorLeft1 21    //motorLeft +  LOW    }gives forward
-#define motorLeft2 22    //motorLeft -  HIGH   }
-#define PWMRight 15
-#define motorRight1 18   //motorRight + HIGH   }gives forward
-#define motorRight2 19   //motorRight - LOW    }
-#define STBY 20
+#define PWMLeft 15
+#define motorLeft1 22    //motorLeft +  LOW    }gives forward
+#define motorLeft2 21    //motorLeft -  HIGH   }
+#define PWMRight 27
+#define motorRight1 25   //motorRight + HIGH   }gives forward
+#define motorRight2 26   //motorRight - LOW    }
 
 //encoder
 #define encoderLeftDirc 31
 #define encoderLeftCLK 30
-#define encoderRightDirc 29
-#define encoderRightCLK 28
+#define encoderRightDirc 18
+#define encoderRightCLK 16
 
 /*================== object declear ====================*/
 Maze maze;
@@ -73,10 +80,10 @@ Motor motor;
 Cell cell[16][16];  //CELL cell[y][x];
 Cell emptyCell;
 Status status;
-Status oldStatus[10];
 
 /*================== mouse state ====================*/
 bool initializeState = false;
-bool mappingState = false;
+#define mapping 1
+#define racing 2
 
 #endif

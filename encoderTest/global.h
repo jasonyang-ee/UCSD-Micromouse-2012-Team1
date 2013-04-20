@@ -1,14 +1,10 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include "sensor.h"
 #include "status.h"
 
-
-bool printing = false;
-
 /*================== Maze Constant ====================*/
-#define mazeSize 16      //used in maze initialize function
+#define mazeSize 16
 
 /*================== Sensor Constant ====================*/
 #define cellLength 18
@@ -16,7 +12,7 @@ bool printing = false;
 /*================== Sensor Constant ====================*/
 
 //sensor interrupt
-#define sensorRate 5      // in period, 1 period = 1 ms
+#define sensorRate 1      // in period, 1 period = 1 ms
 
 //sensor sample rate and sample numbers
 #define sampleNum 20
@@ -32,7 +28,7 @@ bool printing = false;
 #define orientationConstant 10
 #define deviationConstant 10
 #define turnRatio 10
-#define fullSpeed 65536  //2^16
+#define fullSpeed 65535
 #define mappingSpeed 500
 
 
@@ -51,10 +47,26 @@ bool printing = false;
 #define ledTwo 13
 #define ledThree 14
 
+//motor
+#define PWMLeft 25
+#define motorLeft1 21    //motorLeft +  LOW    }gives forward
+#define motorLeft2 22    //motorLeft -  HIGH   }
+#define PWMRight 15
+#define motorRight1 25   //motorRight + HIGH   }gives forward
+#define motorRight2 26   //motorRight - LOW    }
+
+//encoder
+#define encoderLeftDirc 31
+#define encoderLeftCLK 30
+#define encoderRightDirc 18
+#define encoderRightCLK 16
 
 /*================== object declear ====================*/
-Sensor sensor;
 Status status;
+Status oldStatus[10];
 
+/*================== mouse state ====================*/
+bool initializeState = false;
+bool mappingState = false;
 
 #endif

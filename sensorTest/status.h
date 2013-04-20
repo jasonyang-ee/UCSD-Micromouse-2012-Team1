@@ -6,14 +6,16 @@
 class Status{
 public:
   //sensor status
-  volatile int frontDist;
-  volatile int sideLeftDist;
-  volatile int sideRightDist;
-  volatile int diagonalLeftDist;
-  volatile int diagonalRightDist;
+  volatile double leftFrontDist;
+  volatile double rightFrontDist;
+  volatile double sideLeftDist;
+  volatile double sideRightDist;
+  volatile double diagonalLeftDist;
+  volatile double diagonalRightDist;
   
   //raw sensor status
-  volatile int frontVolt;
+  volatile int leftFrontVolt;
+  volatile int rightFrontVolt;
   volatile int sideLeftVolt;
   volatile int sideRightVolt;
   volatile int diagonalLeftVolt;

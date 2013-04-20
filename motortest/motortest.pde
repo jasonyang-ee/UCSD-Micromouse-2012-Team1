@@ -1,10 +1,10 @@
-const int PWMA = 25;
-const int AIN2 = 22;
-const int AIN1 = 21;
-const int STBY = 20;
-const int BIN1 = 19;
-const int BIN2 = 18;
-const int PWMB = 15;
+const int PWMA = 15;
+const int AIN2 = 21;
+const int AIN1 = 22;
+
+const int BIN1 = 25;
+const int BIN2 = 26;
+const int PWMB = 27;
 
 void setup()
 {
@@ -13,9 +13,7 @@ void setup()
   pinMode(AIN1, OUTPUT);
   pinMode(BIN1, OUTPUT);
   pinMode(BIN2, OUTPUT);  
-  pinMode(STBY, OUTPUT);
   pinMode(PWMB, PWM);
-  digitalWrite(STBY, HIGH);
   
 }
 
@@ -26,8 +24,8 @@ void loop()
   
   digitalWrite(BIN1, LOW);
   digitalWrite(BIN2, HIGH);
-  pwmWrite(PWMA, 2768);
-  pwmWrite(PWMB, 2768);
+  pwmWrite(PWMA, 640000);
+  pwmWrite(PWMB, 640000);
   
   delay (2000);
   
@@ -36,8 +34,8 @@ void loop()
   
   digitalWrite(BIN1, HIGH);
   digitalWrite(BIN2, LOW);
-  pwmWrite(PWMA, 5536);
-  pwmWrite(PWMB, 5536);
+  pwmWrite(PWMA, 640000);
+  pwmWrite(PWMB, 640000);
   
   delay(3000);
   
