@@ -33,13 +33,15 @@
 #define deviationConstant 10
 
 //speed constant
-#define turnRatio 6/15
-#define driveRatio 6/15
 #define fullSpeed 65536
 #define mappingSpeed 5000
 #define turnSpeed 3000
+
+#define driveRatio 6/15
+
 #define turnCount 100
 #define UturnCount 200
+#define driveTurnCount 300
 
 
 /*================== Pin Constant ====================*/

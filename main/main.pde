@@ -50,7 +50,7 @@ void globalInterrupt(void)
   sensor.runAllSensor();
   
   //Mapping motor handling
-
+  mortor.applyMotorMapping();
 
 }
 
@@ -78,14 +78,9 @@ void loop()
   //initail setup
   if(initializeState==false)
    {
-   //set map size
-   cell[8][8].goal = true;   cell[8][9].goal = true;
-   cell[9][8].goal = true;   cell[9][9].goal = true;
-   
-   status.initialize();
-   maze.initialize();
-   
-   initializeState = true;
+     status.initialize();
+     maze.initialize();
+     initializeState = true;
    }
 
 

@@ -72,7 +72,7 @@ void Motor::applyMotorMapping(int scenario)
 }
 
 
-/*===================  Mapping scenario handling  =======================*/
+/*===================  Racing scenario handling  =======================*/
 void Motor::applyMotorRacing(int scenario)
 {
   switch (scenario)
@@ -218,6 +218,7 @@ void Motor::turnLeft(int speed)
   while(status.wheelCountLeft - encoderTemp1 < turnCount)    
     continue;                                              //turnning
   stop();                                                  //stop after turn
+  status.compass = (status.compass-1)%4;
 }
 
 //stop and turn right
@@ -231,6 +232,7 @@ void Motor::turnRight(int speed)
   while(status.wheelCountLeft - encoderTemp1 < turnCount)    
     continue;                                             //turnning
   stop();                                                 //stop after turn
+  status.compass = (status.compass+1)%4;
 }
 
 //turn 180 degree
@@ -244,6 +246,7 @@ void Motor::turnBack()
   while(status.wheelCountLeft - encoderTemp1 < UturnCount)    
     continue;                                             //turnning
   stop();                                                 //stop after turn
+  status.compass = (status.compass+2)%4;
 }
 
 
@@ -263,15 +266,31 @@ void Motor::goBack(int speed)
 //turn left while moving forward
 void Motor::goLeft(int speed)
 {
-  motorLeft(speed);
+  int encoderTemp1 = status.wheelCountLeft;
+  int speedTempLeft = status.speedLeft;                    //store speed
+  int speedTempRight = status.speedRight;
+  motorLeft(speed);                                        //set turn speed
   motorRight(speed/driveRatio);
+  while(status.wheelCountLeft - encoderTemp1 < driveTurnCount)    
+    continue;                                              //turnning
+  status.compass = (status.compass-1)%4;                   //update compass
+  motorLeft(speedTempLeft);                                //resotre old speed
+  motorRight(speedTempRight);
 }
 
 //turn right while moving forward
 void Motor::goRight(int speed)
 {
-  motorLeft(speed/driveRatio);
+  int encoderTemp1 = status.wheelCountLeft;
+  int speedTempLeft = status.speedLeft;                    //store speed
+  int speedTempRight = status.speedRight;
+  motorLeft(speed/driveRatio);                             //set turn speed
   motorRight(speed);
+  while(status.wheelCountLeft - encoderTemp1 < driveTurnCount)    
+    continue;                                              //turnning
+  status.compass = (status.compass+1)%4;                   //update compass
+  motorLeft(speedTempLeft);                                //resotre old speed
+  motorRight(speedTempRight);
 }
 
 
