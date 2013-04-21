@@ -40,7 +40,7 @@ void setup()
   Timer2.resume();                                     // Start the timer counting
 
   attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
-  attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
+  //attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
 }
 
 /*===================  Interrput functions  =======================*/
@@ -49,14 +49,15 @@ void globalInterrupt(void)
   //Sensor
   sensor.runAllSensor();
   
+  
   //Mapping motor handling
-  mortor.applyMotorMapping();
+  //motor.applyMotorMapping(1);
 
 }
 
 void encoderLeftInterrupts(void)
 {
-  if(digitalRead(encoderLeftDirc) == LOW)
+  if(digitalRead(encoderLeftDirc) == HIGH)
     status.wheelCountLeft++;
   else
     status.wheelCountLeft--;
@@ -64,7 +65,7 @@ void encoderLeftInterrupts(void)
 
 void encoderRightInterrupts(void)
 {
-  if(digitalRead(encoderRightDirc) == LOW)
+  if(digitalRead(encoderRightDirc) == HIGH)
     status.wheelCountRight++;
   else
     status.wheelCountRight--;
@@ -75,6 +76,7 @@ void encoderRightInterrupts(void)
 void loop()
 {
 /*===================  one time instructions  =======================*/
+/*
   //initail setup
   if(initializeState==false)
    {
@@ -85,20 +87,38 @@ void loop()
 
 
 /*===================  Encoder testing  =======================*/
-  SerialUSB.print(status.wheelCountRight);
+/*
+  SerialUSB.print(status.wheelCountLeft);
   SerialUSB.print("\t");
-  SerialUSB.println(status.wheelCountLeft);
+  SerialUSB.println(status.wheelCountRight);
+
+
+
+
+/*===================  Sensor testing  =======================*/
+/*
+  status.printAll();
+
+/*===================  Driving test  =======================*/
+/*
+  if(status.frontLeftDist > 5)
+    motor.goStraight(driveSpeed);
+  motor.stop();
 
 
 /*===================  Turnning test  =======================*/
-/*
-  while(status.frontRightDist > 5)
-    motor.goStraight(5000);
-  motor.stop();
-  delay(1000);
-    motor.turnLeft(3000);
-*/
 
+  if(turn==false)
+  {
+    motor.turnLeft(turnSpeed);
+    turn = true;
+  }
+
+
+
+
+
+/*===================  END  =======================*/
 }
 
 

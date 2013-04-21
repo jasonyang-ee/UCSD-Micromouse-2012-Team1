@@ -143,12 +143,12 @@ void Motor::applyMotorRacing(int scenario)
 }
 
 
-/*===================  PID position adjustment  =======================*/
-void Motor::fixOrientation(int speed)
+/*===================  Go straight adjustment  =======================*/
+void Motor::goStraightPID(int speed)
 {
   int correction;
   
-  //mapping mode correction
+/*----------  mapping mode correction  ----------*/
   if(status.mode == mapping)
   {
     //when diagonal sensor can still read
@@ -175,7 +175,7 @@ void Motor::fixOrientation(int speed)
     //else dont correct
   }
   
-  //racing mode correction
+/*-------------  racing mode correction  ----------*/
   else if(status.mode == racing)
   {
     if(status.diagonalLeftDist < wallExistDist && status.diagonalRightDist < wallExistDist)
@@ -210,26 +210,34 @@ void Motor::stop()
 //stop and turn left
 void Motor::turnLeft(int speed)
 {
-  int encoderTemp1, encoderTemp2;
+  int countBegin = status.wheelCountLeft;
+  int error, sumError=0;
+  int prevCount = status.wheelCountLeft;
+  int turnKP, turnKI, turnKD;
+  turnKP = 10000/speed;
+  turnKI = 0.001;
+  turnKD = speed*0.5;
   stop();                                                  //stop before turn
-  encoderTemp1 = status.wheelCountLeft;                    //store counts
-  motorLeft(-turnSpeed);
-  motorRight(turnSpeed);                                   //speed for left and right
-  while(status.wheelCountLeft - encoderTemp1 < turnCount)    
-    continue;                                              //turnning
+  while(status.wheelCountLeft - (countBegin-turnCount) > 0)
+  {
+    error = status.wheelCountLeft - (countBegin-turnCount);
+    sumError += error;
+    motorLeft(-1 *(speed + turnKP*error + turnKI*(sumError) + turnKD*(status.wheelCountLeft - prevCount)));
+    motorRight(speed + turnKP*error + turnKI*(sumError) + turnKD*(status.wheelCountLeft - prevCount));
+    prevCount = status.wheelCountLeft;
+  }
   stop();                                                  //stop after turn
-  status.compass = (status.compass-1)%4;
+  status.compass = (status.compass+3)%4;
 }
 
 //stop and turn right
 void Motor::turnRight(int speed)
 {
-  int encoderTemp1, encoderTemp2;
+  int encoderTemp = status.wheelCountLeft;
   stop();                                                 //stop before turn
-  encoderTemp1 = status.wheelCountLeft;                   //store counts
   motorLeft(turnSpeed); 
   motorRight(-turnSpeed);                                 //speed for left and right
-  while(status.wheelCountLeft - encoderTemp1 < turnCount)    
+  while( abs(status.wheelCountLeft - encoderTemp) < turnCount)    
     continue;                                             //turnning
   stop();                                                 //stop after turn
   status.compass = (status.compass+1)%4;
@@ -238,14 +246,13 @@ void Motor::turnRight(int speed)
 //turn 180 degree
 void Motor::turnBack()
 {
-  int encoderTemp1, encoderTemp2;
+  int encoderTemp = status.wheelCountLeft;
   stop();                                                 //stop before turn
-  encoderTemp1 = status.wheelCountLeft;                   //store counts
   motorLeft(-turnSpeed);
   motorRight(turnSpeed);                                  //speed for left and right
-  while(status.wheelCountLeft - encoderTemp1 < UturnCount)    
+  while( abs(status.wheelCountLeft - encoderTemp) < UturnCount)    
     continue;                                             //turnning
-  stop();                                                 //stop after turn
+  motor.stop();                                                 //stop after turn
   status.compass = (status.compass+2)%4;
 }
 
@@ -253,14 +260,22 @@ void Motor::turnBack()
 /*===============  action with changing position  ===================*/
 void Motor::goStraight(int speed)
 {
-  motorRight(speed);
-  motorLeft(speed);
-  fixOrientation(speed);
+  int error, sumError=0;
+  int prevOrientation = status.orientation;
+  int turnKP, turnKI, turnKD;
+  turnKP = 10000/speed;
+  turnKI = 0.001;
+  turnKD = speed*0.5;
+    error = status.orientation;
+    sumError += error;
+    motorLeft(speed + turnKP*error + turnKI*(sumError) + turnKD*(status.orientation - prevOrientation));
+    motorRight(speed + turnKP*error + turnKI*(sumError) + turnKD*(status.orientation - prevOrientation));
+    prevOrientation = status.orientation;
 }
 
 void Motor::goBack(int speed)
 {
-  fixOrientation(-speed);
+  goStraightPID(-speed);
 }
 
 //turn left while moving forward
@@ -273,7 +288,7 @@ void Motor::goLeft(int speed)
   motorRight(speed/driveRatio);
   while(status.wheelCountLeft - encoderTemp1 < driveTurnCount)    
     continue;                                              //turnning
-  status.compass = (status.compass-1)%4;                   //update compass
+  status.compass = (status.compass+3)%4;                   //update compass
   motorLeft(speedTempLeft);                                //resotre old speed
   motorRight(speedTempRight);
 }
@@ -299,7 +314,9 @@ void Motor::goRight(int speed)
 
 void Motor::motorLeft(int speed)
 {
-  //speed *= 1.025;
+  if(speed > fullSpeed) speed = fullSpeed;
+  if(speed < -fullSpeed) speed = -fullSpeed;
+  
   status.speedLeft = speed;    //update current motor speed
   if(speed == 0)
   {
@@ -309,14 +326,14 @@ void Motor::motorLeft(int speed)
   }
   else if(speed > 0)
   {
-    digitalWrite(motorLeft1, LOW);
-    digitalWrite(motorLeft2, HIGH);
+    digitalWrite(motorLeft1, HIGH);
+    digitalWrite(motorLeft2, LOW);
     pwmWrite(PWMLeft, speed);
   }
   else
   {
-    digitalWrite(motorLeft1, HIGH);
-    digitalWrite(motorLeft2, LOW);
+    digitalWrite(motorLeft1, LOW);
+    digitalWrite(motorLeft2, HIGH);
     pwmWrite(PWMLeft, abs(speed));
   }
   
@@ -324,6 +341,9 @@ void Motor::motorLeft(int speed)
 
 void Motor::motorRight(int speed)
 {
+  if(speed > fullSpeed) speed = fullSpeed;
+  if(speed < -fullSpeed) speed = -fullSpeed;
+  
   status.speedRight = speed;    //update current motor speed
   if(speed == 0)
   {

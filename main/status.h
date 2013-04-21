@@ -31,11 +31,6 @@ public:
   volatile double balance;
   int compass;
   
-  //old position
-  double oldOrientation;
-  double oldDeviation;
-  double oldBalance;
-  
   //encoder status
   volatile int wheelCountLeft;      //set by timmer2 ch1
   volatile int wheelCountRight;     //set by timmer2 ch1
