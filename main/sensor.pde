@@ -85,18 +85,32 @@ void Sensor::convertDistance(int v, int c)
 
 void Sensor::setOrientation()
 {
+  status.oldOrientation = status.orientation;
   status.orientation = status.diagonalLeftDist*.707 - status.diagonalRightDist*.707;   // distance measurement*cos45 for distance away from wall
 }
 
 void Sensor::setDeviation()
 {
+  status.oldDeviation = status.deviation;
   status.deviation = status.sideLeftDist - status.sideRightDist;
 }
 
 void Sensor::setBalance()
 {
+  status.oldBalance = status.balance;
   status.balance = status.frontLeftDist - status.frontRightDist;
 }
 
 
-
+float Sensor::rightError()
+{
+  int setpoint1 = 11;
+  int setpoint2 = 3.59;
+  
+  float error = (status.diagonalRightDist - setpoint1);
+  
+  error +=( error < 0 ? (setpoint2 - status.sideRightDist):(status.sideRightDist - setpoint2) );
+  
+  return error/2;
+    
+}
