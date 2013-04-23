@@ -203,6 +203,12 @@ void Motor::goStraightPID(int speed)
 /*==================  action in the same position  =====================*/
 void Motor::stop()
 {
+  int count = status.wheelCountLeft;
+  while( abs(abs(status.wheelCountLeft)-abs(count)) > 10 )
+  {
+    motorLeft(-status.speedLeft);
+    motorRight(-status.speedRight);
+  }
   motorLeft(0);
   motorRight(0);
 }
@@ -210,22 +216,41 @@ void Motor::stop()
 //stop and turn left
 void Motor::turnLeft(int speed)
 {
-  int countBegin = status.wheelCountLeft;
+  status.wheelCountLeft = 0;
+  int error;
+  while(error > 15)
+  {
+    error = turnCount + status.wheelCountLeft;
+    motorLeft(-speed);
+    motorRight(speed);
+  }
+  
+/*  
   int error, sumError=0;
   int prevCount = status.wheelCountLeft;
-  int turnKP, turnKI, turnKD;
-  turnKP = 10000/speed;
-  turnKI = 0.001;
-  turnKD = speed*0.5;
-  stop();                                                  //stop before turn
-  while(status.wheelCountLeft - (countBegin-turnCount) > 0)
+  int turnKP = speed/500;
+  int turnKI = 0.0001;
+  int turnKD = 10;
+  int state = 1, count = 0;
+  int PID;
+  stop();
+  status.wheelCountLeft = 0;
+  while(count<3)
   {
-    error = status.wheelCountLeft - (countBegin-turnCount);
+    error = turnCount + status.wheelCountLeft;
     sumError += error;
-    motorLeft(-1 *(speed + turnKP*error + turnKI*(sumError) + turnKD*(status.wheelCountLeft - prevCount)));
-    motorRight(speed + turnKP*error + turnKI*(sumError) + turnKD*(status.wheelCountLeft - prevCount));
+    PID = turnKP*error - turnKI*(sumError) + turnKD*(status.wheelCountLeft - prevCount);
+    motorLeft(PID*state*-1);
+    motorRight(PID*state);
     prevCount = status.wheelCountLeft;
+    if(error*state<0) 
+    {
+      state*=-1;
+      count++;
+    }
   }
+*/  
+  
   stop();                                                  //stop after turn
   status.compass = (status.compass+3)%4;
 }

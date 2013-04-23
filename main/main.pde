@@ -88,11 +88,12 @@ void loop()
 
 /*===================  Encoder testing  =======================*/
 /*
+
   SerialUSB.print(status.wheelCountLeft);
   SerialUSB.print("\t");
-  SerialUSB.println(status.wheelCountRight);
-
-
+  SerialUSB.print(status.wheelCountRight);
+  SerialUSB.print("\t");
+  SerialUSB.println(status.speedLeft);
 
 
 /*===================  Sensor testing  =======================*/
@@ -114,6 +115,15 @@ void loop()
     turn = true;
   }
 
+
+/*===================  FullSpeed test  =======================*/
+/*
+  int count = status.wheelCountLeft;
+  
+  if(status.wheelCountLeft - count < 5000)
+    motor.goStraight(fullSpeed);
+  else
+    motor.stop();
 
 
 
