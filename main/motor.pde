@@ -1,13 +1,14 @@
 
 #include "motor.h"
 
-/*===================  Mapping scenario handling  =======================*/
-void Motor::applyMotorMapping(int scenario)
-{
-  switch (scenario)
+void Motor::motorInstruction(int scenario)
+{ 
+  /*===================  Mapping scenario handling  =======================*/
+  if(mode == mapping)
   {
-    /*-----  straightaway, walls on both left and right side  -----*/
-    case 1:
+  /*-----  straightaway, walls on both left and right side  -----*/
+    if(scenario == 1)
+    {
       if (status.frontRightDist > 5 && (status.diagonalRightDist < 5 && status.diagonalLeftDist < 5))
         motor.goStraight (5000);
       else
@@ -16,12 +17,13 @@ void Motor::applyMotorMapping(int scenario)
         //from there, jump to scenario -1
         //scenario = -1;
       }
-      break;
-      
+    }
+    
     /*-----  left turn  -----*/
-    case 2:
-                //modify turnLeft to keep turning, bring the if statement here;
-                //since global interupt runs every millisecond, and turning left takes longer than that
+    else if(scenario == 2)
+    {
+      //modify turnLeft to keep turning, bring the if statement here;
+      //since global interupt runs every millisecond, and turning left takes longer than that
       if (status.wheelCountLeft < turnCount)
         motor.turnLeft (5000); 
       else
@@ -29,11 +31,12 @@ void Motor::applyMotorMapping(int scenario)
         motor.stop();
         scenario = -1;			
       }
-      break;
-      
+    }
+    
     /*-----  right turn  -----*/
-    case 3:
-            //same as above
+    else if(scenario == 3)
+    {
+      //same as above
       if (status.wheelCountLeft < turnCount)
         motor.turnRight (5000);
       else
@@ -41,9 +44,11 @@ void Motor::applyMotorMapping(int scenario)
         motor.stop();
         scenario = -1;
       }
-      break;
+    }
+    
     /*-----  180 Degree Turn  -----*/
-    case 4:
+    else if(scenario == 4)
+    {
       if (status.wheelCountLeft < UturnCount)
         motor.turnRight (5000);
       else
@@ -51,10 +56,12 @@ void Motor::applyMotorMapping(int scenario)
         motor.stop();
         scenario = -1;
       }
-      break;
+    }
+    
     /*-----  case -1  -----*/
-    default:
-            // checks front to see that there's no wall there, and the left/right diagonals to be sure there are walls there
+    else if(scenario == -1)
+    {
+      // checks front to see that there's no wall there, and the left/right diagonals to be sure there are walls there
       if (status.frontRightDist > 5 && (status.diagonalRightDist < 5 && status.diagonalLeftDist < 5))  
         scenario = 1;
             //also need a scenario to like... drive up to the middle of a cell without wobbling.
@@ -68,17 +75,15 @@ void Motor::applyMotorMapping(int scenario)
         else 
           scenario = 4;
       }
+    }
   }
-}
-
-
-/*===================  Racing scenario handling  =======================*/
-void Motor::applyMotorRacing(int scenario)
-{
-  switch (scenario)
+  
+  /*===================  Racing scenario handling  =======================*/
+  else if(mode == raicing)
   {
     /*-----  straightaway, walls on both left and right side  -----*/
-    case 1:
+    if(scenario == 1)
+    {
       if (status.frontRightDist > 5 && (status.diagonalRightDist < 5 && status.diagonalLeftDist < 5))
         motor.goStraight (5000);
       else
@@ -87,12 +92,13 @@ void Motor::applyMotorRacing(int scenario)
         //from there, jump to scenario -1
         //scenario = -1;
       }
-      break;
-      
+    }
+
     /*-----  left turn  -----*/
-    case 2:
-                //modify turnLeft to keep turning, bring the if statement here;
-                //since global interupt runs every millisecond, and turning left takes longer than that
+    else if(scenario == 2)
+    {
+      //modify turnLeft to keep turning, bring the if statement here;
+      //since global interupt runs every millisecond, and turning left takes longer than that
       if (status.wheelCountLeft < turnCount)
         motor.turnLeft (5000); 
       else
@@ -100,11 +106,12 @@ void Motor::applyMotorRacing(int scenario)
         motor.stop();
         scenario = -1;			
       }
-      break;
+    }
       
     /*-----  right turn  -----*/
-    case 3:
-            //same as above
+    else if(scenario == 3)
+    {
+      //same as above
       if (status.wheelCountLeft < turnCount)
         motor.turnRight (5000);
       else
@@ -112,9 +119,11 @@ void Motor::applyMotorRacing(int scenario)
         motor.stop();
         scenario = -1;
       }
-      break;
+    }
+
     /*-----  180 Degree Turn  -----*/
-    case 4:
+    else if(scenario == 4)
+    {
       if (status.wheelCountLeft < UturnCount)
         motor.turnRight (5000);
       else
@@ -122,14 +131,16 @@ void Motor::applyMotorRacing(int scenario)
         motor.stop();
         scenario = -1;
       }
-      break;
+    }
+
     /*-----  case -1  -----*/
-    default:
-            // checks front to see that there's no wall there, and the left/right diagonals to be sure there are walls there
+    else if(scenario == -1)
+    {
+      // checks front to see that there's no wall there, and the left/right diagonals to be sure there are walls there
       if (status.frontRightDist > 5 && (status.diagonalRightDist < 5 && status.diagonalLeftDist < 5))  
         scenario = 1;
-            //also need a scenario to like... drive up to the middle of a cell without wobbling.
-            //right/left diagonals will flag higher than 5 before the mouse actually gets into the cell
+        //also need a scenario to like... drive up to the middle of a cell without wobbling.
+        //right/left diagonals will flag higher than 5 before the mouse actually gets into the cell
       else
       {
         if (status.sideRightDist > 5)
@@ -139,6 +150,7 @@ void Motor::applyMotorRacing(int scenario)
         else 
           scenario = 4;
       }
+    }
   }
 }
 
