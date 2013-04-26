@@ -30,6 +30,8 @@ public:
   volatile double deviation;        //set by sensor class
   volatile double balance;
   int compass;
+  int x; //Current X position of Mouse
+  int y; //Current Y position of Mouse
   
   //old position
   double oldOrientation;

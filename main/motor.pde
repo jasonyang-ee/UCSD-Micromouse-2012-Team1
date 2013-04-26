@@ -4,9 +4,10 @@
 /*===================  Mapping scenario handling  =======================*/
 void Motor::applyMotorMapping(int scenario)
 {
+  
   switch (scenario)
   {
-    /*-----  straightaway, walls on both left and right side  -----*/
+    //*-----  straightaway, walls on both left and right side  -----*/
     case 1:
       if (status.frontRightDist > 5 && (status.diagonalRightDist < 5 && status.diagonalLeftDist < 5))
         motor.goStraight (5000);
@@ -69,6 +70,7 @@ void Motor::applyMotorMapping(int scenario)
           scenario = 4;
       }
   }
+  */
 }
 
 
@@ -256,6 +258,21 @@ void Motor::goStraight(int speed)
   motorRight(speed);
   motorLeft(speed);
   fixOrientation(speed);
+}
+
+//Austin's
+void Motor::goStraightOne (int speed)              //Moves Forward One Cell
+{
+  status.wheelCountRight = 0;
+  status.wheelCountLeft = 0;
+  
+  while (((status.wheelCountRight + status.wheelCountLeft)/2) <= cellLength)
+  {
+    motorRight (speed);
+    motorLeft (speed);
+    fixOrientation(speed);
+  }
+  stop();
 }
 
 void Motor::goBack(int speed)

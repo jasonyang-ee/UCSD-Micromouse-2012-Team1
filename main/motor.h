@@ -12,6 +12,9 @@ public:
 public:
   void stop();
   void goStraight(int);
+  
+  void goStraightOne (int);
+  
   void goBack(int);
   void turnLeft(int);
   void turnRight(int);
