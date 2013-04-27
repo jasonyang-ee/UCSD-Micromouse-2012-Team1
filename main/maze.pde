@@ -25,9 +25,9 @@ void Maze::mapping()
       
       
       //set wall if haven't yet
-      if (cell[status.y][status.x].visit = false)
+      if (cell[status.y][status.x].visit == false)
       {
-        if (directx == 0)                                //Adds wall for current cell it is in. (Need an exception case for start?)
+        if (directx == 0)                                //Adds wall for current cell it is in.
         {
           cell[status.y][status.x].wall[0]=false;
           cell[status.y][status.x].wall[1]=true;
@@ -77,7 +77,7 @@ void Maze::mapping()
       motor.turnLeft (speed);
       
       
-      if (cell[status.y][status.x].visit = false)
+      if (cell[status.y][status.x].visit == false)
       {
         if (directy == 1)                                        //Inefficient way to account for all mouse directions.
         {
@@ -136,7 +136,7 @@ void Maze::mapping()
     {
       motor.turnRight (speed);
       
-      if (cell[status.y][status.x].visit = false)
+      if (cell[status.y][status.x].visit == false)
       {
         if (directy == 1)                                        //Inefficient way to account for all mouse directions.
         {
@@ -172,7 +172,7 @@ void Maze::mapping()
         }
       }
         
-      if (directx == 0)          //Changes direction
+      if (directx == 0)          //Changes direction-Turn Right
       {
         directx = directy;
         directy = 0;
@@ -195,7 +195,7 @@ void Maze::mapping()
     {
       motor.turnBack;
       
-      if (cell[status.y][status.x].visit = false)
+      if (cell[status.y][status.x].visit == false)
       {
         if (directy == 1)                                        //Inefficient way to account for all mouse directions.
         {
@@ -231,7 +231,7 @@ void Maze::mapping()
         }
       }
     
-      if (directx == 0)          //Changes direction
+      if (directx == 0)          //Changes direction-Turn Back
         directy *= -1;
       else
         directx *= -1;
@@ -250,12 +250,12 @@ void Maze::mapping()
       
       //Maps out Walls Based on Direction if not visited
       
-      if (cell[status.y][status.x].visit = false)
+      if (cell[status.y][status.x].visit == false)
       {
         if (directy == 1)                                        //Inefficient way to account for all mouse directions.
         {
           cell[status.y][status.x].wall[0]=true;
-          cell[status.y][status.x].wall[1]=true;
+          cell[status.y][status.x].wall[1]=false;
           cell[status.y][status.x].wall[2]=false;
           cell[status.y][status.x].wall[3]=false;      
           cell[status.y][status.x].visit = true;
@@ -265,20 +265,20 @@ void Maze::mapping()
           cell[status.y][status.x].wall[0]=false;
           cell[status.y][status.x].wall[1]=false;
           cell[status.y][status.x].wall[2]=true;
-          cell[status.y][status.x].wall[3]=true;      
+          cell[status.y][status.x].wall[3]=false;      
           cell[status.y][status.x].visit = true;
         }
         else if (directx == 1)
         {
           cell[status.y][status.x].wall[0]=false;
           cell[status.y][status.x].wall[1]=true;
-          cell[status.y][status.x].wall[2]=true;
+          cell[status.y][status.x].wall[2]=false;
           cell[status.y][status.x].wall[3]=false;      
           cell[status.y][status.x].visit = true;
         }
         else //directx == -1
         {
-          cell[status.y][status.x].wall[0]=true;
+          cell[status.y][status.x].wall[0]=false;
           cell[status.y][status.x].wall[1]=false;
           cell[status.y][status.x].wall[2]=false;
           cell[status.y][status.x].wall[3]=true;      
@@ -298,6 +298,10 @@ void Maze::mapping()
       {
         motor.turnBack;
         nextdead = true;
+        if (directx == 0)          //Changes direction-Turn Back
+          directy *= -1;
+        else
+          directx *= -1;
       }
       
       else if (cell[status.y - directx][status.x + directy].dead = true && cell[status.y + directx][status.x - directy].dead = false) //If only Right Dead
@@ -305,6 +309,16 @@ void Maze::mapping()
         motor.turnLeft (speed);
         if (cell[status.y - directy][status.x - directx].dead = true)                                           //If behind also dead, will kill this path at next intersection
           nextdead = true;
+        if (directx == 0)                 //Changes direction-Turn Left
+        {
+          directx = -1*directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = directx;
+          directx = 0;
+        }
       }
       
       else if (cell[status.y - directx][status.x + directy].dead = false && cell[status.y + directx][status.x - directy].dead = true) //If only Left Dead
@@ -312,22 +326,625 @@ void Maze::mapping()
         motor.turnRight (speed);
         if (cell[status.y - directy][status.x - directx].dead = true)                                           //If behind also dead, will kill this path at next intersection
           nextdead = true;
+        if (directx == 0)          //Changes direction-Turn Right
+        {
+          directx = directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = -1*directx;
+          directx = 0;
+        }
       }
       
       else if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directx][status.x - directy].visit = true) //If Visited Both, turn Right (choice)
+      {
         motor.turnRight (speed);
+        if (directx == 0)          //Changes direction-Turn Right
+        {
+          directx = directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = -1*directx;
+          directx = 0;
+        }
+      }
       
       else if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directx][status.x - directy].visit = false) //If Visited Right, turn Left
+      {
         motor.turnLeft (speed);
+        if (directx == 0)               //Changes direction turn Left
+        {
+          directx = -1*directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = directx;
+          directx = 0;
+        }
+      }
       
       else if (cell[status.y - directx][status.x + directy].visit = false  && cell[status.y + directx][status.x - directy].visit = true) //If Visited Left, turn Right
+      {
         motor.turnRight (speed);
+        if (directx == 0)          //Changes direction-Turn Right
+        {
+          directx = directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = -1*directx;
+          directx = 0;
+        }
+      }
       
       else                                                                                                                              //If Both Unknown, turn Right (choice)
-        motor.turnRight (speed);      
+      {
+        motor.turnRight (speed);
+        if (directx == 0)          //Changes direction-Turn Right
+        {
+          directx = directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = -1*directx;
+          directx = 0;
+        }
+      }
        //////////////////Decision Making Ends
-    
+       
+       motor.goStraightOne (speed);
+       
+       status.x += directx;
+       status.y += directy;
     }
+    
+    if (status.sideLeftDist > wallExistDist && status.sideRightDist < wallExistDist                                 //Case 6, Wall Exists Right Only, Rest Open
+        && status.frontLeftDist > wallExistDist && status.frontRightDist > wallExistDist)
+    {
+     //Maps out Walls Based on Direction if not visited
+      
+      if (cell[status.y][status.x].visit == false)
+      {
+        if (directy == 1)                                        //Inefficient way to account for all mouse directions.
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=true;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+        else if (directy == -1)
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=true;      
+          cell[status.y][status.x].visit = true;
+        }
+        else if (directx == 1)
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=true;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+        else //directx == -1
+        {
+          cell[status.y][status.x].wall[0]=true;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+      }
+      
+      //////////////Determines Next Action based on various things (default is to go Forward) and Changes Direction
+      if (nextdead = true)
+      { 
+        cell[status.y - directy][status.x - directx].dead = true; //behind cell is dead 
+        nextdead = false;
+      }
+      
+      if (cell[status.y + directy][status.x + directx].dead = true && cell[status.y + directx][status.x - directy].dead = true)  //If Left and Forward are Dead
+      {
+        motor.turnBack;
+        nextdead = true;
+        if (directx == 0)          //Changes direction-Turn Back
+          directy *= -1;
+        else
+          directx *= -1;
+      }
+      
+      else if (cell[status.y + directy][status.x + directx].dead = true && cell[status.y + directx][status.x - directy].dead = false) //If only Forward Dead
+      {
+        motor.turnLeft (speed);
+        if (cell[status.y - directy][status.x - directx].dead = true)                                           //If behind also dead, will kill this path at next intersection
+          nextdead = true;
+        if (directx == 0)                 //Changes direction-Turn Left
+        {
+          directx = -1*directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = directx;
+          directx = 0;
+        }
+      }
+      
+      else if (cell[status.y + directy][status.x + directx].dead = false && cell[status.y + directx][status.x - directy].dead = true) //If only Left Dead
+      {
+        if (cell[status.y - directy][status.x - directx].dead = true)                                           //If behind also dead, will kill this path at next intersection
+          nextdead = true;
+        
+        //No Direction Change needed, will go forward
+      }
+      
+      else if (cell[status.y + directy][status.x + directx].visit = true && cell[status.y + directx][status.x - directy].visit = true) //If Visited Both, go Forward (choice)
+      {
+        //No Direction Change Needed, will go Forward
+      }
+      
+      else if (cell[status.y + directy][status.x + directx].visit = true && cell[status.y + directx][status.x - directy].visit = false) //If Visited Forward Only, turn Left
+      {
+        motor.turnLeft (speed);
+        if (directx == 0)               //Changes direction turn Left
+        {
+          directx = -1*directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = directx;
+          directx = 0;
+        }
+      }
+      
+      else if (cell[status.y + directy][status.x + directx].visit = false  && cell[status.y + directx][status.x - directy].visit = true) //If Visited Left Only, go Forward
+      {
+        //No Direction Change Needed, will go Forward
+      }
+      
+      else                                                                                                                              //If Both Unknown, Go Forward (Choice)
+      {
+        //No Direction Change Neeeded, will go Forward
+      }
+       //////////////////Decision Making Ends
+       
+       motor.goStraightOne (speed);
+       
+       status.x += directx;
+       status.y += directy;
+    }
+    
+    if (status.sideLeftDist < wallExistDist && status.sideRightDist > wallExistDist                                 //Case 7, Wall Exists Left Only, Rest Open
+        && status.frontLeftDist > wallExistDist && status.frontRightDist > wallExistDist)
+    {
+      //Maps out Walls Based on Direction if not visited
+      
+      if (cell[status.y][status.x].visit == false)
+      {
+        if (directy == 1)                                        //Inefficient way to account for all mouse directions.
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=true;      
+          cell[status.y][status.x].visit = true;
+        }
+        else if (directy == -1)
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=true;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+        else if (directx == 1)
+        {
+          cell[status.y][status.x].wall[0]=true;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+        else //directx == -1
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=true;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+      }
+      
+      //////////////Determines Next Action based on various things (default is to Go Forward) and Changes Direction
+      if (nextdead = true)
+      { 
+        cell[status.y - directy][status.x - directx].dead = true; //behind cell is dead 
+        nextdead = false;
+      }
+      
+      if (cell[status.y - directx][status.x + directy].dead = true && cell[status.y + directy][status.x + directx].dead = true)  //If Left and Forward are Dead
+      {
+        motor.turnBack;
+        nextdead = true;
+        if (directx == 0)          //Changes direction-Turn Back
+          directy *= -1;
+        else
+          directx *= -1;
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].dead = true && cell[status.y + directy][status.x + directx].dead = false) //If only Right Dead
+      {
+        if (cell[status.y - directy][status.x - directx].dead = true)                                           //If behind also dead, will kill this path at next intersection
+          nextdead = true;
+        //No Direction Change Needed, will go Forward
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].dead = false && cell[status.y + directy][status.x + directx].dead = true) //If only Forward Dead
+      {
+        motor.turnRight (speed);
+        if (cell[status.y - directy][status.x - directx].dead = true)                                           //If behind also dead, will kill this path at next intersection
+          nextdead = true;
+        if (directx == 0)          //Changes direction-Turn Right
+        {
+          directx = directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = -1*directx;
+          directx = 0;
+        }
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directy][status.x + directx].visit = true) //If Visited Both, go Forward (choice)
+      {
+        //No Direciton Change Needed, will go Forward
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directy][status.x + directx].visit = false) //If Visited Right, go Forward (choice)
+      {
+        //No Direction Change Needed, will go Forward
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].visit = false  && cell[status.y + directy][status.x + directx].visit = true) //If Visited Forward, turn Right
+      {
+        motor.turnRight (speed);
+        if (directx == 0)          //Changes direction-Turn Right
+        {
+          directx = directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = -1*directx;
+          directx = 0;
+        }
+      }
+      
+      else                                                                                                                              //If Both Unknown, go Forward (choice)
+      {
+        //No Direction Change Needed, will go Forward
+      }
+       //////////////////Decision Making Ends
+      
+      motor.goStraightOne (speed);
+      
+      status.x += directx;
+      status.y += directy;
+                  
+    }
+    
+    if (status.sideLeftDist > wallExistDist && status.sideRightDist > wallExistDist                                 //Case 8, No Walls, Special Case
+        && status.frontLeftDist > wallExistDist && status.frontRightDist > wallExistDist)
+    {
+      if (cell[status.y][status.x].visit == false)       //No Walls for Any Direction
+      {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+      }
+      
+      //////////////Determines Next Action based on various things (default is to go Forward) and Changes Direction 
+      if (nextdead = true)
+      { 
+        cell[status.y - directy][status.x - directx].dead = true; //behind cell is dead 
+        nextdead = false;
+      }
+      
+      if (cell[status.y - directx][status.x + directy].dead = true && cell[status.y + directx][status.x - directy].dead = true 
+                                                                          && cell[status.y + directy][status.x + directx].dead = true)      //If all Three Are Dead  
+      {
+        motor.turnBack;
+        nextdead = true;
+        if (directx == 0)          //Changes direction-Turn Back
+          directy *= -1;
+        else
+          directx *= -1;
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].dead = true && cell[status.y + directx][status.x - directy].dead = true
+                                                                          && cell[status.y + directy][status.x + directx].dead = false) //If Right and Left Dead, go Forward
+      {
+        if (cell[status.y - directy][status.x - directx].dead = true)                                           //If behind also dead, will kill this path at next intersection
+          nextdead = true;
+        
+        //Forward
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].dead = true && cell[status.y + directx][status.x - directy].dead = false
+                                                                          && cell[status.y + directy][status.x + directx].dead = true) //If Right and Forward Dead, Go Left
+      {
+        motor.turnLeft (speed);
+        
+        if (cell[status.y - directy][status.x - directx].dead = true)                                           //If behind also dead, will kill this path at next intersection
+          nextdead = true;
+          
+        if (directx == 0)               //Changes direction turn Left
+        {
+          directx = -1*directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = directx;
+          directx = 0;
+        }
+        
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].dead = false && cell[status.y + directx][status.x - directy].dead = true
+                                                                          && cell[status.y + directy][status.x + directx].dead = true) //If Left and Forward Dead, Go Right
+      {
+        motor.turnRight (speed);
+        if (cell[status.y - directy][status.x - directx].dead = true)                                           //If behind also dead, will kill this path at next intersection
+          nextdead = true;
+        if (directx == 0)          //Changes direction-Turn Right
+        {
+          directx = directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = -1*directx;
+          directx = 0;
+        }
+        
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].dead = false && cell[status.y + directx][status.x - directy].dead = true
+                                                                          && cell[status.y + directy][status.x + directx].dead = false) //If Left Dead only
+      {
+          if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directy][status.x + directx].visit = true) //If Visited Both, go Forward (choice)
+          {
+            //No Direciton Change Needed, will go Forward
+          }
+          
+          else if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directy][status.x + directx].visit = false) //If Visited Right, go Forward (choice)
+          {
+            //No Direction Change Needed, will go Forward
+          }
+          
+          else if (cell[status.y - directx][status.x + directy].visit = false  && cell[status.y + directy][status.x + directx].visit = true) //If Visited Forward, turn Right
+          {
+            motor.turnRight (speed);
+            if (directx == 0)          //Changes direction-Turn Right
+            {
+              directx = directy;
+              directy = 0;
+            }
+            else
+            {
+              directy = -1*directx;
+              directx = 0;
+            }
+          }
+          
+          else                                                                                                                              //If Both Unknown, go Forward (choice)
+          {
+            //No Direction Change Needed, will go Forward
+          }
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].dead = true && cell[status.y + directx][status.x - directy].dead = false
+                                                                          && cell[status.y + directy][status.x + directx].dead = false) //If Right Dead only
+      {
+            if (cell[status.y + directy][status.x + directx].visit = true && cell[status.y + directx][status.x - directy].visit = true) //If Visited Both, go Forward (choice)
+            {
+              //No Direction Change Needed, will go Forward
+            }
+            
+            else if (cell[status.y + directy][status.x + directx].visit = true && cell[status.y + directx][status.x - directy].visit = false) //If Visited Forward Only, turn Left
+            {
+              motor.turnLeft (speed);
+              if (directx == 0)               //Changes direction turn Left
+              {
+                directx = -1*directy;
+                directy = 0;
+              }
+              else
+              {
+                directy = directx;
+                directx = 0;
+              }
+            }
+            
+            else if (cell[status.y + directy][status.x + directx].visit = false  && cell[status.y + directx][status.x - directy].visit = true) //If Visited Left Only, go Forward
+            {
+              //No Direction Change Needed, will go Forward
+            }
+            
+            else                                                                                                                              //If Both Unknown, Go Forward (Choice)
+            {
+              //No Direction Change Neeeded, will go Forward
+            } 
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].dead = false && cell[status.y + directx][status.x - directy].dead = true
+                                                                          && cell[status.y + directy][status.x + directx].dead = false) //If Forward Dead only
+      {
+          if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directx][status.x - directy].visit = true) //If Visited Both, turn Right (choice)
+          {
+            motor.turnRight (speed);
+            if (directx == 0)          //Changes direction-Turn Right
+            {
+              directx = directy;
+              directy = 0;
+            }
+            else
+            {
+              directy = -1*directx;
+              directx = 0;
+            }
+          }
+          
+          else if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directx][status.x - directy].visit = false) //If Visited Right, turn Left
+          {
+            motor.turnLeft (speed);
+            if (directx == 0)               //Changes direction turn Left
+            {
+              directx = -1*directy;
+              directy = 0;
+            }
+            else
+            {
+              directy = directx;
+              directx = 0;
+            }
+          }
+          
+          else if (cell[status.y - directx][status.x + directy].visit = false  && cell[status.y + directx][status.x - directy].visit = true) //If Visited Left, turn Right
+          {
+            motor.turnRight (speed);
+            if (directx == 0)          //Changes direction-Turn Right
+            {
+              directx = directy;
+              directy = 0;
+            }
+            else
+            {
+              directy = -1*directx;
+              directx = 0;
+            }
+          }
+          
+          else                                                                                                                              //If Both Unknown, turn Right (choice)
+          {
+            motor.turnRight (speed);
+            if (directx == 0)          //Changes direction-Turn Right
+            {
+              directx = directy;
+              directy = 0;
+            }
+            else
+            {
+              directy = -1*directx;
+              directx = 0;
+            }
+          }
+      }
+      
+      ///////////////////If None Dead, More Decision Making/////////////////////
+      
+      
+      else if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directx][status.x - directy].visit = true
+                                                                          && cell[status.y + directy][status.x + directx].visit = true)) //If Visited All Three, go Forward
+      {
+            //Forward
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directx][status.x - directy].visit = true
+                                                                          && cell[status.y + directy][status.x + directx].visit = false)) //If Visited Right and Left, go Forward
+      {
+        //Forward
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directx][status.x - directy].visit = false
+                                                                          && cell[status.y + directy][status.x + directx].visit = true)) //If Visited Right and Forward, go Left
+      {
+        motor.turnLeft (speed);
+        if (directx == 0)               //Changes direction turn Left
+        {
+          directx = -1*directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = directx;
+          directx = 0;
+        }
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].visit = false && cell[status.y + directx][status.x - directy].visit = true
+                                                                          && cell[status.y + directy][status.x + directx].visit = true)) //If Visited Left and Forward, go Right
+      {
+        motor.turnRight (speed);
+        if (directx == 0)          //Changes direction-Turn Right
+        {
+          directx = directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = -1*directx;
+          directx = 0;
+        }
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directx][status.x - directy].visit = false
+                                                                          && cell[status.y + directy][status.x + directx].visit = false)) //If Visited Right Only, go Forward
+      {
+        //Forward
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].visit = false && cell[status.y + directx][status.x - directy].visit = true
+                                                                          && cell[status.y + directy][status.x + directx].visit = false)) //If Visited Left Only, go Forward
+      {
+        //Forward
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].visit = false && cell[status.y + directx][status.x - directy].visit = false
+                                                                          && cell[status.y + directy][status.x + directx].visit = true)) //If Visited Forward Only, go Right (choice)
+      {
+        motor.turnRight (speed);
+        if (directx == 0)          //Changes direction-Turn Right
+        {
+          directx = directy;
+          directy = 0;
+        }
+        else
+        {
+          directy = -1*directx;
+          directx = 0;
+        }
+      }
+      
+      else                                                                                                                              //If All Unknown, go Forward (choice)
+      {
+        //Forward
+      }     
+            
+       //////////////////Decision Making Ends
+             
+      motor.goStraightOne (speed);
+      
+      status.x += directx;
+      status.y += directy;      
+    }
+    
+    //All 8 Special Cases have been Specified. Continues While Loop until in Goal Cell.     
       
   } //Closes While loop
   
@@ -411,6 +1028,7 @@ void Maze::initialize()
     cell[0][0].wall[i]=true;
     
   cell[0][0].wall[0] = false;
+  cell[0][0].visit = true;
     
   //initialize emptyCell
   emptyCell.x = -1;
