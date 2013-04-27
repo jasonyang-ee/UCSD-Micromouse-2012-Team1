@@ -37,7 +37,7 @@ public:
   double oldBalance;
   
   //encoder status
-  volatile int wheelCountLeft;      //set by timmer2 ch1
+  volatile int wheelCountLeft ;      //set by timmer2 ch1
   volatile int wheelCountRight;     //set by timmer2 ch1
   
   //motor status

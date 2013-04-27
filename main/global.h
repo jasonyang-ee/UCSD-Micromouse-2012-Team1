@@ -34,8 +34,8 @@
 
 //speed constant
 #define fullSpeed 65536
-#define mappingSpeed 5000
-#define driveSpeed 5000
+#define mappingSpeed 10000
+#define driveSpeed 10000
 #define turnSpeed 10000
 
 #define driveRatio 6/15

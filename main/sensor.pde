@@ -101,7 +101,8 @@ void Sensor::setBalance()
   status.balance = status.frontLeftDist - status.frontRightDist;
 }
 
-
+//uses diagonal sensor to figure out orientation, horizontal sensor
+//as error measurement
 float Sensor::rightError()
 {
   int setpoint1 = 11;
