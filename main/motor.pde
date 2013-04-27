@@ -5,11 +5,13 @@
 void Motor::motorInstruction(int scenario)
 { 
   /*===================  Mapping scenario handling  =======================*/
-  if(mode == mapping)
+  if(status.mode == mapping)
+
   {
   /*-----  straightaway, walls on both left and right side  -----*/
     if(scenario == 1)
     {
+
 
       if (status.frontRightDist > 5 && (status.diagonalRightDist < 5 && status.diagonalLeftDist < 5))
         motor.goStraight (5000);
@@ -26,7 +28,9 @@ void Motor::motorInstruction(int scenario)
     {
       //modify turnLeft to keep turning, bring the if statement here;
       //since global interupt runs every millisecond, and turning left takes longer than that
-      if (status.wheelCountLeft < turnCount)
+
+      if (status.wheelCountLeft != turnCount)
+
         motor.turnLeft (5000); 
       else
       {
@@ -82,7 +86,7 @@ void Motor::motorInstruction(int scenario)
 
   
   /*===================  Racing scenario handling  =======================*/
-  else if(mode == raicing)
+  else if(status.mode == racing)
 
   {
     /*-----  straightaway, walls on both left and right side  -----*/
@@ -103,7 +107,9 @@ void Motor::motorInstruction(int scenario)
     {
       //modify turnLeft to keep turning, bring the if statement here;
       //since global interupt runs every millisecond, and turning left takes longer than that
-      if (status.wheelCountLeft < turnCount)
+
+      if (status.wheelCountLeft != turnCount)
+
         motor.turnLeft (5000); 
       else
       {
@@ -226,29 +232,29 @@ void Motor::stop()
 //stop and turn left
 void Motor::turnLeft(int speed)
 {
-  int encoderTemp1, encoderTemp2;
-  stop();                                                  //stop before turn
-  encoderTemp1 = status.wheelCountLeft;                    //store counts
-  motorLeft(-turnSpeed);
-  motorRight(turnSpeed);                                   //speed for left and right
-  while(status.wheelCountLeft - encoderTemp1 < turnCount)    
+  //int encoderTemp1, encoderTemp2;
+//                                       //stop before turn
+  //encoderTemp1 = status.wheelCountLeft;                    //store counts
+  motorLeft(-speed);
+  motorRight(speed);                                   //speed for left and right
+  /*while(status.wheelCountLeft - encoderTemp1 < turnCount)    
     continue;                                              //turnning
   stop();                                                  //stop after turn
-  status.compass = (status.compass-1)%4;
+  status.compass = (status.compass-1)%4;*/
 }
 
 //stop and turn right
 void Motor::turnRight(int speed)
 {
-  int encoderTemp1, encoderTemp2;
-  stop();                                                 //stop before turn
-  encoderTemp1 = status.wheelCountLeft;                   //store counts
-  motorLeft(turnSpeed); 
-  motorRight(-turnSpeed);                                 //speed for left and right
-  while(status.wheelCountLeft - encoderTemp1 < turnCount)    
+ // int encoderTemp1, encoderTemp2;
+ // stop();                                                 //stop before turn
+ // encoderTemp1 = status.wheelCountLeft;                   //store counts
+  motorLeft(speed); 
+  motorRight(-speed);                                 //speed for left and right
+/*  while(status.wheelCountLeft - encoderTemp1 < turnCount)    
     continue;                                             //turnning
   stop();                                                 //stop after turn
-  status.compass = (status.compass+1)%4;
+  status.compass = (status.compass+1)%4;*/
 }
 
 //turn 180 degree
@@ -378,12 +384,13 @@ void Motor::motorRight(int speed)
 }
 
 
-float last_error;
+float last_error= 0;
+
 void Motor::test()
 {
   float error = sensor.rightError();
   
-  int correction = round(orientationConstant * error);// + ((last_error - error)/(.001))*100);
+  int correction = round(orientationConstant * error + ((error-last_error)/(.001)*5));
   int speed = 10000;
   motor.motorRight(speed - correction);
   motor.motorLeft(speed + correction);

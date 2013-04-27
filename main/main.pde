@@ -44,11 +44,30 @@ void setup()
 }
 
 /*===================  Interrput functions  =======================*/
+int error = 0;
+int last_errorr = 0;
+int d_error;
 void globalInterrupt(void)
 {
   //Sensor
+
   sensor.runAllSensor();
   
+  if ( abs(abs(status.wheelCountLeft) - turnCount) != 0 )
+  {
+    last_errorr = error;
+    error = turnCount - abs(status.wheelCountLeft);
+    d_error = error - last_errorr; 
+    motor.turnLeft(2000*(error) + 10*d_error/.001);
+  }
+  else
+    motor.stop();
+  
+  /*if (status.frontRightDist > 5)
+    motor.test();
+  else
+    motor.stop();
+    */
   
   //Mapping motor handling
 
@@ -77,6 +96,7 @@ void encoderRightInterrupts(void)
 /*=======================  Void Loop  =========================*/
 void loop()
 {
+SerialUSB.println(status.wheelCountLeft);
 /*===================  one time instructions  =======================*/
 /*
   //initail setup
@@ -113,13 +133,13 @@ void loop()
 
 
 /*===================  Turnning test  =======================*/
-
+/*
   if(turn==false)
   {
     motor.turnLeft(turnSpeed);
     turn = true;
   }
-
+*/
 
 /*===================  FullSpeed test  =======================*/
 /*
