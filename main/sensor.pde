@@ -58,11 +58,11 @@ void Sensor::convertDistance(int v, int c)
   {
     //Front Left
     case 1:
-      status.frontLeftDist = ( -493.24*x*x + 160.96*x + 0.0749 );  // dist = -493.24(1/V)^2 + 160.94(1/V) + 0.0749
+      status.frontLeftDist = ( -714.98*x*x + 216.11*x + 0.7782 );  // dist = -714.98(1/v)^2 + 216.11(1/v) - 0.7782
       break;
     //Front Right
     case 2:
-      status.frontRightDist = ( -1142.4*x*x + 310.3*x - 1.0298 );  // dist = -1142.4(1/V)^2 + 310.3(1/V) - 1.0298
+      status.frontRightDist = ( 0.0001*x*x + 0.0033*x - 0.005 );  // dist = 0.0001(1/v)^2 + 0.0033(1/v) + 0.005
       break;
     //Side Left
     case 3:
@@ -74,11 +74,11 @@ void Sensor::convertDistance(int v, int c)
       break;
     //Diagonal Left
     case 5:
-      status.diagonalLeftDist = ( -284.62*x*x + 157.72*x - 0.21 );  // dist = -284.62(1/V)^2 + 157.72(1/V) - 0.21
+      status.diagonalLeftDist = ( -189.78*x*x + 156.48*x - 0.1224 );  // dist = -189.78(1/v)^2 + 156.48(1/v) + 0.1224
       break;
     //Diagonal Left
     case 6:
-      status.diagonalRightDist = ( 172.43*x*x + 151.56*x + 0.1636 );  // dist = 172.43(1/V)^2 + 151.56(1/V) + 0.1636
+      status.diagonalRightDist = ( 173.96*x*x + 156.82*x + 0.0099 );  // dist = 173.96(1/v)^2 + 156.82(1/v) - 0.0099
       break;
   }
 }
