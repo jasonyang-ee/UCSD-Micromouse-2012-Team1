@@ -51,7 +51,9 @@ void globalInterrupt(void)
   
   
   //Mapping motor handling
-  //motor.applyMotorMapping(1);
+
+  //motor.applyMotorMapping();
+
 
 }
 
@@ -87,13 +89,16 @@ void loop()
 
 
 /*===================  Encoder testing  =======================*/
+
 /*
 
   SerialUSB.print(status.wheelCountLeft);
   SerialUSB.print("\t");
+
   SerialUSB.print(status.wheelCountRight);
   SerialUSB.print("\t");
   SerialUSB.println(status.speedLeft);
+
 
 
 /*===================  Sensor testing  =======================*/
@@ -124,6 +129,7 @@ void loop()
     motor.goStraight(fullSpeed);
   else
     motor.stop();
+
 
 
 

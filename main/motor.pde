@@ -1,6 +1,7 @@
 
 #include "motor.h"
 
+
 void Motor::motorInstruction(int scenario)
 { 
   /*===================  Mapping scenario handling  =======================*/
@@ -9,6 +10,7 @@ void Motor::motorInstruction(int scenario)
   /*-----  straightaway, walls on both left and right side  -----*/
     if(scenario == 1)
     {
+
       if (status.frontRightDist > 5 && (status.diagonalRightDist < 5 && status.diagonalLeftDist < 5))
         motor.goStraight (5000);
       else
@@ -77,9 +79,11 @@ void Motor::motorInstruction(int scenario)
       }
     }
   }
+
   
   /*===================  Racing scenario handling  =======================*/
   else if(mode == raicing)
+
   {
     /*-----  straightaway, walls on both left and right side  -----*/
     if(scenario == 1)
@@ -270,6 +274,21 @@ void Motor::goStraight(int speed)
   fixOrientation(speed);
 }
 
+//Austin's
+void Motor::goStraightOne (int speed)              //Moves Forward One Cell
+{
+  status.wheelCountRight = 0;
+  status.wheelCountLeft = 0;
+  
+  while (((status.wheelCountRight + status.wheelCountLeft)/2) <= cellLength)
+  {
+    motorRight (speed);
+    motorLeft (speed);
+    fixOrientation(speed);
+  }
+  stop();
+}
+
 void Motor::goBack(int speed)
 {
   fixOrientation(-speed);
@@ -358,6 +377,7 @@ void Motor::motorRight(int speed)
   
 }
 
+
 float last_error;
 void Motor::test()
 {
@@ -368,4 +388,5 @@ void Motor::test()
   motor.motorRight(speed - correction);
   motor.motorLeft(speed + correction);
 }
+
 
