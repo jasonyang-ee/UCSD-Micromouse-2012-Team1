@@ -58,13 +58,7 @@ void Sensor::convertDistance(int v, int c)
   {
     //Front Left
     case 1:
-<<<<<<< HEAD
-      status.frontLeftDist = ( -493.24*x*x + 160.96*x + 0.0749 );  // dist = -493.24(1/V)^2 + 160.94(1/V) + 0.0749
-      break;
-    //Front Right
-    case 2:
-      status.frontRightDist = ( -1142.4*x*x + 310.3*x - 1.0298 );  // dist = -1142.4(1/V)^2 + 310.3(1/V) - 1.0298
-=======
+
       if(v>10)
         status.frontLeftDist = ( -714.98*x*x + 216.11*x + 0.7782 );  // dist = -714.98(1/v)^2 + 216.11(1/v) - 0.7782
       else
@@ -76,7 +70,7 @@ void Sensor::convertDistance(int v, int c)
         status.frontRightDist = ( -998.25*x*x + 270.64*x - 1.1891 );  // dist = -998.25x2 + 270.64x - 1.1891
       else
         status.frontRightDist = 20;
->>>>>>> sensor
+
       break;
     //Side Left
     case 3:
