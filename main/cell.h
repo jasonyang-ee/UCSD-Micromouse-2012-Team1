@@ -13,7 +13,6 @@ public:
   int y;
   int floodValue;
   bool existance;
-  bool dead;
 //link list siblings
 public:
   Cell *north;

@@ -6,7 +6,6 @@
 class Sensor{
 public:
   void runAllSensor();
-  float rightError();
 private:
   volatile int voltage;
 private:

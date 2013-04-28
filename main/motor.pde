@@ -1,18 +1,13 @@
 
 #include "motor.h"
 
-
-void Motor::motorInstruction(int scenario)
-{ 
-  /*===================  Mapping scenario handling  =======================*/
-  if(status.mode == mapping)
-
+/*===================  Mapping scenario handling  =======================*/
+void Motor::applyMotorMapping(int scenario)
+{
+  switch (scenario)
   {
-  /*-----  straightaway, walls on both left and right side  -----*/
-    if(scenario == 1)
-    {
-
-
+    /*-----  straightaway, walls on both left and right side  -----*/
+    case 1:
       if (status.frontRightDist > 5 && (status.diagonalRightDist < 5 && status.diagonalLeftDist < 5))
         motor.goStraight (5000);
       else
@@ -21,28 +16,24 @@ void Motor::motorInstruction(int scenario)
         //from there, jump to scenario -1
         //scenario = -1;
       }
-    }
-    
+      break;
+      
     /*-----  left turn  -----*/
-    else if(scenario == 2)
-    {
-      //modify turnLeft to keep turning, bring the if statement here;
-      //since global interupt runs every millisecond, and turning left takes longer than that
-
-      if (status.wheelCountLeft != turnCount)
-
+    case 2:
+                //modify turnLeft to keep turning, bring the if statement here;
+                //since global interupt runs every millisecond, and turning left takes longer than that
+      if (status.wheelCountLeft < turnCount)
         motor.turnLeft (5000); 
       else
       {
         motor.stop();
         scenario = -1;			
       }
-    }
-    
+      break;
+      
     /*-----  right turn  -----*/
-    else if(scenario == 3)
-    {
-      //same as above
+    case 3:
+            //same as above
       if (status.wheelCountLeft < turnCount)
         motor.turnRight (5000);
       else
@@ -50,11 +41,9 @@ void Motor::motorInstruction(int scenario)
         motor.stop();
         scenario = -1;
       }
-    }
-    
+      break;
     /*-----  180 Degree Turn  -----*/
-    else if(scenario == 4)
-    {
+    case 4:
       if (status.wheelCountLeft < UturnCount)
         motor.turnRight (5000);
       else
@@ -62,12 +51,10 @@ void Motor::motorInstruction(int scenario)
         motor.stop();
         scenario = -1;
       }
-    }
-    
+      break;
     /*-----  case -1  -----*/
-    else if(scenario == -1)
-    {
-      // checks front to see that there's no wall there, and the left/right diagonals to be sure there are walls there
+    default:
+            // checks front to see that there's no wall there, and the left/right diagonals to be sure there are walls there
       if (status.frontRightDist > 5 && (status.diagonalRightDist < 5 && status.diagonalLeftDist < 5))  
         scenario = 1;
             //also need a scenario to like... drive up to the middle of a cell without wobbling.
@@ -81,17 +68,17 @@ void Motor::motorInstruction(int scenario)
         else 
           scenario = 4;
       }
-    }
   }
+}
 
-  
-  /*===================  Racing scenario handling  =======================*/
-  else if(status.mode == racing)
 
+/*===================  Racing scenario handling  =======================*/
+void Motor::applyMotorRacing(int scenario)
+{
+  switch (scenario)
   {
     /*-----  straightaway, walls on both left and right side  -----*/
-    if(scenario == 1)
-    {
+    case 1:
       if (status.frontRightDist > 5 && (status.diagonalRightDist < 5 && status.diagonalLeftDist < 5))
         motor.goStraight (5000);
       else
@@ -100,28 +87,24 @@ void Motor::motorInstruction(int scenario)
         //from there, jump to scenario -1
         //scenario = -1;
       }
-    }
-
+      break;
+      
     /*-----  left turn  -----*/
-    else if(scenario == 2)
-    {
-      //modify turnLeft to keep turning, bring the if statement here;
-      //since global interupt runs every millisecond, and turning left takes longer than that
-
-      if (status.wheelCountLeft != turnCount)
-
+    case 2:
+                //modify turnLeft to keep turning, bring the if statement here;
+                //since global interupt runs every millisecond, and turning left takes longer than that
+      if (status.wheelCountLeft < turnCount)
         motor.turnLeft (5000); 
       else
       {
         motor.stop();
         scenario = -1;			
       }
-    }
+      break;
       
     /*-----  right turn  -----*/
-    else if(scenario == 3)
-    {
-      //same as above
+    case 3:
+            //same as above
       if (status.wheelCountLeft < turnCount)
         motor.turnRight (5000);
       else
@@ -129,11 +112,9 @@ void Motor::motorInstruction(int scenario)
         motor.stop();
         scenario = -1;
       }
-    }
-
+      break;
     /*-----  180 Degree Turn  -----*/
-    else if(scenario == 4)
-    {
+    case 4:
       if (status.wheelCountLeft < UturnCount)
         motor.turnRight (5000);
       else
@@ -141,16 +122,14 @@ void Motor::motorInstruction(int scenario)
         motor.stop();
         scenario = -1;
       }
-    }
-
+      break;
     /*-----  case -1  -----*/
-    else if(scenario == -1)
-    {
-      // checks front to see that there's no wall there, and the left/right diagonals to be sure there are walls there
+    default:
+            // checks front to see that there's no wall there, and the left/right diagonals to be sure there are walls there
       if (status.frontRightDist > 5 && (status.diagonalRightDist < 5 && status.diagonalLeftDist < 5))  
         scenario = 1;
-        //also need a scenario to like... drive up to the middle of a cell without wobbling.
-        //right/left diagonals will flag higher than 5 before the mouse actually gets into the cell
+            //also need a scenario to like... drive up to the middle of a cell without wobbling.
+            //right/left diagonals will flag higher than 5 before the mouse actually gets into the cell
       else
       {
         if (status.sideRightDist > 5)
@@ -160,7 +139,6 @@ void Motor::motorInstruction(int scenario)
         else 
           scenario = 4;
       }
-    }
   }
 }
 
@@ -232,29 +210,29 @@ void Motor::stop()
 //stop and turn left
 void Motor::turnLeft(int speed)
 {
-  //int encoderTemp1, encoderTemp2;
-//                                       //stop before turn
-  //encoderTemp1 = status.wheelCountLeft;                    //store counts
-  motorLeft(-speed);
-  motorRight(speed);                                   //speed for left and right
-  /*while(status.wheelCountLeft - encoderTemp1 < turnCount)    
+  int encoderTemp1, encoderTemp2;
+  stop();                                                  //stop before turn
+  encoderTemp1 = status.wheelCountLeft;                    //store counts
+  motorLeft(-turnSpeed);
+  motorRight(turnSpeed);                                   //speed for left and right
+  while(status.wheelCountLeft - encoderTemp1 < turnCount)    
     continue;                                              //turnning
   stop();                                                  //stop after turn
-  status.compass = (status.compass-1)%4;*/
+  status.compass = (status.compass-1)%4;
 }
 
 //stop and turn right
 void Motor::turnRight(int speed)
 {
- // int encoderTemp1, encoderTemp2;
- // stop();                                                 //stop before turn
- // encoderTemp1 = status.wheelCountLeft;                   //store counts
-  motorLeft(speed); 
-  motorRight(-speed);                                 //speed for left and right
-/*  while(status.wheelCountLeft - encoderTemp1 < turnCount)    
+  int encoderTemp1, encoderTemp2;
+  stop();                                                 //stop before turn
+  encoderTemp1 = status.wheelCountLeft;                   //store counts
+  motorLeft(turnSpeed); 
+  motorRight(-turnSpeed);                                 //speed for left and right
+  while(status.wheelCountLeft - encoderTemp1 < turnCount)    
     continue;                                             //turnning
   stop();                                                 //stop after turn
-  status.compass = (status.compass+1)%4;*/
+  status.compass = (status.compass+1)%4;
 }
 
 //turn 180 degree
@@ -278,21 +256,6 @@ void Motor::goStraight(int speed)
   motorRight(speed);
   motorLeft(speed);
   fixOrientation(speed);
-}
-
-//Austin's
-void Motor::goStraightOne (int speed)              //Moves Forward One Cell
-{
-  status.wheelCountRight = 0;
-  status.wheelCountLeft = 0;
-  
-  while (((status.wheelCountRight + status.wheelCountLeft)/2) <= cellLength)
-  {
-    motorRight (speed);
-    motorLeft (speed);
-    fixOrientation(speed);
-  }
-  stop();
 }
 
 void Motor::goBack(int speed)
@@ -346,14 +309,14 @@ void Motor::motorLeft(int speed)
   }
   else if(speed > 0)
   {
-    digitalWrite(motorLeft1, HIGH);
-    digitalWrite(motorLeft2, LOW);
+    digitalWrite(motorLeft1, LOW);
+    digitalWrite(motorLeft2, HIGH);
     pwmWrite(PWMLeft, speed);
   }
   else
   {
-    digitalWrite(motorLeft1, LOW);
-    digitalWrite(motorLeft2, HIGH);
+    digitalWrite(motorLeft1, HIGH);
+    digitalWrite(motorLeft2, LOW);
     pwmWrite(PWMLeft, abs(speed));
   }
   
@@ -382,18 +345,4 @@ void Motor::motorRight(int speed)
   }
   
 }
-
-
-float last_error= 0;
-
-void Motor::test()
-{
-  float error = sensor.rightError();
-  
-  int correction = round(orientationConstant * error + ((error-last_error)/(.001)*5));
-  int speed = 10000;
-  motor.motorRight(speed - correction);
-  motor.motorLeft(speed + correction);
-}
-
 

@@ -34,14 +34,13 @@
 
 //speed constant
 #define fullSpeed 65536
-#define mappingSpeed 10000
-#define driveSpeed 10000
-#define turnSpeed 10000
+#define mappingSpeed 5000
+#define turnSpeed 3000
 
 #define driveRatio 6/15
 
-#define turnCount 95
-#define UturnCount 250
+#define turnCount 100
+#define UturnCount 200
 #define driveTurnCount 300
 
 
@@ -69,10 +68,10 @@
 #define motorRight2 26   //motorRight - LOW    }
 
 //encoder
-#define encoderLeftDirc 18
-#define encoderLeftCLK 16
-#define encoderRightDirc 31
-#define encoderRightCLK 30
+#define encoderLeftDirc 31
+#define encoderLeftCLK 30
+#define encoderRightDirc 18
+#define encoderRightCLK 16
 
 /*================== object declear ====================*/
 Maze maze;
@@ -86,10 +85,5 @@ Status status;
 bool initializeState = false;
 #define mapping 1
 #define racing 2
-
-
-/*================== stack mem ====================*/
-bool turn = false;
-
 
 #endif
