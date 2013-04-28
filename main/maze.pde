@@ -2,8 +2,12 @@
 #include "maze.h"
 
 /*===================  public functions  =======================*/
-void Maze::floodFill()
-{
+
+/*
+void Maze::mapping()
+{  
+  bool nextdead = false;                                                      //Used when reach a dead end, sets mode so when going back to intersection, sets cell behind it to dead. 
+
   int speed = mappingSpeed;
   while(status.currentCell->goal == false)
   {

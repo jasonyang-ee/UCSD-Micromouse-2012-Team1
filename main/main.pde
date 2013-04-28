@@ -87,7 +87,22 @@ void loop()
 /*===================  Encoder testing  =======================*/
   SerialUSB.print(status.wheelCountRight);
   SerialUSB.print("\t");
-  SerialUSB.println(status.wheelCountLeft);
+
+  SerialUSB.println(status.speedLeft);
+
+
+
+/*===================  Sensor testing  =======================*/
+
+//  status.printAll();
+  status.printSensor();
+
+/*===================  Driving test  =======================*/
+/*
+  if(status.frontLeftDist > 5)
+    motor.goStraight(driveSpeed);
+  motor.stop();
+
 
 
 /*===================  Turnning test  =======================*/
