@@ -30,6 +30,8 @@ public:
   volatile double deviation;        //set by sensor class
   volatile double balance;
   int compass;
+  int x; //Current X position of Mouse
+  int y; //Current Y position of Mouse
   
   //old position
   double oldOrientation;
@@ -37,7 +39,7 @@ public:
   double oldBalance;
   
   //encoder status
-  volatile int wheelCountLeft;      //set by timmer2 ch1
+  volatile int wheelCountLeft ;      //set by timmer2 ch1
   volatile int wheelCountRight;     //set by timmer2 ch1
   
   //motor status
@@ -47,7 +49,6 @@ public:
 public:
   void initialize();
   void printAll();
-  void printSensor();
 };
 
 

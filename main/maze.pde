@@ -2,35 +2,345 @@
 #include "maze.h"
 
 /*===================  public functions  =======================*/
-
 /*
 void Maze::mapping()
 {  
   bool nextdead = false;                                                      //Used when reach a dead end, sets mode so when going back to intersection, sets cell behind it to dead. 
-
   int speed = mappingSpeed;
-  while(status.currentCell->goal == false)
+  while(cell[status.y][status.x].goal == false)                               //When current cell is not the goal. 
   {
-    while(status.sideLeftDist < wallExistDist && status.sideRightDist < wallExistDist)
-      motor.goStraight(speed);
-    //taking the wheel count average
-    int wheelCount = (status.wheelCountLeft + status.wheelCountRight)/2;
-    //set wall
-    for(int i=0; i<(wheelCount/cellLength); i++)
+    status.wheelCountLeft = 0;                                               //Resets Encoders to Zero
+    status.wheelCountRight = 0;
+    
+    if (status.sideLeftDist < wallExistDist && status.sideRightDist < wallExistDist       //Case 1, Two walls Left Right Side. Forward Open
+        && status.frontLeftDist > wallExistDist && status.frontRightDist > wallExistDist)
     {
-      int x=0, y=0;
-      cell[x][y].wall[0]=false;
-      cell[x][y].wall[1]=true;
-      cell[x][y].wall[2]=false;
-      cell[x][y].wall[3]=true;      
+      while(status.sideLeftDist < wallExistDist && status.sideRightDist < wallExistDist 
+          && status.frontLeftDist > wallExistDist && status.frontRightDist > wallExistDist)
+      {
+      motor.goStraight(speed);
+      }
+      motor.stop;
+      //taking the wheel count average
+      int wheelCount = (status.wheelCountLeft + status.wheelCountRight)/2;
+      
+      
+      //set wall if haven't yet
+      if (cell[status.y][status.x].visit = false)
+      {
+        if (directx == 0)                                //Adds wall for current cell it is in. (Need an exception case for start?)
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=true;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=true;      
+          cell[status.y][status.x].visit = true;
+        }
+       else
+        {
+          cell[status.y][status.x].wall[0]=true;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=true;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+        
+        for(int i=1; i<(wheelCount/cellLength); i++) //This does not include the current cell it is in, only the ones it drove through.
+        {
+          status.x += directx;
+          status.y += directy;
+          
+          if (directx == 0)
+          {
+            cell[status.y][status.x].wall[0]=false;
+            cell[status.y][status.x].wall[1]=true;
+            cell[status.y][status.x].wall[2]=false;
+            cell[status.y][status.x].wall[3]=true;      
+            cell[status.y][status.x].visit = true;
+          }
+          else
+          {
+            cell[status.y][status.x].wall[0]=true;
+            cell[status.y][status.x].wall[1]=false;
+            cell[status.y][status.x].wall[2]=true;
+            cell[status.y][status.x].wall[3]=false;      
+            cell[status.y][status.x].visit = true;
+          }
+        }
+      }
+      status.x += directx; //sets position to current cell. 
+      status.y += directy;
     }
     
-    //turn right or left then loop until reach goal
-  }
+    if (status.sideLeftDist > wallExistDist && status.sideRightDist < wallExistDist                   //Case 2, Wall Exists in Front and Right, Left Open
+        && status.frontLeftDist < wallExistDist && status.frontRightDist < wallExistDist)
+    {
+      motor.turnLeft (speed);
+      
+      
+      if (cell[status.y][status.x].visit = false)
+      {
+        if (directy == 1)                                        //Inefficient way to account for all mouse directions.
+        {
+          cell[status.y][status.x].wall[0]=true;
+          cell[status.y][status.x].wall[1]=true;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+        else if (directy == -1)
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=true;
+          cell[status.y][status.x].wall[3]=true;      
+          cell[status.y][status.x].visit = true;
+        }
+        else if (directx == 1)
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=true;
+          cell[status.y][status.x].wall[2]=true;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+        else //directx == -1
+        {
+          cell[status.y][status.x].wall[0]=true;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=true;      
+          cell[status.y][status.x].visit = true;
+        }
+      }
+    
+      if (directx == 0)          //Changes direction
+      {
+        directx = -1*directy;
+        directy = 0;
+      }
+      else
+      {
+        directy = directx;
+        directx = 0;
+      }
+      
+      motor.goStraightOne (speed); //Goes to Next cell
+     
+      status.x += directx;
+      status.y += directy;
+      
+    }
+    
+    if (status.sideLeftDist < wallExistDist && status.sideRightDist > wallExistDist                   //Case 3, Wall Exists in Front and Left, Right Open
+        && status.frontLeftDist < wallExistDist && status.frontRightDist < wallExistDist)
+    {
+      motor.turnRight (speed);
+      
+      if (cell[status.y][status.x].visit = false)
+      {
+        if (directy == 1)                                        //Inefficient way to account for all mouse directions.
+        {
+          cell[status.y][status.x].wall[0]=true;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=true;      
+          cell[status.y][status.x].visit = true;
+        }
+        else if (directy == -1)
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=true;
+          cell[status.y][status.x].wall[2]=true;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+        else if (directx == 1)
+        {
+          cell[status.y][status.x].wall[0]=true;
+          cell[status.y][status.x].wall[1]=true;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+        else //directx = -1
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=true;
+          cell[status.y][status.x].wall[3]=true;      
+          cell[status.y][status.x].visit = true;
+        }
+      }
+        
+      if (directx == 0)          //Changes direction
+      {
+        directx = directy;
+        directy = 0;
+      }
+      else
+      {
+        directy = -1*directx;
+        directx = 0;
+      }
+      
+      
+      motor.goStraightOne (speed);
+      
+      status.x += directx;
+      status.y += directy;
+    }
+    
+    if (status.sideLeftDist < wallExistDist && status.sideRightDist < wallExistDist                   //Case 4, Wall Exists On All Sides (except Behind)
+        && status.frontLeftDist < wallExistDist && status.frontRightDist < wallExistDist)
+    {
+      motor.turnBack;
+      
+      if (cell[status.y][status.x].visit = false)
+      {
+        if (directy == 1)                                        //Inefficient way to account for all mouse directions.
+        {
+          cell[status.y][status.x].wall[0]=true;
+          cell[status.y][status.x].wall[1]=true;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=true;      
+          cell[status.y][status.x].visit = true;
+        }
+        else if (directy == -1)
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=true;
+          cell[status.y][status.x].wall[2]=true;
+          cell[status.y][status.x].wall[3]=true;      
+          cell[status.y][status.x].visit = true;
+        }
+        else if (directx == 1)
+        {
+          cell[status.y][status.x].wall[0]=true;
+          cell[status.y][status.x].wall[1]=true;
+          cell[status.y][status.x].wall[2]=true;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+        else //directx == -1
+        {
+          cell[status.y][status.x].wall[0]=true;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=true;
+          cell[status.y][status.x].wall[3]=true;      
+          cell[status.y][status.x].visit = true;
+        }
+      }
+    
+      if (directx == 0)          //Changes direction
+        directy *= -1;
+      else
+        directx *= -1;
+      
+      motor.goStraightOne (speed);
+      
+      status.x += directx;
+      status.y += directy;
+      
+      nextdead = true;        //When going back, next intersection it reaches will make it put cell behind it to dead. 
+      
+    }
+    if (status.sideLeftDist > wallExistDist && status.sideRightDist > wallExistDist                   //Case 5, Wall Exists in Front, open Rest
+        && status.frontLeftDist < wallExistDist && status.frontRightDist < wallExistDist)
+    {
+      
+      //Maps out Walls Based on Direction if not visited
+      
+      if (cell[status.y][status.x].visit = false)
+      {
+        if (directy == 1)                                        //Inefficient way to account for all mouse directions.
+        {
+          cell[status.y][status.x].wall[0]=true;
+          cell[status.y][status.x].wall[1]=true;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+        else if (directy == -1)
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=true;
+          cell[status.y][status.x].wall[3]=true;      
+          cell[status.y][status.x].visit = true;
+        }
+        else if (directx == 1)
+        {
+          cell[status.y][status.x].wall[0]=false;
+          cell[status.y][status.x].wall[1]=true;
+          cell[status.y][status.x].wall[2]=true;
+          cell[status.y][status.x].wall[3]=false;      
+          cell[status.y][status.x].visit = true;
+        }
+        else //directx == -1
+        {
+          cell[status.y][status.x].wall[0]=true;
+          cell[status.y][status.x].wall[1]=false;
+          cell[status.y][status.x].wall[2]=false;
+          cell[status.y][status.x].wall[3]=true;      
+          cell[status.y][status.x].visit = true;
+        }
+      }
+      
+      
+      //////////////Determines Next Action based on various things (default is to turn Right) and Changes Direction
+      if (nextdead = true)
+      { 
+        cell[status.y - directy][status.x - directx].dead = true; //behind cell is dead 
+        nextdead = false;
+      }
+      
+      if (cell[status.y - directx][status.x + directy].dead = true && cell[status.y + directx][status.x - directy].dead = true)  //If Left and Right are Dead
+      {
+        motor.turnBack;
+        nextdead = true;
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].dead = true && cell[status.y + directx][status.x - directy].dead = false) //If only Right Dead
+      {
+        motor.turnLeft (speed);
+        if (cell[status.y - directy][status.x - directx].dead = true)                                           //If behind also dead, will kill this path at next intersection
+          nextdead = true;
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].dead = false && cell[status.y + directx][status.x - directy].dead = true) //If only Left Dead
+      {
+        motor.turnRight (speed);
+        if (cell[status.y - directy][status.x - directx].dead = true)                                           //If behind also dead, will kill this path at next intersection
+          nextdead = true;
+      }
+      
+      else if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directx][status.x - directy].visit = true) //If Visited Both, turn Right (choice)
+        motor.turnRight (speed);
+      
+      else if (cell[status.y - directx][status.x + directy].visit = true && cell[status.y + directx][status.x - directy].visit = false) //If Visited Right, turn Left
+        motor.turnLeft (speed);
+      
+      else if (cell[status.y - directx][status.x + directy].visit = false  && cell[status.y + directx][status.x - directy].visit = true) //If Visited Left, turn Right
+        motor.turnRight (speed);
+      
+      else                                                                                                                              //If Both Unknown, turn Right (choice)
+        motor.turnRight (speed);      
+       //////////////////Decision Making Ends
+    
+    }
+      
+  } //Closes While loop
   
   //set wall info for the 4 goal cells
   //then stop and turn back and map other place base on cell visit value
   //then go back to start cell[0][0]
+ 
+}
+*/
+void Maze::floodFill() //Floodfill Function, Which will determine the fastest route to goal from start. This is executed after mapping is adequate/'button' is pressed.
+{
+
 }
 
 
@@ -68,10 +378,11 @@ void Maze::initialize()
       for(int i=0; i<4; i++) cell[y][x].wall[i] = false;
       cell[y][x].goal = false;
       cell[y][x].existance = true;
+      cell[y][x].dead = false;
     } 
   
   //assign goal to 4 cells
-  cell[mazeSize/2-1][mazeSize/2-1].goal = true;
+  cell[mazeSize/2-1][mazeSize/2-1].goal = true; //Goal in [7,7][7,8][8,7][8,8]
   cell[mazeSize/2-1][mazeSize/2].goal = true;
   cell[mazeSize/2][mazeSize/2-1].goal = true;
   cell[mazeSize/2][mazeSize/2].goal = true;
@@ -100,6 +411,8 @@ void Maze::initialize()
   for(int i=1; i<4; i++)
     cell[0][0].wall[i]=true;
     
+  cell[0][0].wall[0] = false;
+    
   //initialize emptyCell
   emptyCell.x = -1;
   emptyCell.y = -1;
@@ -107,6 +420,12 @@ void Maze::initialize()
   for(int i=0; i<4; i++) emptyCell.wall[i] = false;
   emptyCell.goal = false;
   emptyCell.existance = false;
+  
+  status.y = 0; //Set y and x to starting cell. Will be used to determine current location of mouse. 
+  status.x = 0;
+  
+  directy = 1; //Facing North
+  directx = 0; //Vertical
 }
 
 

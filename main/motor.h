@@ -6,12 +6,13 @@
 class Motor{
 public:
   void fixOrientation(int);
-  void applyMotorMapping(int);
-  void applyMotorRacing(int);
-  
+  void motorInstruction(int);
 public:
   void stop();
   void goStraight(int);
+  
+  void goStraightOne (int);
+  
   void goBack(int);
   void turnLeft(int);
   void turnRight(int);
@@ -21,6 +22,7 @@ public:
 public:
   void motorLeft(int);
   void motorRight(int);
+  void test();
 };
 
 

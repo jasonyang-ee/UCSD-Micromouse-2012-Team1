@@ -17,7 +17,7 @@ void Status::initialize()
 
 void Status::printAll()
 {
-  SerialUSB.println("================= Sensor Values =================");
+  SerialUSB.println("============= Sensor Values =============");
   SerialUSB.println("ID\tVolt:\tDistance:");
   SerialUSB.print("SL"); SerialUSB.print("\t"); SerialUSB.print(status.sideLeftVolt); SerialUSB.print("\t"); SerialUSB.println(status.sideLeftDist);
   SerialUSB.print("DL"); SerialUSB.print("\t"); SerialUSB.print(status.diagonalLeftVolt); SerialUSB.print("\t");  SerialUSB.println(status.diagonalLeftDist);
@@ -35,15 +35,4 @@ void Status::printAll()
   SerialUSB.print("Encoder Left: "); SerialUSB.println(status.wheelCountLeft);
   SerialUSB.print("Encoder Right: "); SerialUSB.println(status.wheelCountRight);
   SerialUSB.println();
-}
-
-void Status::printSensor()
-{
-  SerialUSB.println("========================= Sensor Values =========================");
-  SerialUSB.print("SL"); SerialUSB.print("\t"); SerialUSB.print(status.sideLeftDist); SerialUSB.print("\t");
-  SerialUSB.print("DL"); SerialUSB.print("\t"); SerialUSB.print(status.diagonalLeftDist); SerialUSB.print("\t");
-  SerialUSB.print("FL"); SerialUSB.print("\t"); SerialUSB.print(status.frontLeftDist); SerialUSB.print("\t");
-  SerialUSB.print("FR"); SerialUSB.print("\t"); SerialUSB.print(status.frontRightDist); SerialUSB.print("\t");
-  SerialUSB.print("DR"); SerialUSB.print("\t"); SerialUSB.print(status.diagonalRightDist); SerialUSB.print("\t");
-  SerialUSB.print("SR"); SerialUSB.print("\t"); SerialUSB.println(status.sideRightDist);
 }

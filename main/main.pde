@@ -40,23 +40,54 @@ void setup()
   Timer2.resume();                                     // Start the timer counting
 
   attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
-  attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
+  //attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
 }
 
 /*===================  Interrput functions  =======================*/
+int error = 0;
+int last_errorr = 0;
+int d_error = 0;
 void globalInterrupt(void)
 {
   //Sensor
+
   sensor.runAllSensor();
   
+/*  
+  if ( abs(abs(status.wheelCountLeft) - turnCount) != 0 )
+  {
+    last_errorr = error;
+    error = turnCount - abs(status.wheelCountLeft);
+    d_error = error - last_errorr; 
+    motor.turnLeft(2000*(error) + 10*d_error/.001);
+  }
+  else
+    motor.stop();
+*/
+
+  
+ 
+  if (status.frontLeftDist > 10)
+    {
+      int correction = round(1000 * status.orientation+ .2*(status.orientation-d_error)/.001);
+      motor.motorRight(10000 + correction);
+      motor.motorLeft(10000 - correction);
+      d_error = status.orientation;
+    }
+  else
+    motor.stop();
+    
+
   //Mapping motor handling
-  mortor.applyMotorMapping();
+
+  //motor.applyMotorMapping();
+
 
 }
 
 void encoderLeftInterrupts(void)
 {
-  if(digitalRead(encoderLeftDirc) == LOW)
+  if(digitalRead(encoderLeftDirc) == HIGH)
     status.wheelCountLeft++;
   else
     status.wheelCountLeft--;
@@ -64,7 +95,7 @@ void encoderLeftInterrupts(void)
 
 void encoderRightInterrupts(void)
 {
-  if(digitalRead(encoderRightDirc) == LOW)
+  if(digitalRead(encoderRightDirc) == HIGH)
     status.wheelCountRight++;
   else
     status.wheelCountRight--;
@@ -74,7 +105,13 @@ void encoderRightInterrupts(void)
 /*=======================  Void Loop  =========================*/
 void loop()
 {
+//SerialUSB.println(status.wheelCountLeft);
+/*SerialUSB.print(status.diagonalRightDist);
+SerialUSB.print("\t");
+SerialUSB.println(status.diagonalLeftDist);*/
+
 /*===================  one time instructions  =======================*/
+/*
   //initail setup
   if(initializeState==false)
    {
@@ -85,17 +122,21 @@ void loop()
 
 
 /*===================  Encoder testing  =======================*/
-  SerialUSB.print(status.wheelCountRight);
+
+/*
+
+  SerialUSB.print(status.wheelCountLeft);
   SerialUSB.print("\t");
 
+  SerialUSB.print(status.wheelCountRight);
+  SerialUSB.print("\t");
   SerialUSB.println(status.speedLeft);
 
 
 
 /*===================  Sensor testing  =======================*/
-
-//  status.printAll();
-  status.printSensor();
+/*
+  status.printAll();
 
 /*===================  Driving test  =======================*/
 /*
@@ -104,16 +145,29 @@ void loop()
   motor.stop();
 
 
-
 /*===================  Turnning test  =======================*/
 /*
-  while(status.frontRightDist > 5)
-    motor.goStraight(5000);
-  motor.stop();
-  delay(1000);
-    motor.turnLeft(3000);
+  if(turn==false)
+  {
+    motor.turnLeft(turnSpeed);
+    turn = true;
+  }
 */
 
+/*===================  FullSpeed test  =======================*/
+/*
+  int count = status.wheelCountLeft;
+  
+  if(status.wheelCountLeft - count < 5000)
+    motor.goStraight(fullSpeed);
+  else
+    motor.stop();
+
+
+
+
+
+/*===================  END  =======================*/
 }
 
 
