@@ -49,6 +49,7 @@ public:
 public:
   void initialize();
   void printAll();
+  void printSensor();
 };
 
 

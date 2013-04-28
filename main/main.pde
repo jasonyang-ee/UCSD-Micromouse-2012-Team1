@@ -122,8 +122,9 @@ SerialUSB.println(status.wheelCountLeft);
 
 
 /*===================  Sensor testing  =======================*/
-/*
-  status.printAll();
+
+//  status.printAll();
+  status.printSensor();
 
 /*===================  Driving test  =======================*/
 /*
