@@ -1,35 +1,33 @@
 
 #include "sensor.h"
 
-/*===================  public function  =======================*/
 void Sensor::runAllSensor()
 {   
-  //update raw value to status
-  status.frontLeftVolt = (runSensor(sensorFrontLeft));
-  status.frontRightVolt = (runSensor(sensorFrontRight));
-  status.sideLeftVolt = (runSensor(sensorSideLeft));
-  status.sideRightVolt = (runSensor(sensorSideRight));
-  status.diagonalLeftVolt = (runSensor(sensorDiagonalLeft));
-  status.diagonalRightVolt = (runSensor(sensorDiagonalRight));
+  //read sensor
+  status.voltFrontLeft = (runSensor(sensorFrontLeft));
+  status.voltFrontRight = (runSensor(sensorFrontRight));
+  status.voltSideLeft = (runSensor(sensorSideLeft));
+  status.voltSideRight = (runSensor(sensorSideRight));
+  status.voltDiagonalLeft = (runSensor(sensorDiagonalLeft));
+  status.voltDiagonalRight = (runSensor(sensorDiagonalRight));
  
-  //update sensor value to status
-  convertDistance(status.frontLeftVolt, 1);
-  convertDistance(status.frontRightVolt, 2);
-  convertDistance(status.sideLeftVolt, 3);
-  convertDistance(status.sideRightVolt, 4);
-  convertDistance(status.diagonalLeftVolt, 5);
-  convertDistance(status.diagonalRightVolt, 6);
+  //converte voltage to distance
+  status.distFrontLeft = convertDistance(status.voltFrontLeft, 1);
+  status.distFrontRight = convertDistance(status.voltFrontRight, 2);
+  status.distSideLeft = convertDistance(status.voltSideLeft, 3);
+  status.distSideRight = convertDistance(status.voltSideRight, 4);
+  status.distDiagonalLeft = convertDistance(status.voltDiagonalLeft, 5);
+  status.distDiagonalRight = convertDistance(status.voltDiagonalRight, 6);
   
-  //update position value to status
-  setOrientation();
-  setDeviation();
+  //set errors
+  setScenario();
+  setErrorDiagonal();
+  setErrorSide();
+  setErrorFront();
 }
 
 
-
-/*===================  private functions  =======================*/
-
-//controll individual sensor
+/*=======================================================  individual sensor  =======================================================*/
 int Sensor::runSensor(int sensorRef)
 {
   //turn on IR
@@ -49,69 +47,92 @@ int Sensor::runSensor(int sensorRef)
   return voltage;
 }
 
-
-/*===================  conversion functions  =======================*/
-void Sensor::convertDistance(int v, int c)
+/*=======================================================  conversion  =======================================================*/
+int Sensor::convertDistance(int volt, int c)
 {
-  double x = 1.0/v;
-  switch(c)
+  double x = 1.0/volt;
+  //Front Left
+  if(c==1)
   {
-    //Front Left
-    case 1:
-      status.frontLeftDist = ( -714.98*x*x + 216.11*x + 0.7782 );  // dist = -714.98(1/v)^2 + 216.11(1/v) - 0.7782
-      break;
-    //Front Right
-    case 2:
-      status.frontRightDist = ( -998.25*x*x + 270.64*x - 1.1891 );  // dist = -998.25*(1/v)^2 + 270.64*(1/v) -1.1891
-      break;
-    //Side Left
-    case 3:
-      status.sideLeftDist = ( -414.6*x*x + 143*x - 0.9423 );  // dist = -414.6(1/V)^2 + 143(1/V) - 0.9423
-      break;
-    //Side Right
-    case 4:
-      status.sideRightDist = ( 773.41*x*x + 96.525*x - 0.6535 );  // dist = 773.41(1/V)^2 + 96.525(1/V) - 0.6535
-      break;
-    //Diagonal Left
-    case 5:
-      status.diagonalLeftDist = ( -189.78*x*x + 156.48*x - 0.1224 );  // dist = -189.78(1/v)^2 + 156.48(1/v) + 0.1224
-      break;
-    //Diagonal Left
-    case 6:
-      status.diagonalRightDist = ( 173.96*x*x + 156.82*x + 0.0099 );  // dist = 173.96(1/v)^2 + 156.82(1/v) - 0.0099
-      break;
+    // dist = -714.98(1/v)^2 + 216.11(1/v) - 0.7782
+    if(volt>10)  return ( -714.98*x*x + 216.11*x + 0.7782 );  
+    else  return 20;
+  }
+  
+  //Front Right
+  if(c==2)
+  {
+    // dist = -998.25*(1/v)^2 + 270.64*(1/v) -1.1891
+    if(volt>10)  return ( -998.25*x*x + 270.64*x - 1.1891 );
+    else  return 20;
+  }
+  
+  //Side Left
+  if(c==3)
+  {
+    // dist = -414.6(1/V)^2 + 143(1/V) - 0.9423
+    if(volt>10)  return ( -414.6*x*x + 143*x - 0.9423 );
+    else return 20;
+  }
+  
+  //Side Right
+  if(c==4)
+  {
+    // dist = 773.41(1/V)^2 + 96.525(1/V) - 0.6535
+    if(volt>10)  return ( 773.41*x*x + 96.525*x - 0.6535 );
+    else  return 20;
+  }
+  
+  //Diagonal Left
+  if(c==5)
+  {
+    // dist = -189.78(1/v)^2 + 156.48(1/v) + 0.1224
+    if(volt>10)  return ( -189.78*x*x + 156.48*x - 0.1224 );
+    else  return 20;
+  }
+  
+  //Diagonal Left
+  if(c==6)
+  {
+    // dist = 173.96(1/v)^2 + 156.82(1/v) - 0.0099
+    if(volt>10)  return ( 173.96*x*x + 156.82*x + 0.0099 );
+    else  return 20;
   }
 }
 
-void Sensor::setOrientation()
+/*=======================================================  scenario  =======================================================*/
+void Sensor::setScenario()
 {
-  status.oldOrientation = status.orientation;
-  status.orientation = status.diagonalLeftDist*.707 - status.diagonalRightDist*.707;   // distance measurement*cos45 for distance away from wall
+  if(status.modeDrive)
+  {
+    /*------------------------------------------  straight scenario  ------------------------------------------*/
+    if(status.distSideLeft > 5)
+      status.scenarioStraight = followRight;
+    else if(status.distSideRight > 5)
+      status.scenarioStraight = followLeft;
+  }
+
 }
 
-void Sensor::setDeviation()
+/*=======================================================  error  =======================================================*/
+void Sensor::setErrorDiagonal()
 {
-  status.oldDeviation = status.deviation;
-  status.deviation = status.sideLeftDist - status.sideRightDist;
-}
-
-void Sensor::setBalance()
-{
-  status.oldBalance = status.balance;
-  status.balance = status.frontLeftDist - status.frontRightDist;
-}
-
 //uses diagonal sensor to figure out orientation, horizontal sensor
 //as error measurement
-float Sensor::rightError()
-{
   int setpoint1 = 11;
   int setpoint2 = 3.59;
-  
-  float error = (status.diagonalRightDist - setpoint1);
-  
-  error +=( error < 0 ? (setpoint2 - status.sideRightDist):(status.sideRightDist - setpoint2) );
-  
-  return error/2;
-    
+  status.errorDiagonal = (status.distDiagonalRight - setpoint1);
+  status.errorDiagonal +=( status.errorDiagonal < 0 ? (setpoint2 - status.distSideRight):(status.distSideRight - setpoint2) );
+}
+
+void Sensor::setErrorSide()
+{
+  status.errorSideLast = status.errorSide;
+  status.errorSide = status.distSideLeft - status.distSideRight;
+}
+
+void Sensor::setErrorFront()
+{
+  status.errorFrontLast = status.errorFront;
+  status.errorFront = status.distFrontLeft - status.distFrontRight;
 }

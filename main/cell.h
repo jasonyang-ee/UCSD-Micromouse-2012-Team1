@@ -4,7 +4,6 @@
 #include "global.h"
 
 class Cell{
-//elements
 public:
   bool visit;
   bool wall[4];
@@ -14,8 +13,7 @@ public:
   int floodValue;
   bool existance;
   bool dead;
-//link list siblings
-public:
+
   Cell *north;
   Cell *south;
   Cell *east;

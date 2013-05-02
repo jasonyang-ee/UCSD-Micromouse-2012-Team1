@@ -5,16 +5,18 @@
 
 class Sensor{
 public:
-  void runAllSensor();
-  float rightError();
-private:
   volatile int voltage;
-private:
+
+  void runAllSensor();
+  
   int runSensor(int);
-  void convertDistance(int, int);
-  void setOrientation();
-  void setDeviation();
-  void setBalance();
+  int convertDistance(int, int);
+  
+  void setScenario();
+  
+  void setErrorDiagonal();
+  void setErrorSide();
+  void setErrorFront();
 };
 
 #endif

@@ -5,21 +5,22 @@
 
 class Motor{
 public:
-  void fixOrientation(int);
-  void motorInstruction(int);
-public:
+/*=======================================================  PID  =======================================================*/
+  void PID();
+/*=======================================================  stop  =======================================================*/
   void stop();
+  void decelerate();
+/*=======================================================  go  =======================================================*/
   void goStraight(int);
-  
   void goStraightOne (int);
-  
-  void goBack(int);
+/*=======================================================  rotate  =======================================================*/
+  void rotateLeft(int);
+  void rotateRight(int);
+  void rotateBack(int);
+/*=======================================================  turn  =======================================================*/
   void turnLeft(int);
   void turnRight(int);
-  void turnBack();
-  void goLeft(int);
-  void goRight(int);
-public:
+/*=======================================================  motor  =======================================================*/
   void motorLeft(int);
   void motorRight(int);
   void test();

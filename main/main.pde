@@ -3,16 +3,16 @@
 
 void setup()
 {
-  //pin setup
-  pinMode(sensorFrontLeft,INPUT_ANALOG);  //int sensorFrontLeft
-  pinMode(sensorFrontRight,INPUT_ANALOG);  //int sensorFrontRight
-  pinMode(sensorDiagonalLeft,INPUT_ANALOG);  //int sensorDiagonalLeft
+/*=======================================================  pin setup  =======================================================*/
+  pinMode(sensorFrontLeft,INPUT_ANALOG);      //int sensorFrontLeft
+  pinMode(sensorFrontRight,INPUT_ANALOG);     //int sensorFrontRight
+  pinMode(sensorDiagonalLeft,INPUT_ANALOG);   //int sensorDiagonalLeft
   pinMode(sensorDiagonalRight,INPUT_ANALOG);  //int sensorDiagonalRight
-  pinMode(sensorSideLeft,INPUT_ANALOG);  //int sensorSideLeft
-  pinMode(sensorSideRight,INPUT_ANALOG);  //int sensorSideRight
+  pinMode(sensorSideLeft,INPUT_ANALOG);       //int sensorSideLeft
+  pinMode(sensorSideRight,INPUT_ANALOG);      //int sensorSideRight
 
-  pinMode(ledOne,OUTPUT);  //int led
-  pinMode(ledTwo,OUTPUT);  //int led
+  pinMode(ledOne,OUTPUT);    //int led
+  pinMode(ledTwo,OUTPUT);    //int led
   pinMode(ledThree,OUTPUT);  //int led
 
   pinMode(PWMLeft, PWM);
@@ -24,150 +24,94 @@ void setup()
   pwmWrite(PWMLeft, 0);
   pwmWrite(PWMRight, 0);
 
-  pinMode(encoderLeftCLK, INPUT);  //encoder clock pin
-  pinMode(encoderLeftDirc, INPUT);  //encoder direction pin
+  pinMode(encoderLeftCLK, INPUT);    //encoder clock pin
+  pinMode(encoderLeftDirc, INPUT);   //encoder direction pin
   pinMode(encoderRightCLK, INPUT);
   pinMode(encoderRightDirc, INPUT);
 
-  //global interrupts for sensor
-  Timer2.pause();
-  Timer2.setPrescaleFactor(72);                        // set freq = system(72MHz) / 72000 = 1kHz
-  Timer2.setPeriod(sensorRate);                        // Set up period, 1period = 1 ms
-  Timer2.setChannel1Mode(TIMER_OUTPUT_COMPARE);        // CH1 of timer4 is pin D16
-  Timer2.setCompare(TIMER_CH1, 1);                     // Interrupt for every 1 update
+/*=======================================================  Interrupts  =======================================================*/
+  Timer2.pause();                                      // to set timer clock, please go global.h to change timerRate
+  Timer3.pause();
+  Timer2.setPrescaleFactor(72);                        // set freq = system(72MHz) / 72 = 1MHz, counter++ for every 1us
+  Timer3.setPrescaleFactor(72);
+  Timer2.setOverflow(timerRate);                       // Set period = timerRate * 1us
+  Timer3.setOverflow(timerRate);
+  Timer2.setChannel1Mode(TIMER_OUTPUT_COMPARE);        // CH1 of timer2 is pin D11
+  Timer3.setChannel1Mode(TIMER_OUTPUT_COMPARE);        // CH1 of timer3 is pin D5
+  Timer2.setCompare(TIMER_CH1, 1);                     // Interrupt at counter = 1
+  Timer3.setCompare(TIMER_CH1, 1);
   Timer2.attachCompare1Interrupt(globalInterrupt);     // the function that will be called
+  Timer3.attachCompare1Interrupt(timer);
   Timer2.refresh();                                    // Refresh the timer's count, prescale, and overflow
+  Timer3.refresh();
   Timer2.resume();                                     // Start the timer counting
+  Timer3.resume();
 
   attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
-  //attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
+//  attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);  //broken encoder
+  
+/*=======================================================  Initialize  =======================================================*/
+
 }
 
-/*===================  Interrput functions  =======================*/
-int error = 0;
-int last_errorr = 0;
-int d_error = 0;
+void timer(void)  { time++; }
+
 void globalInterrupt(void)
 {
-  //Sensor
-
+  //sensor
   sensor.runAllSensor();
   
-/*  
-  if ( abs(abs(status.wheelCountLeft) - turnCount) != 0 )
-  {
-    last_errorr = error;
-    error = turnCount - abs(status.wheelCountLeft);
-    d_error = error - last_errorr; 
-    motor.turnLeft(2000*(error) + 10*d_error/.001);
-  }
-  else
-    motor.stop();
-*/
+  //encodercount per second
+  angularVelocity = (status.countLeft - status.countLeftLast) / 0.001;
 
-  
- 
-  if (status.frontLeftDist > 10)
-    {
-      int correction = round(1000 * status.orientation+ .2*(status.orientation-d_error)/.001);
-      motor.motorRight(10000 + correction);
-      motor.motorLeft(10000 - correction);
-      d_error = status.orientation;
-    }
-  else
-    motor.stop();
-    
-
-  //Mapping motor handling
-
-  //motor.applyMotorMapping();
-
-
+  //apply PID
+  motor.PID();
 }
 
 void encoderLeftInterrupts(void)
 {
-  if(digitalRead(encoderLeftDirc) == HIGH)
-    status.wheelCountLeft++;
-  else
-    status.wheelCountLeft--;
+  if(digitalRead(encoderLeftDirc) == HIGH)  status.countLeft++;
+  else  status.countLeft--;
 }
 
 void encoderRightInterrupts(void)
 {
-  if(digitalRead(encoderRightDirc) == HIGH)
-    status.wheelCountRight++;
-  else
-    status.wheelCountRight--;
+  if(digitalRead(encoderRightDirc) == HIGH)  status.countRight++;
+  else  status.countRight--;
 }
 
 
-/*=======================  Void Loop  =========================*/
 void loop()
 {
-//SerialUSB.println(status.wheelCountLeft);
-/*SerialUSB.print(status.diagonalRightDist);
-SerialUSB.print("\t");
-SerialUSB.println(status.diagonalLeftDist);*/
-
-/*===================  one time instructions  =======================*/
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+/*===================  Encoder print  =======================*/
 /*
-  //initail setup
-  if(initializeState==false)
-   {
-     status.initialize();
-     maze.initialize();
-     initializeState = true;
-   }
-
-
-/*===================  Encoder testing  =======================*/
-
-/*
-
   SerialUSB.print(status.wheelCountLeft);
   SerialUSB.print("\t");
 
   SerialUSB.print(status.wheelCountRight);
   SerialUSB.print("\t");
   SerialUSB.println(status.speedLeft);
-
-
-
-/*===================  Sensor testing  =======================*/
-/*
-  status.printAll();
-
-/*===================  Driving test  =======================*/
-/*
-  if(status.frontLeftDist > 5)
-    motor.goStraight(driveSpeed);
-  motor.stop();
-
-
-/*===================  Turnning test  =======================*/
-/*
-  if(turn==false)
-  {
-    motor.turnLeft(turnSpeed);
-    turn = true;
-  }
 */
-
-/*===================  FullSpeed test  =======================*/
-/*
-  int count = status.wheelCountLeft;
-  
-  if(status.wheelCountLeft - count < 5000)
-    motor.goStraight(fullSpeed);
-  else
-    motor.stop();
-
-
-
-
-
-/*===================  END  =======================*/
+/*=======================================================  End  =======================================================*/
 }
 
 

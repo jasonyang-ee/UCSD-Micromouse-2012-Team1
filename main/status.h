@@ -6,49 +6,55 @@
 class Status{
 public:
   //sensor status
-  volatile double frontLeftDist;
-  volatile double frontRightDist;
-  volatile double sideLeftDist;
-  volatile double sideRightDist;
-  volatile double diagonalLeftDist;
-  volatile double diagonalRightDist;
+  volatile double distFrontLeft;
+  volatile double distFrontRight;
+  volatile double distSideLeft;
+  volatile double distSideRight;
+  volatile double distDiagonalLeft;
+  volatile double distDiagonalRight;
   
   //raw sensor status
-  volatile int frontLeftVolt;
-  volatile int frontRightVolt;
-  volatile int sideLeftVolt;
-  volatile int sideRightVolt;
-  volatile int diagonalLeftVolt;
-  volatile int diagonalRightVolt;
-  
-  //running mode
-  int mode;
+  volatile int voltFrontLeft;
+  volatile int voltFrontRight;
+  volatile int voltSideLeft;
+  volatile int voltSideRight;
+  volatile int voltDiagonalLeft;
+  volatile int voltDiagonalRight;
   
   //position status
-  Cell *currentCell;
-  volatile double orientation;      //set by sensor class
-  volatile double deviation;        //set by sensor class
-  volatile double balance;
+  Cell *currentCell;    //cell pointer
+  volatile double errorDiagonal;  //error for PID
+  volatile double errorSide;
+  volatile double errorFront;
   int compass;
   int x; //Current X position of Mouse
   int y; //Current Y position of Mouse
   
   //old position
-  double oldOrientation;
-  double oldDeviation;
-  double oldBalance;
+  double errorDiagonalLast;
+  double errorSideLast;
+  double errorFrontLast;
   
   //encoder status
-  volatile int wheelCountLeft ;      //set by timmer2 ch1
-  volatile int wheelCountRight;     //set by timmer2 ch1
-  
+  volatile int countLeft;  //wheel encoder count
+  volatile int countRight;
+  volatile int countLeftLast;  //wheel encoder count last one
+  volatile int countRightLast;
+
   //motor status
   int speedLeft;
   int speedRight;
   
+  //control PID drive type
+  int modeDrive;
+  
+  //control drive detail
+  int scenarioStraight;
+  
 public:
   void initialize();
   void printAll();
+  void printSensor();
 };
 
 

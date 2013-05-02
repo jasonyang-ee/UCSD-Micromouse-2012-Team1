@@ -7,46 +7,36 @@
 #include "sensor.h"
 #include "status.h"
 
-/*================== Maze Constant ====================*/
-#define mazeSize 16 //cells
+/*=====================  maze constant  =====================*/
+//cell per side
+#define mazeSize 16
+#define cellLength 18
 
-/*================== Sensor Constant ====================*/
-#define cellLength 18 //cm
-
-/*================== Sensor Constant ====================*/
-
-//sensor interrupt
-#define sensorRate 5      // in period, 1 period = 1 ms
+/*=====================  sensor constant  =====================*/
+//counter++ for every 1us, and interrupt for every 1000 count
+//interrupt in every 1us * this value = period
+#define timerRate 100
 
 //sensor sample rate and sample numbers
 #define sampleNum 20
 
 //minimun distance between wall and mouse in one cell
-#define wallExistDist 7
+#define wallExistDist 13
 
-
-/*================== Motor Constant ====================*/
-
-//for fixOrientation
-#define orientationConstant 1800 //for mapping, might need to
-                                 //increase for speed run
-#define deviationConstant 10
-
+/*=====================  motor constant  =====================*/
 //speed constant
-#define fullSpeed 65536
-#define mappingSpeed 10000
-#define driveSpeed 10000
-#define turnSpeed 10000
+#define speedFull 65536
+#define speedMap 10000
+#define speedRotate 10000
+#define speedTurn 10000
 
-#define driveRatio 6/15
+#define turnRatio 6/15
 
-#define turnCount 95
-#define UturnCount 250
-#define driveTurnCount 300
+#define rotateCount 95
+#define rotateBackCount 250
+#define turnCount 300
 
-
-/*================== Pin Constant ====================*/
-
+/*=====================  pin constant  =====================*/
 //Reciever
 #define sensorFrontLeft 6
 #define sensorFrontRight 5
@@ -74,7 +64,7 @@
 #define encoderRightDirc 31
 #define encoderRightCLK 30
 
-/*================== object declear ====================*/
+/*=====================  object declare  =====================*/
 Maze maze;
 Sensor sensor;
 Motor motor;
@@ -82,14 +72,21 @@ Cell cell[16][16];  //CELL cell[y][x];
 Cell emptyCell;
 Status status;
 
-/*================== mouse state ====================*/
-bool initializeState = false;
-#define mapping 1
-#define racing 2
+/*=====================  global varriable  =====================*/
+int time = 0;
+int angularVelocity = 0;
 
+/*=====================  mode value  =====================*/
+//modeDrive
+#define modeBreaking 0
+#define modeStop 1
+#define modeStraight 2
+#define modeRotate 3
+#define modeTurn 4
 
-/*================== stack mem ====================*/
-bool turn = false;
+//scenarioStraight
+#define followRight 1
+#define followLeft 2
 
 
 #endif
