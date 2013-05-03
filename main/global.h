@@ -86,5 +86,11 @@ Status status;
 #define followLeft 2
 #define fishBone 3
 
+//scenarioRotate
+//scenarioTurn
+#define left 1
+#define right 2
+#define back 3
+
 
 #endif

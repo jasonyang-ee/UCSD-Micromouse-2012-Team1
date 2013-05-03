@@ -30,7 +30,7 @@ public:
   void errorDiagonalDiff();
   void errorSideDiff();
   void errorFrontDiff();
-  void errorCountRightDiff();
+  void errorCountLeftDiff();
 };
 
 #endif

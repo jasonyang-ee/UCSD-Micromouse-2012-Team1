@@ -20,6 +20,14 @@ void Motor::PID()
         motor.motorRight(speedMap + correction);
         motor.motorLeft(speedMap - correction);
       }
+      if(status.scenarioStraight == followLeft)
+      {
+        
+      }
+      if(status.scenarioStraight == fishBone)
+      {
+        
+      }
     }
     else
       motor.stop();
@@ -28,7 +36,16 @@ void Motor::PID()
   /*------------------------------------------  rotate PID  ------------------------------------------*/
   else if(status.modeDrive == modeRotate)
   {
-    //code
+    if(status.scenarioRotate == left)
+      if ( abs(status.countLeft) - turnCount != 0 )
+      {
+        last_errorr = error;
+        error = turnCount - abs(status.wheelCountLeft);
+        d_error = error - last_errorr; 
+        motor.turnLeft(2000*(error) + 10*d_error/.001);
+      }
+      else
+        motor.stop();
   }
 
   /*------------------------------------------  turn PID  ------------------------------------------*/

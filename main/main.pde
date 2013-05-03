@@ -49,11 +49,23 @@ void setup()
 
 void globalInterrupt(void)
 {
-  //sensor
+  /*--------------------------------------------------------------
+  runAllSensor: reads distance, converte all raw data
+    - error from distance
+    - angularVelocity
+    - converted error sum, error diff
+  --------------------------------------------------------------*/
   sensor.runAllSensor();
 
-  //apply PID
+  /*--------------------------------------------------------------
+  PID: continue run motor base on given drive instruction
+    - run until the instruction finished, and stop the mouse
+    - stop then wait for next instruction
+  --------------------------------------------------------------*/
   motor.PID();
+  
+  
+  
 }
 
 void encoderLeftInterrupts(void)

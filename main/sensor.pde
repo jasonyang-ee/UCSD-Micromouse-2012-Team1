@@ -150,7 +150,7 @@ void Sensor::errorFront()
 /*=======================================================  PID  =======================================================*/
 void Sensor::angularVelocity()
 {
-  status.angularVelocity = (status.countLeft - status.countLeftLast) / 0.001;
+  status.angularVelocity = (absstatus.countLeft - status.countLeftLast) / 0.001;
 }
 
 void Sensor::errorDiagonalTotal()  { status.errorDiagonalTotal += status.errorDiagonal; }
@@ -167,4 +167,4 @@ void Sensor::errorSideDiff()  { status.errorSideDiff = status.errorSide - status
 
 void Sensor::errorFrontDiff()  { status.errorFrontDiff = status.errorFront - status.errorFrontLast; }
 
-void Sensor::errorCountLeft()  { status.errorCountLeftDiff = status.errorCountLeft - status.errorCountLeftLast; }
+void Sensor::errorCountLeftDiff()  { status.errorCountLeftDiff = abs(status.errorCountLeft - status.errorCountLeftLast); }
