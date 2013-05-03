@@ -324,51 +324,51 @@ int Maze::decide(int scenario)
                                                                                   -Sets nextdead if necessary
                                                                                   -Returns Value of Next Case
                                                                               */
-      if (status.distSideLeft < wallExistDist && status.distSideRight < wallExistDist                   //Case 1, Two walls Left Right Side. Forward Open
-        && status.distFrontLeft > wallExistDist && status.distFrontRight > wallExistDist)
+      if (status.distSideLeft < distWallExist && status.distSideRight < distWallExist                   //Case 1, Two walls Left Right Side. Forward Open
+        && status.distFrontLeft > distWallExist && status.distFrontRight > distWallExist)
       {
         return 1;
       }
       
-      if (status.distSideLeft > wallExistDist && status.distSideRight < wallExistDist                   //Case 2, Wall Exists in Front and Right, Left Open
-          && status.distFrontLeft < wallExistDist && status.distFrontRight < wallExistDist)
+      if (status.distSideLeft > distWallExist && status.distSideRight < distWallExist                   //Case 2, Wall Exists in Front and Right, Left Open
+          && status.distFrontLeft < distWallExist && status.distFrontRight < distWallExist)
       {
         return 5;
       }
       
-      if (status.distSideLeft < wallExistDist && status.distSideRight > wallExistDist                   //Case 3, Wall Exists in Front and Left, Right Open
-          && status.distFrontLeft < wallExistDist && status.distFrontRight < wallExistDist)
+      if (status.distSideLeft < distWallExist && status.distSideRight > distWallExist                   //Case 3, Wall Exists in Front and Left, Right Open
+          && status.distFrontLeft < distWallExist && status.distFrontRight < distWallExist)
       {
         return 8;
       }
       
-      if (status.distSideLeft < wallExistDist && status.distSideRight < wallExistDist                   //Case 4, Wall Exists On All Sides (except Behind)
-          && status.distFrontLeft < wallExistDist && status.distFrontRight < wallExistDist)
+      if (status.distSideLeft < distWallExist && status.distSideRight < distWallExist                   //Case 4, Wall Exists On All Sides (except Behind)
+          && status.distFrontLeft < distWallExist && status.distFrontRight < distWallExist)
       {
         nextdead = true;        //When going back, next intersection it reaches will make it put cell behind it to dead.  
         return 9;
       }
       
-      if (status.distSideLeft > wallExistDist && status.distSideRight > wallExistDist                   //Case 5, Wall Exists in Front, open Rest
-          && status.distFrontLeft < wallExistDist && status.distFrontRight < wallExistDist)
+      if (status.distSideLeft > distWallExist && status.distSideRight > distWallExist                   //Case 5, Wall Exists in Front, open Rest
+          && status.distFrontLeft < distWallExist && status.distFrontRight < distWallExist)
       {
         return 11;
       }
       
-      if (status.distSideLeft > wallExistDist && status.distSideRight < wallExistDist                                 //Case 6, Wall Exists Right Only, Rest Open
-          && status.distFrontLeft > wallExistDist && status.distFrontRight > wallExistDist)
+      if (status.distSideLeft > distWallExist && status.distSideRight < distWallExist                                 //Case 6, Wall Exists Right Only, Rest Open
+          && status.distFrontLeft > distWallExist && status.distFrontRight > distWallExist)
       {
         return 13;
       }
       
-      if (status.distSideLeft < wallExistDist && status.distSideRight > wallExistDist                                 //Case 7, Wall Exists Left Only, Rest Open
-          && status.distFrontLeft > wallExistDist && status.distFrontRight > wallExistDist)
+      if (status.distSideLeft < distWallExist && status.distSideRight > distWallExist                                 //Case 7, Wall Exists Left Only, Rest Open
+          && status.distFrontLeft > distWallExist && status.distFrontRight > distWallExist)
       {
         return 15;
       }
       
-      if (status.distSideLeft > wallExistDist && status.distSideRight > wallExistDist                                 //Case 8, No Walls, Special Case
-          && status.distFrontLeft > wallExistDist && status.distFrontRight > wallExistDist)
+      if (status.distSideLeft > distWallExist && status.distSideRight > distWallExist                                 //Case 8, No Walls, Special Case
+          && status.distFrontLeft > distWallExist && status.distFrontRight > distWallExist)
       { 
         return 17;    
       }                                                                        
@@ -388,11 +388,11 @@ void Maze::mapping()
     status.countLeft = 0;                                                           //Resets Encoders to Zero
     status.countRight = 0;
     
-    if (status.distSideLeft < wallExistDist && status.distSideRight < wallExistDist       //Case 1, Two walls Left Right Side. Forward Open
-        && status.distFrontLeft > wallExistDist && status.distFrontRight > wallExistDist)
+    if (status.distSideLeft < distWallExist && status.distSideRight < distWallExist       //Case 1, Two walls Left Right Side. Forward Open
+        && status.distFrontLeft > distWallExist && status.distFrontRight > distWallExist)
     {
-      while(status.distSideLeft < wallExistDist && status.distSideRight < wallExistDist 
-          && status.distFrontLeft > wallExistDist && status.distFrontRight > wallExistDist)
+      while(status.distSideLeft < distWallExist && status.distSideRight < distWallExist 
+          && status.distFrontLeft > distWallExist && status.distFrontRight > distWallExist)
       {
       motor.goStraight(speed);
       }
@@ -448,8 +448,8 @@ void Maze::mapping()
       status.y += directy;
     }
     
-    if (status.distSideLeft > wallExistDist && status.distSideRight < wallExistDist                   //Case 2, Wall Exists in Front and Right, Left Open
-        && status.distFrontLeft < wallExistDist && status.distFrontRight < wallExistDist)
+    if (status.distSideLeft > distWallExist && status.distSideRight < distWallExist                   //Case 2, Wall Exists in Front and Right, Left Open
+        && status.distFrontLeft < distWallExist && status.distFrontRight < distWallExist)
     {
       motor.turnLeft (speed);
       
@@ -508,8 +508,8 @@ void Maze::mapping()
       
     }
     
-    if (status.distSideLeft < wallExistDist && status.distSideRight > wallExistDist                   //Case 3, Wall Exists in Front and Left, Right Open
-        && status.distFrontLeft < wallExistDist && status.distFrontRight < wallExistDist)
+    if (status.distSideLeft < distWallExist && status.distSideRight > distWallExist                   //Case 3, Wall Exists in Front and Left, Right Open
+        && status.distFrontLeft < distWallExist && status.distFrontRight < distWallExist)
     {
       motor.turnRight (speed);
       
@@ -567,8 +567,8 @@ void Maze::mapping()
       status.y += directy;
     }
     
-    if (status.distSideLeft < wallExistDist && status.distSideRight < wallExistDist                   //Case 4, Wall Exists On All Sides (except Behind)
-        && status.distFrontLeft < wallExistDist && status.distFrontRight < wallExistDist)
+    if (status.distSideLeft < distWallExist && status.distSideRight < distWallExist                   //Case 4, Wall Exists On All Sides (except Behind)
+        && status.distFrontLeft < distWallExist && status.distFrontRight < distWallExist)
     {
       motor.rotateBack(speed);
       
@@ -622,8 +622,8 @@ void Maze::mapping()
       
     }
     
-    if (status.distSideLeft > wallExistDist && status.distSideRight > wallExistDist                   //Case 5, Wall Exists in Front, open Rest
-        && status.distFrontLeft < wallExistDist && status.distFrontRight < wallExistDist)
+    if (status.distSideLeft > distWallExist && status.distSideRight > distWallExist                   //Case 5, Wall Exists in Front, open Rest
+        && status.distFrontLeft < distWallExist && status.distFrontRight < distWallExist)
     {
       
       //Maps out Walls Based on Direction if not visited
@@ -783,8 +783,8 @@ void Maze::mapping()
        status.y += directy;
     }
     
-    if (status.distSideLeft > wallExistDist && status.distSideRight < wallExistDist                                 //Case 6, Wall Exists Right Only, Rest Open
-        && status.distFrontLeft > wallExistDist && status.distFrontRight > wallExistDist)
+    if (status.distSideLeft > distWallExist && status.distSideRight < distWallExist                                 //Case 6, Wall Exists Right Only, Rest Open
+        && status.distFrontLeft > distWallExist && status.distFrontRight > distWallExist)
     {
      //Maps out Walls Based on Direction if not visited
       
@@ -903,8 +903,8 @@ void Maze::mapping()
        status.y += directy;
     }
     
-    if (status.distSideLeft < wallExistDist && status.distSideRight > wallExistDist                                 //Case 7, Wall Exists Left Only, Rest Open
-        && status.distFrontLeft > wallExistDist && status.distFrontRight > wallExistDist)
+    if (status.distSideLeft < distWallExist && status.distSideRight > distWallExist                                 //Case 7, Wall Exists Left Only, Rest Open
+        && status.distFrontLeft > distWallExist && status.distFrontRight > distWallExist)
     {
       //Maps out Walls Based on Direction if not visited
       
@@ -1024,8 +1024,8 @@ void Maze::mapping()
                   
     }
     
-    if (status.distSideLeft > wallExistDist && status.distSideRight > wallExistDist                                 //Case 8, No Walls, Special Case
-        && status.distFrontLeft > wallExistDist && status.distFrontRight > wallExistDist)
+    if (status.distSideLeft > distWallExist && status.distSideRight > distWallExist                                 //Case 8, No Walls, Special Case
+        && status.distFrontLeft > distWallExist && status.distFrontRight > distWallExist)
     {
       if (cell[status.y][status.x].visit == false)       //No Walls for Any Direction
       {
@@ -1423,13 +1423,4 @@ void Maze::initialize()
   directy = 1; //Facing North
   directx = 0; //Vertical
 }
-
-
-/*===================  debug functions  =======================*/
-
-void Maze::printAll()
-{
-//print all status variable for debug 
-}
-
 

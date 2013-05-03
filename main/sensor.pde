@@ -18,12 +18,13 @@ void Sensor::runAllSensor()
   status.distSideRight = convertDistance(status.voltSideRight, 4);
   status.distDiagonalLeft = convertDistance(status.voltDiagonalLeft, 5);
   status.distDiagonalRight = convertDistance(status.voltDiagonalRight, 6);
+  status.distFront = (status.distFrontLeft + status.distFrontRight)/2;
   
   //set errors
   setScenario();
-  setErrorDiagonal();
-  setErrorSide();
-  setErrorFront();
+  errorDiagonal();
+  errorSide();
+  errorFront();
 }
 
 
@@ -106,33 +107,64 @@ void Sensor::setScenario()
   if(status.modeDrive)
   {
     /*------------------------------------------  straight scenario  ------------------------------------------*/
-    if(status.distSideLeft > 5)
+    if(status.distSideLeft > distWallExist && status.distFront > distWallExist)
       status.scenarioStraight = followRight;
-    else if(status.distSideRight > 5)
+    else if(status.distSideRight > distWallExist)
       status.scenarioStraight = followLeft;
+    else if(status.distSideLeft > distWallExist && status.distSideRight > distWallExist)
+      status.scenarioStraight = fishBone;
   }
 
 }
 
 /*=======================================================  error  =======================================================*/
-void Sensor::setErrorDiagonal()
+void Sensor::errorRight()
 {
-//uses diagonal sensor to figure out orientation, horizontal sensor
-//as error measurement
+  //uses diagonal sensor to figure out orientation, horizontal sensor
+  //as error measurement
+  status.errorDiagonalLast = status.errorDiagonal;
   int setpoint1 = 11;
   int setpoint2 = 3.59;
   status.errorDiagonal = (status.distDiagonalRight - setpoint1);
   status.errorDiagonal +=( status.errorDiagonal < 0 ? (setpoint2 - status.distSideRight):(status.distSideRight - setpoint2) );
 }
 
-void Sensor::setErrorSide()
+void Sensor::errorDiagonal()
+{
+  status.errorDiagonalLast = status.errorDiagonal;
+  status.errorDiagonal = (status.distDiagonalLeft - status.distDiagonalRight) * 0.703;
+}
+
+void Sensor::errorSide()
 {
   status.errorSideLast = status.errorSide;
   status.errorSide = status.distSideLeft - status.distSideRight;
 }
 
-void Sensor::setErrorFront()
+void Sensor::errorFront()
 {
   status.errorFrontLast = status.errorFront;
   status.errorFront = status.distFrontLeft - status.distFrontRight;
 }
+
+/*=======================================================  PID  =======================================================*/
+void Sensor::angularVelocity()
+{
+  status.angularVelocity = (status.countLeft - status.countLeftLast) / 0.001;
+}
+
+void Sensor::errorDiagonalTotal()  { status.errorDiagonalTotal += status.errorDiagonal; }
+
+void Sensor::errorSideTotal()  { status.errorSideTotal += status.errorSide; }
+
+void Sensor::errorFrontTotal()  { status.errorFrontTotal += status.errorFront; }
+
+void Sensor::errorCountLeftTotal()  { status.errorCountLeftTotal += status.errorCountLeft; }
+
+void Sensor::errorDiagonalDiff()  { status.errorDiagonalDiff = status.errorDiagonal - status.errorDiagonalLast; }
+
+void Sensor::errorSideDiff()  { status.errorSideDiff = status.errorSide - status.errorSideLast; }
+
+void Sensor::errorFrontDiff()  { status.errorFrontDiff = status.errorFront - status.errorFrontLast; }
+
+void Sensor::errorCountLeft()  { status.errorCountLeftDiff = status.errorCountLeft - status.errorCountLeftLast; }

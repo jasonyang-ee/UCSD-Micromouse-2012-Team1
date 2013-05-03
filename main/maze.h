@@ -14,7 +14,6 @@ public:
   int directy;
   
   void initialize();
-  void printAll();
 };
 
 

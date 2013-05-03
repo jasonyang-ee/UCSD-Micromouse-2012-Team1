@@ -21,7 +21,7 @@
 #define sampleNum 20
 
 //minimun distance between wall and mouse in one cell
-#define wallExistDist 13
+#define distWallExist 13
 
 /*=====================  motor constant  =====================*/
 //speed constant
@@ -72,21 +72,19 @@ Cell cell[16][16];  //CELL cell[y][x];
 Cell emptyCell;
 Status status;
 
-/*=====================  global varriable  =====================*/
-int time = 0;
-int angularVelocity = 0;
-
 /*=====================  mode value  =====================*/
 //modeDrive
-#define modeBreaking 0
-#define modeStop 1
+#define modeStop 0
+#define modeDecelerate 1
 #define modeStraight 2
 #define modeRotate 3
 #define modeTurn 4
 
 //scenarioStraight
+#define modeNull 0
 #define followRight 1
 #define followLeft 2
+#define fishBone 3
 
 
 #endif

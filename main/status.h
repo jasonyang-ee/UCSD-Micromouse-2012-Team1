@@ -6,6 +6,7 @@
 class Status{
 public:
   //sensor status
+  volatile double distFront;
   volatile double distFrontLeft;
   volatile double distFrontRight;
   volatile double distSideLeft;
@@ -21,19 +22,35 @@ public:
   volatile int voltDiagonalLeft;
   volatile int voltDiagonalRight;
   
-  //position status
+  //position
   Cell *currentCell;    //cell pointer
-  volatile double errorDiagonal;  //error for PID
-  volatile double errorSide;
-  volatile double errorFront;
   int compass;
   int x; //Current X position of Mouse
   int y; //Current Y position of Mouse
   
-  //old position
+  //error
+  volatile double errorRight;
+  volatile double errorDiagonal;  //error for PID
+  volatile double errorSide;
+  volatile double errorFront;
+  volatile double errorCountLeft;
+  
+  //preveous error
   double errorDiagonalLast;
   double errorSideLast;
   double errorFrontLast;
+  double errorCountLeftLast;
+  
+  //PID error
+  double errorDiagonalTotal;
+  double errorSideTotal;
+  double errorFrontTotal;
+  double errorCountLeftTotal;
+  
+  double errorDiagonalDiff;
+  double errorSideDiff;
+  double errorFrontDiff;
+  double errorCountLeftDiff;
   
   //encoder status
   volatile int countLeft;  //wheel encoder count
@@ -44,6 +61,7 @@ public:
   //motor status
   int speedLeft;
   int speedRight;
+  int angularVelocity;
   
   //control PID drive type
   int modeDrive;

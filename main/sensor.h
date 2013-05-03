@@ -5,18 +5,32 @@
 
 class Sensor{
 public:
-  volatile int voltage;
-
   void runAllSensor();
-  
+/*=======================================================  individual sensor  =======================================================*/
+  volatile int voltage;
   int runSensor(int);
+/*=======================================================  conversion  =======================================================*/
   int convertDistance(int, int);
-  
+/*=======================================================  scenario  =======================================================*/
   void setScenario();
+/*=======================================================  error  =======================================================*/
+  void errorRight();
+  void errorDiagonal();
+  void errorSide();
+  void errorFront();
+  void errorCountLeft();
+/*=======================================================  PID value  =======================================================*/
+  void angularVelocity();
+
+  void errorDiagonalTotal();
+  void errorSideTotal();
+  void errorFrontTotal();
+  void errorCountLeftTotal();
   
-  void setErrorDiagonal();
-  void setErrorSide();
-  void setErrorFront();
+  void errorDiagonalDiff();
+  void errorSideDiff();
+  void errorFrontDiff();
+  void errorCountRightDiff();
 };
 
 #endif

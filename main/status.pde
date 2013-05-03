@@ -5,11 +5,57 @@
 /*===================  initialize functions  =======================*/
 void Status::initialize()
 {
+  distFront = 0;
+  distFrontLeft = 0;
+  distFrontRight = 0;
+  distSideLeft = 0;
+  distSideRight = 0;
+  distDiagonalLeft = 0;
+  distDiagonalRight = 0;
+  
+  voltFrontLeft = 0;
+  voltFrontRight = 0;
+  voltSideLeft = 0;
+  voltSideRight = 0;
+  voltDiagonalLeft = 0;
+  voltDiagonalRight = 0;
+  
   currentCell = &cell[0][0];
-  sensor.runAllSensor();
   compass = 0;
+  x = 0;  y = 0;
+  
+  errorRight = 0;
+  errorDiagonal = 0;
+  errorSide = 0;
+  errorFront = 0;
+  errorCountLeft = 0;
+  
+  errorDiagonalLast = 0;
+  errorSideLast = 0;
+  errorFrontLast = 0;
+  errorCountLeftLast = 0;
+  
+  errorDiagonalTotal = 0;
+  errorSideTotal = 0;
+  errorFrontTotal = 0;
+  errorCountLeftTotal = 0;
+  
+  errorDiagonalDiff = 0;
+  errorSideDiff = 0;
+  errorFrontDiff = 0;
+  errorCountLeftDiff = 0;
+  
   countLeft = 0;
   countRight = 0;
+  countLeftLast = 0;
+  countRightLast = 0;
+
+  speedLeft = 0;  speedRight = 0;
+  angularVelocity = 0;
+  
+  modeDrive = modeStop;
+  
+  scenarioStraight = modeNull;
 }
 
 /*===================  print functions  =======================*/

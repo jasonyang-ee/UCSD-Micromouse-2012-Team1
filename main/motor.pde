@@ -7,16 +7,18 @@ void Motor::PID()
   /*------------------------------------------  stop PID  ------------------------------------------*/
   if(status.modeDrive == modeStop)  { motorLeft(0);  motorRight(0); }
   
+  else if(status.modeDrive == modeDecelerate)  { motor.decelerate(); }
+  
   /*------------------------------------------  straight PID  ------------------------------------------*/
   else if(status.modeDrive == modeStraight)
   {
-    if(status.distFrontLeft > 13)
+    if(status.distFrontLeft > distWallExist)
     {
       if(status.scenarioStraight == followRight)
       {
-        int correction = round(1000*status.errorDiagonal + ((status.errorDiagonalLast)/(.001)*5));
-        motor.motorRight(speedMap - correction);
-        motor.motorLeft(speedMap + correction);
+        int correction = round(1000*status.errorDiagonal + ((status.errorDiagonalDiff)/(.001)*5));
+        motor.motorRight(speedMap + correction);
+        motor.motorLeft(speedMap - correction);
       }
     }
     else
@@ -39,24 +41,31 @@ void Motor::PID()
 /*=======================================================  stop  =======================================================*/
 void Motor::stop()
 {
-  status.modeDrive = modeStop;                    //set mode
-  motorLeft(0);  motorRight(0);                   //set motor=0
-  if(status.modeDrive != modeStop) decelerate();  //start decelerate
-  motorLeft(0);  motorRight(0);                   //set motor=0
+  status.modeDrive = modeStop;                 //set modd
+  if(status.angularVelocity > 20)
+  {
+    status.modeDrive = modeDecelerate;
+    decelerate();                              //start decelerate
+  }
+  motorLeft(0);  motorRight(0);                //set motor=0
 }
 
 void Motor::decelerate()
 {
-  status.modeDrive = modeBreaking;
+  status.speedLeft * 0.95;
+  status.speedRight * 0.95;
   motorLeft(-status.speedLeft);        //set oppsite speed
   motorRight(-status.speedRight);      //set oppsite speed
-  int duration = (abs(status.speedLeft)+abs(status.speedRight))/30;   //set duration for breaking
-  for(time=0; time<duration;) continue;                               //decelerate for duration (ms)
+  if(status.angularVelocity < 10)
+    status.modeDrive = modeStop;
 }
 
 /*=======================================================  go  =======================================================*/
 void Motor::goStraight(int speed)
 {
+  status.errorDiagonalTotal=0;
+  status.errorSideTotal=0;
+  status.errorFrontTotal=0;
   status.modeDrive = modeStraight;              //set mode
   motorRight(speed);  motorLeft(speed);         //set speed
 }
@@ -64,6 +73,9 @@ void Motor::goStraight(int speed)
 //Moves forward one cell
 void Motor::goStraightOne (int speed)
 {
+  status.errorDiagonalTotal=0;
+  status.errorSideTotal=0;
+  status.errorFrontTotal=0;
   status.modeDrive = modeStraight;
   status.countRight = 0;
   status.countLeft = 0;
@@ -96,12 +108,18 @@ void Motor::rotateBack(int speed)
 /*=======================================================  turn  =======================================================*/
 void Motor::turnLeft(int speed)
 {
+  status.errorDiagonalTotal=0;
+  status.errorSideTotal=0;
+  status.errorFrontTotal=0;
   status.modeDrive = modeTurn;                  //set mode
   status.compass = (status.compass+3)%4;        //set compass
 }
 
 void Motor::turnRight(int speed)
 {
+  status.errorDiagonalTotal=0;
+  status.errorSideTotal=0;
+  status.errorFrontTotal=0;
   status.modeDrive = modeTurn;                  //set mode
   status.compass = (status.compass+1)%4;        //set compass 
 }
