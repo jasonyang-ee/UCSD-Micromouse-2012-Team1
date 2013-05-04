@@ -104,7 +104,7 @@ int Sensor::convertDistance(int volt, int c)
 /*=======================================================  scenario  =======================================================*/
 void Sensor::setScenario()
 {
-  if(status.modeDrive)
+  if(status.mode)
   {
     /*------------------------------------------  straight scenario  ------------------------------------------*/
     if(status.distSideLeft > distWallExist && status.distFront > distWallExist)
@@ -150,7 +150,7 @@ void Sensor::errorFront()
 /*=======================================================  PID  =======================================================*/
 void Sensor::angularVelocity()
 {
-  status.angularVelocity = (absstatus.countLeft - status.countLeftLast) / 0.001;
+  status.angularVelocity = abs(status.countLeft - status.countLeftLast) / 0.001;
 }
 
 void Sensor::errorDiagonalTotal()  { status.errorDiagonalTotal += status.errorDiagonal; }
@@ -166,5 +166,3 @@ void Sensor::errorDiagonalDiff()  { status.errorDiagonalDiff = status.errorDiago
 void Sensor::errorSideDiff()  { status.errorSideDiff = status.errorSide - status.errorSideLast; }
 
 void Sensor::errorFrontDiff()  { status.errorFrontDiff = status.errorFront - status.errorFrontLast; }
-
-void Sensor::errorCountLeftDiff()  { status.errorCountLeftDiff = abs(status.errorCountLeft - status.errorCountLeftLast); }

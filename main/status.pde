@@ -24,6 +24,8 @@ void Status::initialize()
   compass = 0;
   x = 0;  y = 0;
   
+  speedBase = 0;
+  
   errorRight = 0;
   errorDiagonal = 0;
   errorSide = 0;
@@ -53,7 +55,7 @@ void Status::initialize()
   speedLeft = 0;  speedRight = 0;
   angularVelocity = 0;
   
-  modeDrive = modeStop;
+  mode = modeStop;
   
   scenarioStraight = modeNull;
 }

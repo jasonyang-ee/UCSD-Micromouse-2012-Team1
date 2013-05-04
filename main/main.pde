@@ -49,6 +49,7 @@ void setup()
 
 void globalInterrupt(void)
 {
+    
   /*--------------------------------------------------------------
   runAllSensor: reads distance, converte all raw data
     - error from distance
@@ -57,6 +58,9 @@ void globalInterrupt(void)
   --------------------------------------------------------------*/
   sensor.runAllSensor();
 
+  if(status.mode == modeStop)
+    motor.goStraight(speedMap);
+
   /*--------------------------------------------------------------
   PID: continue run motor base on given drive instruction
     - run until the instruction finished, and stop the mouse
@@ -64,7 +68,19 @@ void globalInterrupt(void)
   --------------------------------------------------------------*/
   motor.PID();
   
+  /*--------------------------------------------------------------
+  mapping: traverse back to the straight path and update wall info
+    - use encoder to know #'s of cell, and update those wall info
+    - reset encoder
+    - set modeWait
+  --------------------------------------------------------------*/
+//  if(status.mode == modeStop)  maze.mapping();
   
+  /*--------------------------------------------------------------
+  decide: determine the next path to go after mapping
+    - give motor instruciton
+  --------------------------------------------------------------*/
+//  if(status.mode == modeWait)  maze.decide();
   
 }
 
@@ -83,8 +99,7 @@ void encoderRightInterrupts(void)
 
 void loop()
 {
-  
-  
+ 
   
   
   

@@ -73,12 +73,13 @@ Cell emptyCell;
 Status status;
 
 /*=====================  mode value  =====================*/
-//modeDrive
+//mode
 #define modeStop 0
 #define modeDecelerate 1
 #define modeStraight 2
 #define modeRotate 3
 #define modeTurn 4
+#define modeWait 5
 
 //scenarioStraight
 #define modeNull 0

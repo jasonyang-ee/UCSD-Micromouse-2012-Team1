@@ -28,6 +28,8 @@ public:
   int x; //Current X position of Mouse
   int y; //Current Y position of Mouse
   
+  int speedBase;
+  
   //error
   volatile double errorRight;
   volatile double errorDiagonal;  //error for PID
@@ -64,10 +66,11 @@ public:
   int angularVelocity;
   
   //control PID drive type
-  int modeDrive;
+  int mode;
   
   //control drive detail
   int scenarioStraight;
+  int scenarioRotate;
   
 public:
   void initialize();
