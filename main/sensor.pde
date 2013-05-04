@@ -21,7 +21,8 @@ void Sensor::runAllSensor()
   status.distFront = (status.distFrontLeft + status.distFrontRight)/2;
   
   //set errors
-  setScenario();
+  angularVelocity();
+//  setScenario();
   errorDiagonal();
   errorSide();
   errorFront();
@@ -49,7 +50,7 @@ int Sensor::runSensor(int sensorRef)
 }
 
 /*=======================================================  conversion  =======================================================*/
-int Sensor::convertDistance(int volt, int c)
+double Sensor::convertDistance(int volt, int c)
 {
   double x = 1.0/volt;
   //Front Left
@@ -150,7 +151,8 @@ void Sensor::errorFront()
 /*=======================================================  PID  =======================================================*/
 void Sensor::angularVelocity()
 {
-  status.angularVelocity = abs(status.countLeft - status.countLeftLast) / 0.001;
+  status.angularVelocity = status.countLeft - status.countLeftLast;
+  status.countLeftLast = status.countLeft;
 }
 
 void Sensor::errorDiagonalTotal()  { status.errorDiagonalTotal += status.errorDiagonal; }

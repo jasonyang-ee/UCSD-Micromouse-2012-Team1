@@ -381,25 +381,8 @@ int Maze::decide(int scenario)
 
 
 void Maze::mapping()
-{  
-  int speed = speedMap;
-  while(cell[status.y][status.x].goal == false)                                          //When current cell is not the goal. 
-  {
-    status.countLeft = 0;                                                           //Resets Encoders to Zero
-    status.countRight = 0;
-    
-    if (status.distSideLeft < distWallExist && status.distSideRight < distWallExist       //Case 1, Two walls Left Right Side. Forward Open
-        && status.distFrontLeft > distWallExist && status.distFrontRight > distWallExist)
-    {
-      while(status.distSideLeft < distWallExist && status.distSideRight < distWallExist 
-          && status.distFrontLeft > distWallExist && status.distFrontRight > distWallExist)
-      {
-      motor.goStraight(speed);
-      }
-      motor.stop();
-      //taking the wheel count average
-      int wheelCount = (status.countLeft + status.countRight)/2;
-      
+{
+  status.countLeft/
       
       //set wall if haven't yet
       if (cell[status.y][status.x].visit == false)

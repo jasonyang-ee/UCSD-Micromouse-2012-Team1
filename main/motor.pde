@@ -5,15 +5,21 @@
 void Motor::PID()
 {
   /*------------------------------------------  stop PID  ------------------------------------------*/
-  if(status.mode == modeStop)  { motorLeft(0);  motorRight(0); }
+  if(status.mode == modeStop)  { stop(); }
   
-  else if(status.mode == modeDecelerate)  { motor.decelerate(); }
+  else if(status.mode == modeDecelerate)  { decelerate(); }
   
   /*------------------------------------------  straight PID  ------------------------------------------*/
   else if(status.mode == modeStraight)
   {
-    if(status.distFrontLeft > distWallExist)
+    if(status.distFront > distWallExist)
     {
+      if(status.scenarioStraight == followBoth)
+      {
+        int correction = round(300 * status.errorDiagonal + 0.5*(status.errorDiagonalDiff)/0.001 + 0.1*status.errorDiagonalTotal);
+        motor.motorRight(status.speedRight + correction);
+        motor.motorLeft(status.speedLeft - correction);
+      }
       if(status.scenarioStraight == followRight)
       {
         int correction = round(1000*status.errorDiagonal + ((status.errorDiagonalDiff)/(.001)*5));
@@ -65,24 +71,27 @@ void Motor::PID()
 
 /*=======================================================  stop  =======================================================*/
 void Motor::stop()
-{
-  if(status.angularVelocity > 20)
+{ 
+  if( abs(status.speedLeft) < 1 && abs(status.speedRight) < 1)
   {
-    status.mode = modeDecelerate;
-    decelerate();                        //start decelerate
+    motorLeft(0);  motorRight(0);          //set motor=0
+    status.mode = modeStop;                //set modd
+    status.speedBase = 0;
   }
-  motorLeft(0);  motorRight(0);          //set motor=0
-  status.mode = modeStop;                //set modd
-  status.speedBase = 0;
+  else
+    decelerate();                        //start decelerate
 }
 
 void Motor::decelerate()
 {
-  status.speedLeft * 0.95;
-  status.speedRight * 0.95;
-  motorLeft(-status.speedLeft);        //set oppsite speed
-  motorRight(-status.speedRight);      //set oppsite speed
-  if(status.angularVelocity < 10)
+  status.mode = modeDecelerate;
+  int tempL = status.speedLeft * -0.995;
+  int tempR = status.speedRight * -0.995;
+  motorLeft(tempL);                     //set oppsite speed
+  motorRight(tempR);                    //set oppsite speed
+  status.speedLeft *= -1;
+  status.speedRight *= -1;
+  if( abs(status.speedLeft) < 1 && abs(status.speedRight) < 1)
     status.mode = modeStop;
 }
 
@@ -92,6 +101,8 @@ void Motor::goStraight(int speed)
   status.errorDiagonalTotal=0;
   status.errorSideTotal=0;
   status.errorFrontTotal=0;
+  status.countRight = 0;
+  status.countLeft = 0;
   status.mode = modeStraight;              //set mode
   motorRight(speed);  motorLeft(speed);    //set speed
   status.speedBase = speed;
@@ -200,6 +211,5 @@ void Motor::motorRight(int speed)
     pwmWrite(PWMRight, abs(speed)); //set speed
   }
 }
-
 
 

@@ -49,7 +49,11 @@ void setup()
 
 void globalInterrupt(void)
 {
-    
+  if(status.distFront > distWallExist)
+    motor.goStraight(speedMap);
+  else
+    motor.stop();
+  
   /*--------------------------------------------------------------
   runAllSensor: reads distance, converte all raw data
     - error from distance
@@ -57,9 +61,6 @@ void globalInterrupt(void)
     - converted error sum, error diff
   --------------------------------------------------------------*/
   sensor.runAllSensor();
-
-  if(status.mode == modeStop)
-    motor.goStraight(speedMap);
 
   /*--------------------------------------------------------------
   PID: continue run motor base on given drive instruction
@@ -99,12 +100,22 @@ void encoderRightInterrupts(void)
 
 void loop()
 {
- 
+  //SerialUSB.println(status.countLeft);
   
-  
-  
-  
-  
+  /*
+  SerialUSB.print(status.mode);
+  SerialUSB.print("\t");
+  SerialUSB.print(status.scenarioStraight);
+  SerialUSB.print("\t");  
+  SerialUSB.print(status.speedLeft);
+  SerialUSB.print("\t");
+  SerialUSB.println(status.speedRight);
+  */
+  //SerialUSB.print(status.distFront);
+  //SerialUSB.print("\t");
+  //SerialUSB.print(status.voltFrontLeft);
+  //SerialUSB.print("\t");
+  //SerialUSB.println(status.voltFrontRight);
   
   
   

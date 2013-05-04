@@ -10,7 +10,7 @@
 /*=====================  maze constant  =====================*/
 //cell per side
 #define mazeSize 16
-#define cellLength 18
+#define countCell 
 
 /*=====================  sensor constant  =====================*/
 //counter++ for every 1us, and interrupt for every 1000 count
@@ -85,7 +85,8 @@ Status status;
 #define modeNull 0
 #define followRight 1
 #define followLeft 2
-#define fishBone 3
+#define followBoth 3
+#define fishBone 4
 
 //scenarioRotate
 //scenarioTurn
