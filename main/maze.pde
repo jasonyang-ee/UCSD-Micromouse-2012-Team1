@@ -2,69 +2,10 @@
 
 
 /*=======================================================  decide  =======================================================*/
-void Maze::decide()
-{  
-  /*------------------------------------------  set scenario  ------------------------------------------*/
-  status.scenarioPath = 0;
-  if(status.cellCurrent->wall[(status.compass+north) % 4] == false)  status.scenarioPath += openNorth;
-  if(status.cellCurrent->wall[(status.compass+east) % 4] == false)  status.scenarioPath += openEast;
-  if(status.cellCurrent->wall[(status.compass+west) % 4] == false)  status.scenarioPath += openWest;
+int Maze::decide(int scenario)
+{
   
-  /*------------------------------------------  singal open  ------------------------------------------*/
-  if(status.scenarioPath == openNone)  motor.rotateBack(speedMap);
-  if(status.scenarioPath == openNorth)  motor.goStraight(speedMap);
-  if(status.scenarioPath == openEast)  motor.rotateRight(speedMap);
-  if(status.scenarioPath == openWest)  motor.rotateLeft(speedMap);
   
-  /*------------------------------------------  set home path  ------------------------------------------*/
-  if(status.scenarioFlag == flagBack)  status.cellCurrent->compassHome = (status.compass+2) % 4;
-  
-  /*------------------------------------------  multiple open  ------------------------------------------*/
-  if(status.scenarioPath == openNorthEast)
-  {
-    if(status.cellCurrent->cellNorth->visit == false)  motor.goStraight(speedMap);
-    else if(status.cellCurrent->cellEast->visit == false)  motor.rotateRight(speedMap);
-    else
-    {
-      if(status.cellCurrent->compassHome == north)  motor.goStraight(speedMap);
-      if(status.cellCurrent->compassHome == east)  motor.rotateRight(speedMap);
-      if(status.cellCurrent->compassHome == west)  motor.rotateLeft(speedMap);
-    }
-  }
-  if(status.scenarioPath == openNorthWest)
-  {
-    if(status.cellCurrent->cellNorth->visit == false)  motor.goStraight(speedMap);
-    else if(status.cellCurrent->cellWest->visit == false)  motor.rotateRight(speedMap);
-    else
-    {
-      if(status.cellCurrent->compassHome == north)  motor.goStraight(speedMap);
-      if(status.cellCurrent->compassHome == east)  motor.rotateRight(speedMap);
-      if(status.cellCurrent->compassHome == west)  motor.rotateLeft(speedMap);
-    }
-  }
-  if(status.scenarioPath == openEastWest)
-  {
-    if(status.cellCurrent->cellEast->visit == false)  motor.rotateLeft(speedMap);
-    else if(status.cellCurrent->cellWest->visit == false)  motor.rotateRight(speedMap);
-    else
-    {
-      if(status.cellCurrent->compassHome == north)  motor.goStraight(speedMap);
-      if(status.cellCurrent->compassHome == east)  motor.rotateRight(speedMap);
-      if(status.cellCurrent->compassHome == west)  motor.rotateLeft(speedMap);
-    }
-  }
-  if(status.scenarioPath == openAll)
-  {
-    if(status.cellCurrent->cellNorth->visit == false)  motor.goStraight(speedMap);
-    else if(status.cellCurrent->cellEast->visit == false)  motor.rotateLeft(speedMap);
-    else if(status.cellCurrent->cellWest->visit == false)  motor.rotateRight(speedMap);
-    else
-    {
-      if(status.cellCurrent->compassHome == north)  motor.goStraight(speedMap);
-      if(status.cellCurrent->compassHome == east)  motor.rotateRight(speedMap);
-      if(status.cellCurrent->compassHome == west)  motor.rotateLeft(speedMap);
-    }
-  }
 }
 
 
@@ -74,7 +15,7 @@ void Maze::mapping()
 {
   /*------------------------------------------  set position  ------------------------------------------*/
   int cellTraveled = status.countLeft / countCell;
-  Cell *cellMarker = status.cellCurrent; 
+  Cell *cellMarker = status.currentCell; 
   
   /*------------------------------------------  set arrived cell  ------------------------------------------*/
   if(status.distFront < 10)  cellMarker->wall[(status.compass+north) % 4] = true;
@@ -102,12 +43,8 @@ void Maze::mapping()
     if(status.compass==west)  cellMarker = cellMarker->cellEast;
     cellTraveled--;
   }
-  
-  /*------------------------------------------  aquire instruction  ------------------------------------------*/
-  status.mode = modeDecide;
 }
 
-/*------------------------------------------  update adjacent  ------------------------------------------*/
 void Maze::adjacentWall(Cell *cellMarker)
 {
   Cell *adjacentNorth=cellMarker->cellNorth;
@@ -115,63 +52,19 @@ void Maze::adjacentWall(Cell *cellMarker)
   Cell *adjacentSouth=cellMarker->cellSouth;
   Cell *adjacentWest=cellMarker->cellWest;
   if(cellMarker->wall[north]==true)  adjacentNorth->wall[south]=true;
-  if(cellMarker->wall[east]==true)  adjacentEast->wall[west]=true;
-  if(cellMarker->wall[south]==true)  adjacentSouth->wall[north]=true;
-  if(cellMarker->wall[west]==true)  adjacentWest->wall[east]=true;
+  if(cellMarker->wall[east]==true)  adjacentNorth->wall[west]=true;
+  if(cellMarker->wall[south]==true)  adjacentNorth->wall[north]=true;
+  if(cellMarker->wall[west]==true)  adjacentNorth->wall[east]=true;
 }
 
 
 /*=======================================================  flood fill  =======================================================*/
-void Maze::flood()
+void Maze::floodFill()
 {
-  //All cells floodValues are initially set to -1.
-  cell[mazeSize/2-1][mazeSize/2-1].floodValue = 0;
-  cell[mazeSize/2-1][mazeSize/2].floodValue = 0;
-  cell[mazeSize/2][mazeSize/2-1].floodValue = 0;
-  cell[mazeSize/2][mazeSize/2].floodValue = 0;
-  for (int curr_step=1; curr_step < mazeSize*mazeSize; curr_step++)
-    for (int y=0; y<mazeSize; y++)
-      for (int x=0; x<mazeSize; x++)
-        if (cell[y][x].visit == true && cell[y][x].floodValue == (curr_step - 1))
-          expand(y, x, curr_step);
+  
 }
 
-//Checks all four directions to see if there is a wall blocking.
-void Maze::expand(int y, int x, int curr_step)
-{
-  northFlood(y, x, curr_step);
-  eastFlood(y, x, curr_step);
-  southFlood(y, x, curr_step);
-  westFlood(y, x, curr_step);
-}
 
-void Maze::northFlood(int y, int x, int curr_step) 
-{
-  if ((y < 15) && !(cell[y][x].wall[0]))
-    if(cell[y+1][x].floodValue < 0)
-      cell[y+1][x].floodValue = curr_step; 
-}
-
-void Maze::eastFlood(int y, int x, int curr_step) 
-{
-  if (x < 15 && !(cell[y][x].wall[1]))
-    if (cell[y][x+1].floodValue < 0)
-      cell[y][x+1].floodValue = curr_step;
-}
-
-void Maze::southFlood(int y, int x, int curr_step) 
-{
-  if (y > 0 && !(cell[y][x].wall[2])) 
-    if (cell[y-1][x].floodValue < 0) 
-      cell[y-1][x].floodValue = curr_step;
-}
-
-void Maze::westFlood(int y, int x, int curr_step) 
-{
-  if (x > 0 && !(cell[y][x].wall[3]) )
-    if (cell[y][x-1].floodValue < 0) 
-      cell[y][x-1].floodValue = curr_step;
-}
 
 
 /*=======================================================  initialize  =======================================================*/
@@ -214,9 +107,25 @@ void Maze::initialize()
   cell[mazeSize/2][mazeSize/2-1].goal = true;
   cell[mazeSize/2][mazeSize/2].goal = true;
   
-  /*------------------------------------------  start cell  ------------------------------------------*/
-  cell[0][0].wall[south] = true;
-  
+  /*------------------------------------------  flood value  ------------------------------------------*/
+  for(int y=0; y<16; y++)
+    for(int x=0; x<16; x++)
+    {
+      if(y<=7)
+      {
+        if(x<=7)
+          cell[y][x].floodValue = 14-x-y;   //quadrant III
+        else if(x>=8)
+          cell[y][x].floodValue = x-y-1;    //quadrant IV
+      }
+      else if(y>=8)
+      {
+        if(x<=7)
+          cell[y][x].floodValue = y-x-1;    //quadrant II
+        else if(x>=8)
+          cell[y][x].floodValue = x+y-16;   //quadrant I
+      }
+    }
     
   /*------------------------------------------  empty cell  ------------------------------------------*/
   emptyCell.x = -1;

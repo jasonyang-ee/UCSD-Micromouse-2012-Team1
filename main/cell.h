@@ -9,7 +9,6 @@ public:
   bool wall[4];
   bool dead;
   int floodValue;
-  int compassHome;
   
   int x;
   int y;

@@ -16,9 +16,27 @@ void Motor::PID()
     {
       if(status.scenarioStraight == followBoth)
       {
-        int correction = round(300 * status.errorDiagonal + 0.5*(status.errorDiagonalDiff)/0.001 + 0.1*status.errorDiagonalTotal);
-        motor.motorRight(status.speedRight + correction);
-        motor.motorLeft(status.speedLeft - correction);
+         if (abs(status.errorDiagonalDiffLast) > abs (status.errorDiagonalDiff) || abs(status.errorDiagonalLast) > .25)
+         {
+         //   int correction = round(800 * status.errorDiagonal + 50*(status.errorDiagonalDiff)/.001);// + 10*status.errorDiagonalTotal);
+          /*suitable for 20,000: */int correction = round(1500 * status.errorDiagonal + 200*(status.errorDiagonalDiff)/.001 + 10*status.errorDiagonalTotal);
+            motor.motorRight(20000 + correction);
+            motor.motorLeft(20000 - correction);            
+            status.errorDiagonalDiffLast = status.errorDiagonalDiff;
+         }
+           /* if (correction > 0)
+            {
+              motor.motorRight(status.speedBase + correction);
+              motor.motorLeft(status.speedBase);
+            }
+            else
+            {
+               motor.motorLeft(status.speedBase - correction);
+               motor.motorRight(status.speedBase);
+            }
+            status.errorDiagonalDiffLast = status.errorDiagonalDiff;
+            */
+//       
       }
       if(status.scenarioStraight == followRight)
       {
@@ -108,7 +126,6 @@ void Motor::goStraight(int speed)
   status.speedBase = speed;
 }
 
-/*
 //Moves forward one cell
 void Motor::goStraightOne (int speed)
 {
@@ -122,7 +139,6 @@ void Motor::goStraightOne (int speed)
   if((status.countLeft)/2 > countCell)   //stop after one cell
     stop();
 }
-*/
 
 /*=======================================================  rotate  =======================================================*/
 void Motor::rotateLeft(int speed)

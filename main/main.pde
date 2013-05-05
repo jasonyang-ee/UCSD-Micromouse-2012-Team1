@@ -1,5 +1,6 @@
 #include "global.h"
 
+
 void setup()
 {
 /*=======================================================  pin setup  =======================================================*/
@@ -47,7 +48,9 @@ void setup()
 }
 
 void globalInterrupt(void)
-{  
+{
+
+  
   /*--------------------------------------------------------------
   runAllSensor: reads distance, converte all raw data
     - error from distance
@@ -61,6 +64,11 @@ void globalInterrupt(void)
     - run until the instruction finished, and stop the mouse
     - stop then wait for next instruction
   --------------------------------------------------------------*/
+  if(status.distFront > distWallExist)
+    motor.goStraight(20000);
+  else
+    motor.stop();
+  
   motor.PID();
   
   /*--------------------------------------------------------------
@@ -69,13 +77,13 @@ void globalInterrupt(void)
     - reset encoder
     - set modeWait
   --------------------------------------------------------------*/
-  if(status.mode == modeStop)  maze.mapping();
+//  if(status.mode == modeStop)  maze.mapping();
   
   /*--------------------------------------------------------------
   decide: determine the next path to go after mapping
     - give motor instruciton
   --------------------------------------------------------------*/
-  if(status.mode == modeDecide)  maze.decide();
+//  if(status.mode == modeWait)  maze.decide();
   
 }
 
@@ -94,16 +102,22 @@ void encoderRightInterrupts(void)
 
 void loop()
 {
-
+/*
+  SerialUSB.print(status.errorDiagonalDiffLast);
+  SerialUSB.print("\t");
+  SerialUSB.print(status.errorDiagonalDiff);
+  SerialUSB.print("\t");
+  SerialUSB.print(status.distDiagonalRight);
+  SerialUSB.print("\t");
+  SerialUSB.println(status.distDiagonalLeft);
+*/
   
   
   
   
   
-  
-  
-  
-  
+if(isButtonPressed())
+  SerialUSB.println(timesIgnored);
   
   
   
