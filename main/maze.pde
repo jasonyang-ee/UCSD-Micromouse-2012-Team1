@@ -2,10 +2,68 @@
 
 
 /*=======================================================  decide  =======================================================*/
-int Maze::decide(int scenario)
+void Maze::decide()
 {
+  /*------------------------------------------  set home path  ------------------------------------------*/
+  status.cellCurrent->compassHome = (status.compass+2) % 4;
   
+  /*------------------------------------------  set scenario  ------------------------------------------*/
+  status.scenarioDecide = 0;
+  if(status.cellCurrent->wall[(status.compass+north) % 4] == false)  status.scenarioDecide += openNorth;
+  if(status.cellCurrent->wall[(status.compass+east) % 4] == false)  status.scenarioDecide += openEast;
+  if(status.cellCurrent->wall[(status.compass+west) % 4] == false)  status.scenarioDecide += openWest;
   
+  /*------------------------------------------  instruction  ------------------------------------------*/
+  if(status.scenarioDecide == openNone)  motor.rotateBack(speedMap);
+  if(status.scenarioDecide == openNorth)  motor.goStraight(speedMap);
+  if(status.scenarioDecide == openEast)  motor.rotateRight(speedMap);
+  if(status.scenarioDecide == openWest)  motor.rotateLeft(speedMap);
+  
+  if(status.scenarioDecide == openNorthEast)
+  {
+    if(status.cellCurrent->cellNorth->visit == false)  motor.goStraight(speedMap);
+    else if(status.cellCurrent->cellEast->visit == false)  motor.rotateLeft(speedMap);
+    else
+    {
+      if(status.cellCurrent->compassHome == north)  motor.goStraight(speedMap);
+      if(status.cellCurrent->compassHome == east)  motor.rotateRight(speedMap);
+      if(status.cellCurrent->compassHome == west)  motor.rotateLeft(speedMap);
+    }
+  }
+  if(status.scenarioDecide == openNorthWest)
+  {
+    if(status.cellCurrent->cellNorth->visit == false)  motor.goStraight(speedMap);
+    else if(status.cellCurrent->cellWest->visit == false)  motor.rotateRight(speedMap);
+    else
+    {
+      if(status.cellCurrent->compassHome == north)  motor.goStraight(speedMap);
+      if(status.cellCurrent->compassHome == east)  motor.rotateRight(speedMap);
+      if(status.cellCurrent->compassHome == west)  motor.rotateLeft(speedMap);
+    }
+  }
+  if(status.scenarioDecide == openEastWest)
+  {
+    if(status.cellCurrent->cellEast->visit == false)  motor.rotateLeft(speedMap);
+    else if(status.cellCurrent->cellWest->visit == false)  motor.rotateRight(speedMap);
+    else
+    {
+      if(status.cellCurrent->compassHome == north)  motor.goStraight(speedMap);
+      if(status.cellCurrent->compassHome == east)  motor.rotateRight(speedMap);
+      if(status.cellCurrent->compassHome == west)  motor.rotateLeft(speedMap);
+    }
+  }
+  if(status.scenarioDecide == openAll)
+  {
+    if(status.cellCurrent->cellNorth->visit == false)  motor.goStraight(speedMap);
+    else if(status.cellCurrent->cellEast->visit == false)  motor.rotateLeft(speedMap);
+    else if(status.cellCurrent->cellWest->visit == false)  motor.rotateRight(speedMap);
+    else
+    {
+      if(status.cellCurrent->compassHome == north)  motor.goStraight(speedMap);
+      if(status.cellCurrent->compassHome == east)  motor.rotateRight(speedMap);
+      if(status.cellCurrent->compassHome == west)  motor.rotateLeft(speedMap);
+    }
+  }
 }
 
 
@@ -15,7 +73,7 @@ void Maze::mapping()
 {
   /*------------------------------------------  set position  ------------------------------------------*/
   int cellTraveled = status.countLeft / countCell;
-  Cell *cellMarker = status.currentCell; 
+  Cell *cellMarker = status.cellCurrent; 
   
   /*------------------------------------------  set arrived cell  ------------------------------------------*/
   if(status.distFront < 10)  cellMarker->wall[(status.compass+north) % 4] = true;
@@ -43,8 +101,12 @@ void Maze::mapping()
     if(status.compass==west)  cellMarker = cellMarker->cellEast;
     cellTraveled--;
   }
+  
+  /*------------------------------------------  aquire instruction  ------------------------------------------*/
+  status.mode = modeWait;
 }
 
+/*------------------------------------------  update adjacent  ------------------------------------------*/
 void Maze::adjacentWall(Cell *cellMarker)
 {
   Cell *adjacentNorth=cellMarker->cellNorth;
@@ -52,9 +114,9 @@ void Maze::adjacentWall(Cell *cellMarker)
   Cell *adjacentSouth=cellMarker->cellSouth;
   Cell *adjacentWest=cellMarker->cellWest;
   if(cellMarker->wall[north]==true)  adjacentNorth->wall[south]=true;
-  if(cellMarker->wall[east]==true)  adjacentNorth->wall[west]=true;
-  if(cellMarker->wall[south]==true)  adjacentNorth->wall[north]=true;
-  if(cellMarker->wall[west]==true)  adjacentNorth->wall[east]=true;
+  if(cellMarker->wall[east]==true)  adjacentEast->wall[west]=true;
+  if(cellMarker->wall[south]==true)  adjacentSouth->wall[north]=true;
+  if(cellMarker->wall[west]==true)  adjacentWest->wall[east]=true;
 }
 
 

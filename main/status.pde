@@ -20,7 +20,7 @@ void Status::initialize()
   voltDiagonalLeft = 0;
   voltDiagonalRight = 0;
   
-  currentCell = &cell[0][0];
+  cellCurrent = &cell[0][0];
   compass = 0;
   x = 0;  y = 0;
   
@@ -58,6 +58,7 @@ void Status::initialize()
   mode = modeStop;
   
   scenarioStraight = followBoth;
+  scenarioDecide = 0;
 }
 
 /*===================  print functions  =======================*/

@@ -108,6 +108,7 @@ void Motor::goStraight(int speed)
   status.speedBase = speed;
 }
 
+/*
 //Moves forward one cell
 void Motor::goStraightOne (int speed)
 {
@@ -120,6 +121,12 @@ void Motor::goStraightOne (int speed)
   goStraight(speed);
   if((status.countLeft)/2 > countCell)   //stop after one cell
     stop();
+}
+*/
+
+void Motor::goBack(int speed)
+{
+  
 }
 
 /*=======================================================  rotate  =======================================================*/

@@ -23,7 +23,7 @@ public:
   volatile int voltDiagonalRight;
   
   //position
-  Cell *currentCell;    //cell pointer
+  Cell *cellCurrent;    //cell pointer
   int compass;
   int x; //Current X position of Mouse
   int y; //Current Y position of Mouse
@@ -71,6 +71,7 @@ public:
   //control drive detail
   int scenarioStraight;
   int scenarioRotate;
+  int scenarioDecide;
   
 public:
   void initialize();

@@ -12,7 +12,8 @@ public:
   void decelerate();
 /*=======================================================  go  =======================================================*/
   void goStraight(int);
-  void goStraightOne (int);
+//  void goStraightOne (int);
+  void goBack(int);
 /*=======================================================  rotate  =======================================================*/
   void rotateLeft(int);
   void rotateRight(int);

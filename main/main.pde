@@ -48,9 +48,7 @@ void setup()
 }
 
 void globalInterrupt(void)
-{
-
-  
+{  
   /*--------------------------------------------------------------
   runAllSensor: reads distance, converte all raw data
     - error from distance
@@ -72,13 +70,13 @@ void globalInterrupt(void)
     - reset encoder
     - set modeWait
   --------------------------------------------------------------*/
-//  if(status.mode == modeStop)  maze.mapping();
+  if(status.mode == modeStop)  maze.mapping();
   
   /*--------------------------------------------------------------
   decide: determine the next path to go after mapping
     - give motor instruciton
   --------------------------------------------------------------*/
-//  if(status.mode == modeWait)  maze.decide();
+  if(status.mode == modeWait)  maze.decide();
   
 }
 
@@ -97,22 +95,7 @@ void encoderRightInterrupts(void)
 
 void loop()
 {
-  SerialUSB.println(status.countLeft);
-  
-  /*
-  SerialUSB.print(status.mode);
-  SerialUSB.print("\t");
-  SerialUSB.print(status.scenarioStraight);
-  SerialUSB.print("\t");  
-  SerialUSB.print(status.speedLeft);
-  SerialUSB.print("\t");
-  SerialUSB.println(status.speedRight);
-  */
-  //SerialUSB.print(status.distFront);
-  //SerialUSB.print("\t");
-  //SerialUSB.print(status.voltFrontLeft);
-  //SerialUSB.print("\t");
-  //SerialUSB.println(status.voltFrontRight);
+
   
   
   

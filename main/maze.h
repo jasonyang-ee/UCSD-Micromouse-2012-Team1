@@ -5,7 +5,7 @@
 
 class Maze{
 public:
-  int decide(int);
+  void decide();
   
   void mapping();
   void adjacentWall(Cell*);
