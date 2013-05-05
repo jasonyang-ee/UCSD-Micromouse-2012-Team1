@@ -58,7 +58,8 @@ void Status::initialize()
   mode = modeStop;
   
   scenarioStraight = followBoth;
-  scenarioDecide = 0;
+  scenarioPath = 0;
+  scenarioBack = false;
 }
 
 /*===================  print functions  =======================*/

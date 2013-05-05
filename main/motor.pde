@@ -124,11 +124,6 @@ void Motor::goStraightOne (int speed)
 }
 */
 
-void Motor::goBack(int speed)
-{
-  
-}
-
 /*=======================================================  rotate  =======================================================*/
 void Motor::rotateLeft(int speed)
 {

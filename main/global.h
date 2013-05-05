@@ -85,8 +85,7 @@ Status status;
 #define modeStraight 2
 #define modeRotate 3
 #define modeTurn 4
-#define modeWait 5
-#define modeBack 6
+#define modeDecide 5
 
 //scenarioStraight
 #define followRight 1
@@ -110,6 +109,10 @@ Status status;
 #define openNorthWest 7
 #define openEastWest 5
 #define openAll 9
+
+/*=====================  flagDecide  =====================*/
+#define flagBack 1
+#define flagBranching 2
 
 
 

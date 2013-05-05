@@ -71,7 +71,9 @@ public:
   //control drive detail
   int scenarioStraight;
   int scenarioRotate;
-  int scenarioDecide;
+  int scenarioPath;
+  int scenarioFlag;
+  bool scenarioBack;
   
 public:
   void initialize();

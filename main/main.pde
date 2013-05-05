@@ -76,7 +76,7 @@ void globalInterrupt(void)
   decide: determine the next path to go after mapping
     - give motor instruciton
   --------------------------------------------------------------*/
-  if(status.mode == modeWait)  maze.decide();
+  if(status.mode == modeDecide)  maze.decide();
   
 }
 
