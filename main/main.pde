@@ -103,20 +103,6 @@ void encoderRightInterrupts(void)
 
 void loop()
 {
-/*
-  SerialUSB.print(status.errorDiagonalDiffLast);
-  SerialUSB.print("\t");
-  SerialUSB.print(status.errorDiagonalDiff);
-  SerialUSB.print("\t");
-  SerialUSB.print(status.distDiagonalRight);
-  SerialUSB.print("\t");
-  SerialUSB.println(status.distDiagonalLeft);
-*/
-  
-  
-  
-  
-  
 if(isButtonPressed())
   SerialUSB.println(timesIgnored);
   
