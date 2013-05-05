@@ -7,6 +7,7 @@
 #include "sensor.h"
 #include "status.h"
 
+int timesIgnored = 0;
 /*=====================  maze constant  =====================*/
 //cell per side
 #define mazeSize 16
@@ -22,6 +23,7 @@
 
 //minimun distance between wall and mouse in one cell
 #define distWallExist 13
+#define distWallExist 15
 
 /*=====================  motor constant  =====================*/
 //speed constant
@@ -86,8 +88,10 @@ Status status;
 #define modeRotate 3
 #define modeTurn 4
 #define modeDecide 5
+#define modeWait 5
 
 //scenarioStraight
+#define modeNull 0
 #define followRight 1
 #define followLeft 2
 #define followBoth 3
@@ -116,4 +120,5 @@ Status status;
 
 
 
+#endif
 #endif

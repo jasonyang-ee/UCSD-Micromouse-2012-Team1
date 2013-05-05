@@ -57,7 +57,7 @@ double Sensor::convertDistance(int volt, int c)
   if(c==1)
   {
     // dist = -714.98(1/v)^2 + 216.11(1/v) - 0.7782
-    if(volt>10)  return ( -714.98*x*x + 216.11*x + 0.7782 );  
+    if(volt>10)  return ((-714.98*x*x + 216.11*x + 0.7782)); //- status.distFrontLeft) < 2 ? -714.98*x*x + 216.11*x + 0.7782 : status.distFrontLeft  );  
     else  return 20;
   }
   
@@ -65,7 +65,7 @@ double Sensor::convertDistance(int volt, int c)
   if(c==2)
   {
     // dist = -998.25*(1/v)^2 + 270.64*(1/v) -1.1891
-    if(volt>10)  return ( -998.25*x*x + 270.64*x - 1.1891 );
+    if(volt>10)  return (( -998.25*x*x + 270.64*x - 1.1891));// - status.distFrontRight) < 2 ?  -998.25*x*x + 270.64*x - 1.1891: status.distFrontRight );
     else  return 20;
   }
   
@@ -73,7 +73,7 @@ double Sensor::convertDistance(int volt, int c)
   if(c==3)
   {
     // dist = -414.6(1/V)^2 + 143(1/V) - 0.9423
-    if(volt>10)  return ( -414.6*x*x + 143*x - 0.9423 );
+    if(volt>10)  return ( (-414.6*x*x + 143*x - 0.9423));// - status.distSideLeft) < 2 ? -414.6*x*x + 143*x - 0.9423 : status.distSideLeft );
     else return 20;
   }
   
@@ -81,7 +81,7 @@ double Sensor::convertDistance(int volt, int c)
   if(c==4)
   {
     // dist = 773.41(1/V)^2 + 96.525(1/V) - 0.6535
-    if(volt>10)  return ( 773.41*x*x + 96.525*x - 0.6535 );
+    if(volt>10)  return ( 773.41*x*x + 96.525*x - 0.6535);// - status.distSideRight) < 2 ? 773.41*x*x + 96.525*x - 0.6535: status.distSideRight );
     else  return 20;
   }
   
@@ -89,7 +89,7 @@ double Sensor::convertDistance(int volt, int c)
   if(c==5)
   {
     // dist = -189.78(1/v)^2 + 156.48(1/v) + 0.1224
-    if(volt>10)  return ( -189.78*x*x + 156.48*x - 0.1224 );
+    if(volt>10)  return ( -189.78*x*x + 156.48*x - 0.1224);
     else  return 20;
   }
   
@@ -97,7 +97,7 @@ double Sensor::convertDistance(int volt, int c)
   if(c==6)
   {
     // dist = 173.96(1/v)^2 + 156.82(1/v) - 0.0099
-    if(volt>10)  return ( 173.96*x*x + 156.82*x + 0.0099 );
+    if(volt>10)  return  (173.96*x*x + 156.82*x + 0.0099);
     else  return 20;
   }
 }
@@ -123,7 +123,7 @@ void Sensor::errorRight()
 {
   //uses diagonal sensor to figure out orientation, horizontal sensor
   //as error measurement
-  status.errorDiagonalLast = status.errorDiagonal;
+  status.errorDiagonalLast = status.errorDiagonal; // should be errorRight
   int setpoint1 = 11;
   int setpoint2 = 3.59;
   status.errorDiagonal = (status.distDiagonalRight - setpoint1);
@@ -133,7 +133,8 @@ void Sensor::errorRight()
 void Sensor::errorDiagonal()
 {
   status.errorDiagonalLast = status.errorDiagonal;
-  status.errorDiagonal = (status.distDiagonalLeft - status.distDiagonalRight) * 0.703;
+  status.errorDiagonal = (status.distDiagonalLeft - status.distDiagonalRight) * 0.707;
+  errorDiagonalDiff();
 }
 
 void Sensor::errorSide()
