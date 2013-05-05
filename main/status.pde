@@ -10,6 +10,8 @@ void Status::initialize()
   distFrontRight = 0;
   distSideLeft = 0;
   distSideRight = 0;
+  distDiagonalLeft = 0;
+  distDiagonalRight = 0;
   distDiagonalLeft = 20;
   distDiagonalRight = 20;
   
@@ -21,6 +23,7 @@ void Status::initialize()
   voltDiagonalRight = 0;
   errorDiagonalDiffLast = 0;
   
+  cellCurrent = &cell[0][0];
   currentCell = &cell[0][0];
   compass = 0;
   x = 0;  y = 0;
@@ -59,6 +62,8 @@ void Status::initialize()
   mode = modeStop;
   
   scenarioStraight = followBoth;
+  scenarioPath = 0;
+  scenarioBack = false;
 }
 
 /*===================  print functions  =======================*/
@@ -92,4 +97,5 @@ void Status::printSensor()
   SerialUSB.print("FR"); SerialUSB.print("\t"); SerialUSB.print(status.distSideRight); SerialUSB.print("\t");
   SerialUSB.print("DR"); SerialUSB.print("\t"); SerialUSB.print(status.distDiagonalLeft); SerialUSB.print("\t");
   SerialUSB.print("SR"); SerialUSB.print("\t"); SerialUSB.println(status.distDiagonalRight); 
+}
 }

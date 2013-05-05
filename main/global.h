@@ -22,6 +22,7 @@ int timesIgnored = 0;
 #define sampleNum 20
 
 //minimun distance between wall and mouse in one cell
+#define distWallExist 13
 #define distWallExist 15
 
 /*=====================  motor constant  =====================*/
@@ -86,6 +87,7 @@ Status status;
 #define modeStraight 2
 #define modeRotate 3
 #define modeTurn 4
+#define modeDecide 5
 #define modeWait 5
 
 //scenarioStraight
@@ -101,5 +103,22 @@ Status status;
 #define right 2
 #define back 3
 
+/*=====================  scenarioDecide  =====================*/
+#define openNone 0
+#define openNorth 4
+#define openEast 2
+#define openWest 3
 
+#define openNorthEast 6
+#define openNorthWest 7
+#define openEastWest 5
+#define openAll 9
+
+/*=====================  flagDecide  =====================*/
+#define flagBack 1
+#define flagBranching 2
+
+
+
+#endif
 #endif
