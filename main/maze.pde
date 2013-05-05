@@ -121,12 +121,56 @@ void Maze::adjacentWall(Cell *cellMarker)
 
 
 /*=======================================================  flood fill  =======================================================*/
-void Maze::floodFill()
+void Maze::flood()
 {
-  
+  //All cells floodValues are initially set to -1.
+  cell[mazeSize/2-1][mazeSize/2-1].floodValue = 0;
+  cell[mazeSize/2-1][mazeSize/2].floodValue = 0;
+  cell[mazeSize/2][mazeSize/2-1].floodValue = 0;
+  cell[mazeSize/2][mazeSize/2].floodValue = 0;
+  for (int curr_step=1; curr_step < mazeSize*mazeSize; curr_step++)
+    for (int y=0; y<mazeSize; y++)
+      for (int x=0; x<mazeSize; x++)
+        if (cell[y][x].visit == true && cell[y][x].floodValue == (curr_step - 1))
+          expand(y, x, curr_step);
 }
 
+//Checks all four directions to see if there is a wall blocking.
+void Maze::expand(int y, int x, int curr_step)
+{
+  northFlood(y, x, curr_step);
+  eastFlood(y, x, curr_step);
+  southFlood(y, x, curr_step);
+  westFlood(y, x, curr_step);
+}
 
+void Maze::northFlood(int y, int x, int curr_step) 
+{
+  if ((y < 15) && !(cell[y][x].wall[0]))
+    if(cell[y+1][x].floodValue < 0)
+      cell[y+1][x].floodValue = curr_step; 
+}
+
+void Maze::eastFlood(int y, int x, int curr_step) 
+{
+  if (x < 15 && !(cell[y][x].wall[1]))
+    if (cell[y][x+1].floodValue < 0)
+      cell[y][x+1].floodValue = curr_step;
+}
+
+void Maze::southFlood(int y, int x, int curr_step) 
+{
+  if (y > 0 && !(cell[y][x].wall[2])) 
+    if (cell[y-1][x].floodValue < 0) 
+      cell[y-1][x].floodValue = curr_step;
+}
+
+void Maze::westFlood(int y, int x, int curr_step) 
+{
+  if (x > 0 && !(cell[y][x].wall[3]) )
+    if (cell[y][x-1].floodValue < 0) 
+      cell[y][x-1].floodValue = curr_step;
+}
 
 
 /*=======================================================  initialize  =======================================================*/
