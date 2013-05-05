@@ -118,7 +118,7 @@ void Motor::goStraightOne (int speed)
   status.countRight = 0;
   status.countLeft = 0;
   goStraight(speed);
-  if( (status.countLeft)/2 > cellLength )   //stop after one cell
+  if((status.countLeft)/2 > countCell)   //stop after one cell
     stop();
 }
 
@@ -126,7 +126,7 @@ void Motor::goStraightOne (int speed)
 void Motor::rotateLeft(int speed)
 {
   status.mode = modeRotate;                //set mode
-  status.compass = (status.compass+3)%4;        //set compass
+  status.compass = (status.compass+west) % 4;        //set compass
   motorLeft(-speed);  motorRight(speed);        //set speed
   status.speedBase = speed;
 }
@@ -134,14 +134,14 @@ void Motor::rotateLeft(int speed)
 void Motor::rotateRight(int speed)
 {
   status.mode = modeRotate;                //set mode
-  status.compass = (status.compass+1)%4;        //set compass
+  status.compass = (status.compass+east) % 4;        //set compass
   motorLeft(speed);  motorRight(-speed);        //set speed
   status.speedBase = speed;
 }
 void Motor::rotateBack(int speed)
 {
   status.mode = modeRotate;                //set mode
-  status.compass = (status.compass+2)%4;        //set compass
+  status.compass = (status.compass+south) % 4;        //set compass
   motorLeft(-speed);  motorRight(speed);        //set speed
   status.speedBase = speed;
 }

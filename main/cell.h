@@ -7,17 +7,18 @@ class Cell{
 public:
   bool visit;
   bool wall[4];
-  bool goal;
+  bool dead;
+  int floodValue;
+  
   int x;
   int y;
-  int floodValue;
+  bool goal;
   bool existance;
-  bool dead;
 
-  Cell *north;
-  Cell *south;
-  Cell *east;
-  Cell *west;
+  Cell *cellNorth;
+  Cell *cellSouth;
+  Cell *cellEast;
+  Cell *cellWest;
 };
 
 #endif

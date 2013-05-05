@@ -44,15 +44,12 @@ void setup()
   
 /*=======================================================  Initialize  =======================================================*/
   status.initialize();
-  maze.initialize();
+//  maze.initialize();
 }
 
 void globalInterrupt(void)
 {
-  if(status.distFront > distWallExist)
-    motor.goStraight(speedMap);
-  else
-    motor.stop();
+
   
   /*--------------------------------------------------------------
   runAllSensor: reads distance, converte all raw data
@@ -100,7 +97,7 @@ void encoderRightInterrupts(void)
 
 void loop()
 {
-  //SerialUSB.println(status.countLeft);
+  SerialUSB.println(status.countLeft);
   
   /*
   SerialUSB.print(status.mode);

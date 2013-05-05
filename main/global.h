@@ -10,7 +10,7 @@
 /*=====================  maze constant  =====================*/
 //cell per side
 #define mazeSize 16
-#define countCell 
+#define countCell 280
 
 /*=====================  sensor constant  =====================*/
 //counter++ for every 1us, and interrupt for every 1000 count
@@ -71,6 +71,12 @@ Motor motor;
 Cell cell[16][16];  //CELL cell[y][x];
 Cell emptyCell;
 Status status;
+
+/*=====================  compass value  =====================*/
+#define north 0
+#define east 1
+#define south 2
+#define west 3
 
 /*=====================  mode value  =====================*/
 //mode

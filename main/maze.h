@@ -6,12 +6,11 @@
 class Maze{
 public:
   int decide(int);
-  void mapping();
-  void floodFill();
   
-  int nextdead;
-  int directx;
-  int directy;
+  void mapping();
+  void adjacentWall(Cell*);
+  
+  void floodFill();
   
   void initialize();
 };
