@@ -44,6 +44,8 @@ void setup()
   
 /*=======================================================  Initialize  =======================================================*/
   status.initialize();
+  motor.goStraight(20000);
+  
 //  maze.initialize();
 }
 
@@ -64,11 +66,10 @@ void globalInterrupt(void)
     - run until the instruction finished, and stop the mouse
     - stop then wait for next instruction
   --------------------------------------------------------------*/
-  if(status.distFront > distWallExist)
-    motor.goStraight(20000);
-  else
+  /*
+  if(status.distFront < distWallExist)  
     motor.stop();
-  
+  */
   motor.PID();
   
   /*--------------------------------------------------------------

@@ -19,9 +19,9 @@ void Motor::PID()
          if (abs(status.errorDiagonalDiffLast) > abs (status.errorDiagonalDiff) || abs(status.errorDiagonalLast) > .25)
          {
          //   int correction = round(800 * status.errorDiagonal + 50*(status.errorDiagonalDiff)/.001);// + 10*status.errorDiagonalTotal);
-          /*suitable for 20,000: */int correction = round(1500 * status.errorDiagonal + 200*(status.errorDiagonalDiff)/.001 + 10*status.errorDiagonalTotal);
-            motor.motorRight(20000 + correction);
-            motor.motorLeft(20000 - correction);            
+          /*suitable for 20,000: */int correction = round(1500 * status.errorDiagonal + 400*(status.errorDiagonalDiff)/.001 + 10*status.errorDiagonalTotal);
+            motor.motorRight(30000 + correction);
+            motor.motorLeft(30000 - correction);            
             status.errorDiagonalDiffLast = status.errorDiagonalDiff;
          }
            /* if (correction > 0)
@@ -90,7 +90,7 @@ void Motor::PID()
 /*=======================================================  stop  =======================================================*/
 void Motor::stop()
 { 
-  if( abs(status.speedLeft) < 1 && abs(status.speedRight) < 1)
+  if( status.angularVelocity == 0)
   {
     motorLeft(0);  motorRight(0);          //set motor=0
     status.mode = modeStop;                //set modd
@@ -102,14 +102,19 @@ void Motor::stop()
 
 void Motor::decelerate()
 {
-  status.mode = modeDecelerate;
-  int tempL = status.speedLeft * -0.995;
-  int tempR = status.speedRight * -0.995;
-  motorLeft(tempL);                     //set oppsite speed
-  motorRight(tempR);                    //set oppsite speed
-  status.speedLeft *= -1;
-  status.speedRight *= -1;
   if( abs(status.speedLeft) < 1 && abs(status.speedRight) < 1)
+  status.mode = modeDecelerate;
+  {
+    int tempL = status.speedLeft * -0.995;
+    int tempR = status.speedRight * -0.995;
+    motorLeft(tempL);                     //set oppsite speed
+    motorRight(tempR);                    //set oppsite speed
+    status.speedLeft *= -1;
+    status.speedRight *= -1;
+  
+
+  }
+    if(status.angularVelocity == 0)
     status.mode = modeStop;
 }
 

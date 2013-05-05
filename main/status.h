@@ -30,6 +30,8 @@ public:
   int y; //Current Y position of Mouse
   
   int speedBase;
+  int angSpeed;
+  int angSpeedCounter;
   
   //error
   volatile double errorRight;
@@ -84,5 +86,6 @@ public:
 };
 
 
+#endif
 #endif
 #endif

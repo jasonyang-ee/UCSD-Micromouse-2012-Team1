@@ -2,7 +2,7 @@
 #include "sensor.h"
 
 void Sensor::runAllSensor()
-{   
+{ 
   //read sensor
   status.voltFrontLeft = (runSensor(sensorFrontLeft));
   status.voltFrontRight = (runSensor(sensorFrontRight));
@@ -152,8 +152,12 @@ void Sensor::errorFront()
 /*=======================================================  PID  =======================================================*/
 void Sensor::angularVelocity()
 {
-  status.angularVelocity = status.countLeft - status.countLeftLast;
-  status.countLeftLast = status.countLeft;
+  status.angSpeedCounter = (++status.angSpeedCounter)%10;
+  if( status.angSpeedCounter == 0)
+  {
+    status.angularVelocity = status.countLeft - status.countLeftLast;
+    status.countLeftLast = status.countLeft;
+  }
 }
 
 void Sensor::errorDiagonalTotal()  { status.errorDiagonalTotal += status.errorDiagonal; }
