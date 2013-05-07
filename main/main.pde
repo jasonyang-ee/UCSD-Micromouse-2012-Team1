@@ -40,19 +40,15 @@ void setup()
   Timer2.resume();                                     // Start the timer counting
 
   attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
-//  attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);  //broken encoder
+  attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
   
 /*=======================================================  Initialize  =======================================================*/
   status.initialize();
-  motor.goStraight(20000);
-  
-//  maze.initialize();
+  maze.initialize();
 }
 
 void globalInterrupt(void)
 {
-
-  
   /*--------------------------------------------------------------
   runAllSensor: reads distance, converte all raw data
     - error from distance

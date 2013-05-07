@@ -58,14 +58,14 @@ void Status::initialize()
   countRightLast = 0;
 
   speedLeft = 0;  speedRight = 0;
-  angularVelocity = 0;
+  angularSpeed = 0;
   
   mode = modeStop;
   
   scenarioStraight = followBoth;
   scenarioPath = 0;
   scenarioBack = false;
-  angSpeed = 0;
+  angularSpeed = 0;
   angSpeedCounter = 0;
 }
 

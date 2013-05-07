@@ -26,6 +26,14 @@ void Sensor::runAllSensor()
   errorDiagonal();
   errorSide();
   errorFront();
+  
+  errorDiagonalTotal();
+  errorSideTotal();
+  errorFrontTotal();
+  
+  errorDiagonalDiff();
+  errorSideDiff();
+  errorFrontDiff();
 }
 
 
@@ -155,7 +163,7 @@ void Sensor::angularVelocity()
   status.angSpeedCounter = (++status.angSpeedCounter)%10;
   if( status.angSpeedCounter == 0)
   {
-    status.angularVelocity = status.countLeft - status.countLeftLast;
+    status.angularSpeed = status.countLeft - status.countLeftLast;
     status.countLeftLast = status.countLeft;
   }
 }
@@ -165,8 +173,6 @@ void Sensor::errorDiagonalTotal()  { status.errorDiagonalTotal += status.errorDi
 void Sensor::errorSideTotal()  { status.errorSideTotal += status.errorSide; }
 
 void Sensor::errorFrontTotal()  { status.errorFrontTotal += status.errorFront; }
-
-void Sensor::errorCountLeftTotal()  { status.errorCountLeftTotal += status.errorCountLeft; }
 
 void Sensor::errorDiagonalDiff()  { status.errorDiagonalDiff = status.errorDiagonal - status.errorDiagonalLast; }
 

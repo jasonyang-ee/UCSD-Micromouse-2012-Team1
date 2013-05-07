@@ -29,34 +29,34 @@ public:
   int x; //Current X position of Mouse
   int y; //Current Y position of Mouse
   
-  int speedBase;
-  int angSpeed;
-  int angSpeedCounter;
-  
   //error
   volatile double errorRight;
   volatile double errorDiagonal;  //error for PID
   volatile double errorSide;
   volatile double errorFront;
   volatile double errorCountLeft;
+  volatile double errorCountRight;
   
   //preveous error
   double errorDiagonalLast;
   double errorSideLast;
   double errorFrontLast;
   double errorCountLeftLast;
+  double errorCountRightLast;
   
   //PID error
   double errorDiagonalTotal;
   double errorSideTotal;
   double errorFrontTotal;
   double errorCountLeftTotal;
+  double errorCountRightTotal;
   
   double errorDiagonalDiff;
   double errorDiagonalDiffLast;
   double errorSideDiff;
   double errorFrontDiff;
   double errorCountLeftDiff;
+  double errorCountRightDiff;
   
   //encoder status
   volatile int countLeft;  //wheel encoder count
@@ -67,7 +67,11 @@ public:
   //motor status
   int speedLeft;
   int speedRight;
-  int angularVelocity;
+  int speedBase;
+  
+  //angular velocity
+  int angularSpeed;
+  int angSpeedCounter;
   
   //control PID drive type
   int mode;

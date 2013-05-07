@@ -50,6 +50,12 @@ void Motor::PID()
       }
       if(status.scenarioStraight == fishBone)
       {
+        status.errorCountLeftDiff = status.errorCountLeft - status.errorCountLeftLast;
+        status.errorCountLeftTotal += status.errorCountLeft;
+
+        
+        status.errorCountLeftLast = status.errorCountLeft;
+        
         
       }
     }
@@ -62,7 +68,7 @@ void Motor::PID()
   {
     //computing encoder error
     status.errorCountLeftLast = status.errorCountLeft;
-    status.errorCountLeft = turnCount - abs(status.countLeft);
+    status.errorCountLeft = countRotateSide - abs(status.countLeft);
     int Kp = 2000;
     int Kd = 100;
     
@@ -90,11 +96,13 @@ void Motor::PID()
 /*=======================================================  stop  =======================================================*/
 void Motor::stop()
 { 
-  if( status.angularVelocity == 0)
+  if(status.angularSpeed == 0)
   {
     motorLeft(0);  motorRight(0);          //set motor=0
     status.mode = modeStop;                //set modd
     status.speedBase = 0;
+    if(status.mode == modeRotateGo)
+      motor.goStraight(speedMap);
   }
   else
     decelerate();                        //start decelerate
@@ -102,19 +110,15 @@ void Motor::stop()
 
 void Motor::decelerate()
 {
-  if( abs(status.speedLeft) < 1 && abs(status.speedRight) < 1)
   status.mode = modeDecelerate;
-  {
-    int tempL = status.speedLeft * -0.995;
-    int tempR = status.speedRight * -0.995;
-    motorLeft(tempL);                     //set oppsite speed
-    motorRight(tempR);                    //set oppsite speed
-    status.speedLeft *= -1;
-    status.speedRight *= -1;
+  int tempL = status.speedLeft * -0.995;
+  int tempR = status.speedRight * -0.995;
+  motorLeft(tempL);                     //set oppsite speed
+  motorRight(tempR);                    //set oppsite speed
+  status.speedLeft *= -1;
+  status.speedRight *= -1;
   
-
-  }
-    if(status.angularVelocity == 0)
+  if(status.angularSpeed == 0)
     status.mode = modeStop;
 }
 
@@ -148,25 +152,25 @@ void Motor::goStraightOne (int speed)
 /*=======================================================  rotate  =======================================================*/
 void Motor::rotateLeft(int speed)
 {
-  status.mode = modeRotate;                //set mode
-  status.compass = (status.compass+west) % 4;        //set compass
+  status.compass = (status.compass+west) % 4;   //set compass
   motorLeft(-speed);  motorRight(speed);        //set speed
   status.speedBase = speed;
+  status.mode = modeRotate;                     //set mode
 }
 
 void Motor::rotateRight(int speed)
 {
-  status.mode = modeRotate;                //set mode
-  status.compass = (status.compass+east) % 4;        //set compass
+  status.compass = (status.compass+east) % 4;   //set compass
   motorLeft(speed);  motorRight(-speed);        //set speed
   status.speedBase = speed;
+  status.mode = modeRotate;                     //set mode
 }
 void Motor::rotateBack(int speed)
 {
-  status.mode = modeRotate;                //set mode
-  status.compass = (status.compass+south) % 4;        //set compass
+  status.compass = (status.compass+south) % 4;  //set compass
   motorLeft(-speed);  motorRight(speed);        //set speed
   status.speedBase = speed;
+  status.mode = modeRotate;                     //set mode
 }
 
 /*=======================================================  turn  =======================================================*/

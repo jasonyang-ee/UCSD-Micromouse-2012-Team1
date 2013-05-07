@@ -10,6 +10,7 @@ public:
   bool dead;
   int floodValue;
   int compassHome;
+  int branch;
   
   int x;
   int y;
