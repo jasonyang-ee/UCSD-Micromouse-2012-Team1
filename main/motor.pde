@@ -16,27 +16,12 @@ void Motor::PID()
     {
       if(status.scenarioStraight == followBoth)
       {
-         if (abs(status.errorDiagonalDiffLast) > abs (status.errorDiagonalDiff) || abs(status.errorDiagonalLast) > .25)
-         {
-         //   int correction = round(800 * status.errorDiagonal + 50*(status.errorDiagonalDiff)/.001);// + 10*status.errorDiagonalTotal);
-          /*suitable for 20,000: */int correction = round(1500 * status.errorDiagonal + 400*(status.errorDiagonalDiff)/.001 + 10*status.errorDiagonalTotal);
-            motor.motorRight(30000 + correction);
-            motor.motorLeft(30000 - correction);            
+            int correction = round(800 * status.errorDiagonal + 130*(status.errorDiagonalDiff)/.001 + 20*status.errorDiagonalTotal);
+          /*suitable for 20,000: int correction = round(1500 * status.errorDiagonal + 200*(status.errorDiagonalDiff)/.001 + 35*status.errorDiagonalTotal);*/
+            motor.motorRight(status.speedBase + correction);
+            motor.motorLeft(status.speedBase - correction);            
             status.errorDiagonalDiffLast = status.errorDiagonalDiff;
-         }
-           /* if (correction > 0)
-            {
-              motor.motorRight(status.speedBase + correction);
-              motor.motorLeft(status.speedBase);
-            }
-            else
-            {
-               motor.motorLeft(status.speedBase - correction);
-               motor.motorRight(status.speedBase);
-            }
-            status.errorDiagonalDiffLast = status.errorDiagonalDiff;
-            */
-//       
+
       }
       if(status.scenarioStraight == followRight)
       {
@@ -50,7 +35,10 @@ void Motor::PID()
       }
       if(status.scenarioStraight == fishBone)
       {
+<<<<<<< HEAD
         status.errorCountDiff = status.errorCountLeft - status.errorCountRight;
+=======
+>>>>>>> rotate
         
         if(status.distSideLeft > distWallExist || status.distSideRight > distWallExist)
         {
@@ -81,21 +69,36 @@ void Motor::PID()
   {
     //computing encoder error
     status.errorCountLeftLast = status.errorCountLeft;
-    status.errorCountLeft = countRotateSide - abs(status.countLeft);
+    status.errorCountLeft = rotateCount - abs(status.countLeft);
+    status.errorCountRight = rotateCount - abs(status.countRight);
     int Kp = 2000;
-    int Kd = 100;
+    int Kd = 900;
+    int Ki = 5;
     
     if(status.scenarioRotate == left)
     {
-      if (status.errorCountLeft > 0)
+      if (status.errorCountLeft != 0||status.tick < 5) //&& status.errorCountRight != 0)
       {
-        status.errorCountLeftDiff = abs(status.errorCountLeft - status.errorCountLeftLast);
-        int correction = round(Kp * status.errorCountLeft + Kd * status.errorCountLeftDiff);
-        motor.motorRight(status.speedBase + correction);
-        motor.motorLeft(status.speedBase - correction);
+        status.errorCountLeftTotal += status.errorCountLeft;
+        //status.errorCountRightDiff = status.errorCountRight - status.errorCountRightLast;
+        status.errorCountLeftDiff = status.errorCountLeft - status.errorCountLeftLast;
+        int correction = round(Kp * status.errorCountLeft + Kd * status.errorCountLeftDiff);// + Ki*status.errorCountLeftTotal);
+        //int correctionRight = round(Kp * status.errorCountRight + Kd * status.errorCountRightDiff);
+        motor.motorRight(correction);
+        motor.motorLeft(- correction);
+        
+        //as long as 
+        if (status.errorCountLeft == status.errorCountLeftLast )
+          status.tick++;
+        else
+          status.tick = 0;
       }
       else
-        motor.stop();
+      {
+//        togglePin(33);
+        motor.motorRight(0);
+        motor.motorLeft(0);
+      }
     }
   }
 
@@ -109,13 +112,11 @@ void Motor::PID()
 /*=======================================================  stop  =======================================================*/
 void Motor::stop()
 { 
-  if(status.angularSpeed == 0)
+  if( status.angularVelocityRight == 0 && status.angularVelocityLeft == 0) //might need to change this later
   {
     motorLeft(0);  motorRight(0);          //set motor=0
     status.mode = modeStop;                //set modd
     status.speedBase = 0;
-    if(status.mode == modeRotateGo)
-      motor.goStraight(speedMap);
   }
   else
     decelerate();                        //start decelerate
@@ -123,18 +124,26 @@ void Motor::stop()
 
 void Motor::decelerate()
 {
-  status.mode = modeDecelerate;
-  int tempL = status.speedLeft * -0.995;
-  int tempR = status.speedRight * -0.995;
-  motorLeft(tempL);                     //set oppsite speed
-  motorRight(tempR);                    //set oppsite speed
-  status.speedLeft *= -1;
-  status.speedRight *= -1;
+  if( abs(status.speedLeft) > 1 && abs(status.speedRight) > 1)
+  { 
+	status.mode = modeDecelerate;
+    int tempL = status.speedLeft * -0.995;
+    int tempR = status.speedRight * -0.995;
+    motorLeft(tempL);                     //set opposite speed
+    motorRight(tempR);                    //set opposite speed
+    status.speedLeft *= -1;
+    status.speedRight *= -1;
   
-  if(status.angularSpeed == 0)
-    status.mode = modeStop;
+
+  }
+    if(status.angularVelocityLeft == 0 && status.angularVelocityRight == 0) //might need to change this too
+		status.mode = modeStop;
 }
 
+/* The following functions set the mode and scenario for PID control
+	
+
+*/
 /*=======================================================  go  =======================================================*/
 void Motor::goStraight(int speed)
 {
@@ -163,27 +172,24 @@ void Motor::goStraightOne (int speed)
 }
 
 /*=======================================================  rotate  =======================================================*/
-void Motor::rotateLeft(int speed)
+void Motor::rotateLeft()
 {
-  status.compass = (status.compass+west) % 4;   //set compass
-  motorLeft(-speed);  motorRight(speed);        //set speed
+  status.mode = modeRotate;                				//set mode
+  status.compass = (status.compass+west) % 4;   		//set compass
   status.speedBase = speed;
-  status.mode = modeRotate;                     //set mode
 }
 
-void Motor::rotateRight(int speed)
+void Motor::rotateRight()
 {
-  status.compass = (status.compass+east) % 4;   //set compass
-  motorLeft(speed);  motorRight(-speed);        //set speed
+  status.mode = modeRotate;                				//set mode
+  status.compass = (status.compass+east) % 4;        	//set compass
   status.speedBase = speed;
-  status.mode = modeRotate;                     //set mode
 }
-void Motor::rotateBack(int speed)
+void Motor::rotateBack()
 {
-  status.compass = (status.compass+south) % 4;  //set compass
-  motorLeft(-speed);  motorRight(speed);        //set speed
+  status.mode = modeRotate;                				//set mode
+  status.compass = (status.compass+south) % 4;        	//set compass
   status.speedBase = speed;
-  status.mode = modeRotate;                     //set mode
 }
 
 /*=======================================================  turn  =======================================================*/
@@ -192,7 +198,7 @@ void Motor::turnLeft(int speed)
   status.errorDiagonalTotal=0;
   status.errorSideTotal=0;
   status.errorFrontTotal=0;
-  status.mode = modeTurn;                  //set mode
+  status.mode = modeTurn;                  		//set mode
   status.compass = (status.compass+3)%4;        //set compass
 }
 
@@ -201,10 +207,13 @@ void Motor::turnRight(int speed)
   status.errorDiagonalTotal=0;
   status.errorSideTotal=0;
   status.errorFrontTotal=0;
-  status.mode = modeTurn;                  //set mode
+  status.mode = modeTurn;                  		//set mode
   status.compass = (status.compass+1)%4;        //set compass 
 }
 
+/*
+The following functions provide raw motor control; positive values set the motors forward, while negative values set the motors backward 
+*/
 /*=======================================================  motor  =======================================================*/
 void Motor::motorLeft(int speed)
 {
@@ -213,20 +222,23 @@ void Motor::motorLeft(int speed)
   {
     digitalWrite(motorLeft1, LOW);
     digitalWrite(motorLeft2, LOW);
-    pwmWrite(PWMLeft, 0);           //set speed
   }
   else if(speed > 0)                //forward
   {
     digitalWrite(motorLeft1, HIGH);
     digitalWrite(motorLeft2, LOW);
-    pwmWrite(PWMLeft, speed);
   }
   else                              //backward
   {
     digitalWrite(motorLeft1, LOW);
     digitalWrite(motorLeft2, HIGH);
-    pwmWrite(PWMLeft, abs(speed));  //set speed
   }
+  
+  //check to make sure value isn't greater than max speed available
+  if (abs(speed) < speedFull)
+	pwmWrite(PWMLeft, abs(speed));  //set speed
+  else
+	pwmWrite(PWMLeft, speedFull);
 }
 
 void Motor::motorRight(int speed)
@@ -236,20 +248,23 @@ void Motor::motorRight(int speed)
   {
     digitalWrite(motorRight1, LOW);
     digitalWrite(motorRight2, LOW);
-    pwmWrite(PWMRight, 0);          //set speed
   }
   else if(speed > 0)                //forward
   {
     digitalWrite(motorRight1, HIGH);
     digitalWrite(motorRight2, LOW);
-    pwmWrite(PWMRight, speed);      //set speed
   }
   else                              //backward
   {
     digitalWrite(motorRight1, LOW);
     digitalWrite(motorRight2, HIGH);
-    pwmWrite(PWMRight, abs(speed)); //set speed
   }
+  
+  //check to make sure value isn't greater than max speed available
+  if (abs(speed) < speedFull)
+	pwmWrite(PWMRight, abs(speed));  //set speed
+  else
+	pwmWrite(PWMRight, speedFull);
 }
 
 

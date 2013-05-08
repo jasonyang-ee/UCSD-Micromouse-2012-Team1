@@ -21,12 +21,10 @@ public:
   void errorCountLeft();
 /*=======================================================  PID value  =======================================================*/
   void angularVelocity();
-
   void errorDiagonalTotal();
   void errorSideTotal();
   void errorFrontTotal();
   void errorCountLeftTotal();
-  
   void errorDiagonalDiff();
   void errorSideDiff();
   void errorFrontDiff();

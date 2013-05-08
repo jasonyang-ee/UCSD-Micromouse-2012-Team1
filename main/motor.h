@@ -14,9 +14,9 @@ public:
   void goStraight(int);
   void goStraightOne (int);
 /*=======================================================  rotate  =======================================================*/
-  void rotateLeft(int);
-  void rotateRight(int);
-  void rotateBack(int);
+  void rotateLeft();
+  void rotateRight();
+  void rotateBack();
 /*=======================================================  turn  =======================================================*/
   void turnLeft(int);
   void turnRight(int);
