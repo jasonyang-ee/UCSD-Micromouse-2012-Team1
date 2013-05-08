@@ -15,20 +15,22 @@ void setup()
   pinMode(ledTwo,OUTPUT);    //int led
   pinMode(ledThree,OUTPUT);  //int led
 
-  pinMode(PWMLeft, PWM);
-  pinMode(motorLeft1, OUTPUT);
-  pinMode(motorLeft2, OUTPUT);
-  pinMode(PWMRight, PWM);
-  pinMode(motorRight1, OUTPUT);
-  pinMode(motorRight2, OUTPUT);  
-  pwmWrite(PWMLeft, 0);
-  pwmWrite(PWMRight, 0);
+  pinMode(PWMLeft, PWM);					  	//PWM control of Left Motor
+  pinMode(motorLeft1, OUTPUT);					//direction control of Left Motor
+  pinMode(motorLeft2, OUTPUT);					//direction control of Left Motor
+  pinMode(PWMRight, PWM);						//PWM control of Right Motor
+  pinMode(motorRight1, OUTPUT);					//direction control of Right Motor
+  pinMode(motorRight2, OUTPUT);  				//direction control of Right Motor
+  pwmWrite(PWMLeft, 0);							//initialize speed of 
+  pwmWrite(PWMRight, 0);						//both motors to 0
 
-  pinMode(encoderLeftCLK, INPUT);    //encoder clock pin
-  pinMode(encoderLeftDirc, INPUT);   //encoder direction pin
-  pinMode(encoderRightCLK, INPUT);
-  pinMode(encoderRightDirc, INPUT);
+  pinMode(encoderLeftCLK, INPUT);    //Left encoder clock pin
+  pinMode(encoderLeftDirc, INPUT);   //Left encoder direction pin
+  pinMode(encoderRightCLK, INPUT);	 //Right encoder clock pin
+  pinMode(encoderRightDirc, INPUT);	 //Right encoder direction pin
 
+  for (int i = 0; i < 100; i++)
+    sensor.runAllSensor();
 /*=======================================================  Interrupts  =======================================================*/
   Timer2.pause();                                      // to set timer clock, please go global.h to change timerRate
   Timer2.setPrescaleFactor(72);                        // set freq = system(72MHz) / 72 = 1MHz, counter++ for every 1us
@@ -40,15 +42,21 @@ void setup()
   Timer2.resume();                                     // Start the timer counting
 
   attachInterrupt(encoderLeftCLK, encoderLeftInterrupts, RISING);
-  attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);
+  attachInterrupt(encoderRightCLK, encoderRightInterrupts, RISING);  //broken encoder
   
 /*=======================================================  Initialize  =======================================================*/
   status.initialize();
-  maze.initialize();
-}
+motor.goStraight(10000);
 
+maze.initialize();
+//status.mode = modeRotate; 
+//status.scenarioRotate = left;
+}
+int j = 0;
 void globalInterrupt(void)
 {
+
+  
   /*--------------------------------------------------------------
   runAllSensor: reads distance, converte all raw data
     - error from distance
@@ -66,8 +74,41 @@ void globalInterrupt(void)
   if(status.distFront < distWallExist)  
     motor.stop();
   */
-  motor.PID();
-  
+  //if (status.countLeft < countCell)
+    motor.PID();
+ /* else
+  {    
+    motor.stop();
+  }*/
+  /*
+//    j = (++j)%1000;
+    if (status.angularVelocityRight == 0 && status.angularVelocityLeft == 0)
+   { 
+      status.countLeft = 0;
+      status.countRight = 0;
+   }
+  }
+  */
+/*    status.errorCountLeftLast = status.errorCountLeft;
+    status.errorCountLeft = rotateCount - abs(status.countLeft);
+    int Kp = 2000;
+    int Kd = 100;
+    
+    if(status.scenarioRotate == left)
+    {
+      if (status.errorCountLeft > 0)
+      {
+        status.errorCountLeftDiff = status.errorCountLeft) - abs(status.errorCountLeftLast);
+        int correction = round(Kp * status.errorCountLeft + Kd * status.errorCountLeftDiff);
+        motor.motorRight(correction);
+        motor.motorLeft(- correction);
+      }
+      else
+      {
+        
+        motor.stop();
+      }
+*/  
   /*--------------------------------------------------------------
   mapping: traverse back to the straight path and update wall info
     - use encoder to know #'s of cell, and update those wall info
@@ -84,6 +125,31 @@ void globalInterrupt(void)
   
 }
 
+void loop()
+{
+
+/*===================  Encoder print  =======================*/
+/*if(isButtonPressed())
+//{
+  SerialUSB.print(status.countLeft);
+  SerialUSB.print("\t");
+
+  SerialUSB.print(status.countRight);
+  SerialUSB.println("\t");
+//}
+//  SerialUSB.println(status.speedLeft);
+
+/*=======================================================  End  =======================================================*/
+/*
+SerialUSB.print(status.distFrontRight);
+SerialUSB.print("\t");
+SerialUSB.println(status.distFrontLeft);
+*/
+//SerialUSB.println(status.distDiagonalLeft);
+}
+
+/* Encoder Interrupts */
+
 void encoderLeftInterrupts(void)
 {
   if(digitalRead(encoderLeftDirc) == HIGH)  status.countLeft++;
@@ -92,30 +158,9 @@ void encoderLeftInterrupts(void)
 
 void encoderRightInterrupts(void)
 {
-  if(digitalRead(encoderRightDirc) == HIGH)  status.countRight++;
+  if(digitalRead(encoderRightDirc) == LOW)  status.countRight++;
   else  status.countRight--;
 }
-
-
-void loop()
-{
-if(isButtonPressed())
-  SerialUSB.println(timesIgnored);
-  
-  
-  
-/*===================  Encoder print  =======================*/
-/*
-  SerialUSB.print(status.wheelCountLeft);
-  SerialUSB.print("\t");
-
-  SerialUSB.print(status.wheelCountRight);
-  SerialUSB.print("\t");
-  SerialUSB.println(status.speedLeft);
-*
-/*=======================================================  End  =======================================================*/
-}
-
 
 
 
