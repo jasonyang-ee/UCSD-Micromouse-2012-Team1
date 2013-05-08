@@ -167,8 +167,12 @@ void Sensor::angularVelocity()
   status.angSpeedCounter = (++status.angSpeedCounter)%10;
   if( status.angSpeedCounter == 0)
   {
-    status.angularSpeed = status.countLeft - status.countLeftLast;
+    status.angularVelocityLeft = status.countLeft - status.countLeftLast;
+    status.angularVelocityRight = status.countRight - status.countRightLast;
+    
     status.countLeftLast = status.countLeft;
+    status.countRightLast = status.countRight;
+    
   }
 }
 

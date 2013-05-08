@@ -11,10 +11,10 @@ void Maze::decide()
   if(status.cellCurrent->wall[(status.compass+west) % 4] == false)  status.scenarioPath += openWest;
   
   /*------------------------------------------  singal open  ------------------------------------------*/
-  if(status.scenarioPath == openNone)  motor.rotateBack(speedRotate);
+  if(status.scenarioPath == openNone)  motor.rotateBack();
   if(status.scenarioPath == openNorth)  motor.goStraight(speedMap);
-  if(status.scenarioPath == openEast)  motor.rotateRight(speedRotate);
-  if(status.scenarioPath == openWest)  motor.rotateLeft(speedRotate);
+  if(status.scenarioPath == openEast)  motor.rotateRight();
+  if(status.scenarioPath == openWest)  motor.rotateLeft();
   
   /*------------------------------------------  set home path  ------------------------------------------*/
   if(status.scenarioFlag == flagBack)  status.cellCurrent->compassHome = (status.compass+2) % 4;
@@ -23,46 +23,46 @@ void Maze::decide()
   if(status.scenarioPath == openNorthEast)
   {
     if(status.cellCurrent->cellNorth->visit == false)  motor.goStraight(speedMap);
-    else if(status.cellCurrent->cellEast->visit == false)  motor.rotateRight(speedRotate);
+    else if(status.cellCurrent->cellEast->visit == false)  motor.rotateRight();
     else
     {
       if(status.cellCurrent->compassHome == north)  motor.goStraight(speedMap);
-      if(status.cellCurrent->compassHome == east)  motor.rotateRight(speedRotate);
-      if(status.cellCurrent->compassHome == west)  motor.rotateLeft(speedRotate);
+      if(status.cellCurrent->compassHome == east)  motor.rotateRight();
+      if(status.cellCurrent->compassHome == west)  motor.rotateLeft();
     }
   }
   if(status.scenarioPath == openNorthWest)
   {
     if(status.cellCurrent->cellNorth->visit == false)  motor.goStraight(speedMap);
-    else if(status.cellCurrent->cellWest->visit == false)  motor.rotateLeft(speedRotate);
+    else if(status.cellCurrent->cellWest->visit == false)  motor.rotateLeft();
     else
     {
       if(status.cellCurrent->compassHome == north)  motor.goStraight(speedMap);
-      if(status.cellCurrent->compassHome == east)  motor.rotateRight(speedRotate);
-      if(status.cellCurrent->compassHome == west)  motor.rotateLeft(speedRotate);
+      if(status.cellCurrent->compassHome == east)  motor.rotateRight();
+      if(status.cellCurrent->compassHome == west)  motor.rotateLeft();
     }
   }
   if(status.scenarioPath == openEastWest)
   {
-    if(status.cellCurrent->cellEast->visit == false)  motor.rotateRight(speedRotate);
-    else if(status.cellCurrent->cellWest->visit == false)  motor.rotateLeft(speedRotate);
+    if(status.cellCurrent->cellEast->visit == false)  motor.rotateRight();
+    else if(status.cellCurrent->cellWest->visit == false)  motor.rotateLeft();
     else
     {
       if(status.cellCurrent->compassHome == north)  motor.goStraight(speedMap);
-      if(status.cellCurrent->compassHome == east)  motor.rotateRight(speedRotate);
-      if(status.cellCurrent->compassHome == west)  motor.rotateLeft(speedRotate);
+      if(status.cellCurrent->compassHome == east)  motor.rotateRight();
+      if(status.cellCurrent->compassHome == west)  motor.rotateLeft();
     }
   }
   if(status.scenarioPath == openAll)
   {
     if(status.cellCurrent->cellNorth->visit == false)  motor.goStraight(speedMap);
-    else if(status.cellCurrent->cellEast->visit == false)  motor.rotateLeft(speedRotate);
-    else if(status.cellCurrent->cellWest->visit == false)  motor.rotateRight(speedRotate);
+    else if(status.cellCurrent->cellEast->visit == false)  motor.rotateLeft();
+    else if(status.cellCurrent->cellWest->visit == false)  motor.rotateRight();
     else
     {
       if(status.cellCurrent->compassHome == north)  motor.goStraight(speedMap);
-      if(status.cellCurrent->compassHome == east)  motor.rotateRight(speedRotate);
-      if(status.cellCurrent->compassHome == west)  motor.rotateLeft(speedRotate);
+      if(status.cellCurrent->compassHome == east)  motor.rotateRight();
+      if(status.cellCurrent->compassHome == west)  motor.rotateLeft();
     }
   }
 }

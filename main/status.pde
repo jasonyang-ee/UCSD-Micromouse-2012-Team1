@@ -60,15 +60,16 @@ void Status::initialize()
   countStampRight = 0;
 
   speedLeft = 0;  speedRight = 0;
-  angularSpeed = 0;
+  angularVelocityLeft = 0;
+  angularVelocityRight = 0;
   
   mode = modeStop;
   
   scenarioStraight = followBoth;
   scenarioPath = 0;
   scenarioBack = false;
-  angularSpeed = 0;
   angSpeedCounter = 0;
+  tick = 0;
 }
 
 /*===================  print functions  =======================*/

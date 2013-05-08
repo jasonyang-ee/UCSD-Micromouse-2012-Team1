@@ -16,7 +16,7 @@ int timesIgnored = 0;
 /*=====================  sensor constant  =====================*/
 //counter++ for every 1us, and interrupt for every 1000 count
 //interrupt in every 1us * this value = period
-#define timerRate 100
+#define timerRate 1000
 
 //sensor sample rate and sample numbers
 #define sampleNum 20
@@ -26,15 +26,15 @@ int timesIgnored = 0;
 
 /*=====================  motor constant  =====================*/
 //speed constant
-#define speedFull 65536
-#define speedMap 10000
+#define speedFull 65535
+#define speedMap 15000
 #define speedRotate 10000
 #define speedTurn 10000
 
 #define turnRatio 6/15
 
-#define countRotateSide 95
-#define countRotateBack 250
+#define countRotateSide 180
+#define countRotateBack 180
 
 /*=====================  pin constant  =====================*/
 //Reciever

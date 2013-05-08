@@ -60,6 +60,12 @@ public:
   volatile int countRight;
   volatile int countLeftLast;  //wheel encoder count last one
   volatile int countRightLast;
+  volatile int errorCountLeftLast;
+  volatile int errorCountRightLast;
+  int errorCountLeftTotal;
+  int errorCountRightTotal;
+  int errorCountLeftDiff;
+  int errorCountRightDiff;
   
   int countStampLeft;
   int countStampRight;
@@ -70,7 +76,8 @@ public:
   int speedBase;
   
   //angular velocity
-  int angularSpeed;
+  int angularVelocityRight;
+  int angularVelocityLeft;
   int angSpeedCounter;
   
   //control PID drive type
@@ -82,6 +89,7 @@ public:
   int scenarioPath;
   int scenarioFlag;
   bool scenarioBack;
+  int tick;
   
 public:
   void initialize();
