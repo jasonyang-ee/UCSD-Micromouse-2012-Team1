@@ -13,6 +13,8 @@ public:
   volatile double distSideRight;
   volatile double distDiagonalLeft;
   volatile double distDiagonalRight;
+  volatile double distSideLeftLast;
+  volatile double distSideRightLast;
   
   //raw sensor status
   volatile int voltFrontLeft;
@@ -41,28 +43,26 @@ public:
   double errorDiagonalLast;
   double errorSideLast;
   double errorFrontLast;
-  double errorCountLeftLast;
-  double errorCountRightLast;
   
   //PID error
   double errorDiagonalTotal;
   double errorSideTotal;
   double errorFrontTotal;
-  double errorCountLeftTotal;
-  double errorCountRightTotal;
   
   double errorDiagonalDiff;
   double errorDiagonalDiffLast;
   double errorSideDiff;
   double errorFrontDiff;
-  double errorCountLeftDiff;
-  double errorCountRightDiff;
+  double errorCountDiff;
   
   //encoder status
   volatile int countLeft;  //wheel encoder count
   volatile int countRight;
   volatile int countLeftLast;  //wheel encoder count last one
   volatile int countRightLast;
+  
+  int countStampLeft;
+  int countStampRight;
 
   //motor status
   int speedLeft;

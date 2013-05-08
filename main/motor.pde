@@ -50,13 +50,26 @@ void Motor::PID()
       }
       if(status.scenarioStraight == fishBone)
       {
-        status.errorCountLeftDiff = status.errorCountLeft - status.errorCountLeftLast;
-        status.errorCountLeftTotal += status.errorCountLeft;
-
+        status.errorCountDiff = status.errorCountLeft - status.errorCountRight;
         
-        status.errorCountLeftLast = status.errorCountLeft;
-        
-        
+        if(status.distSideLeft > distWallExist || status.distSideRight > distWallExist)
+        {
+          int correction = round(400*(status.errorCountDiff)/.001);
+          motorRight(status.speedBase + correction);
+          motorLeft(status.speedBase - correction);
+        }
+        else
+        {
+          if(status.distSideLeft - status.distSideLeftLast > 4)  status.countStampLeft = status.countLeft;
+          if(status.distSideRight - status.distSideRightLast > 4)  status.countStampRight = status.countRight;
+          if(status.countStampLeft!=0 && status.countStampRight!=0)
+          {
+            int correction = round(400*abs(status.countStampLeft-status.countStampRight)/.001);
+            motorRight(status.speedBase + correction);
+            motorLeft(status.speedBase - correction);
+          }
+        }
+        status.countLeftLast = status.countLeft;
       }
     }
     else

@@ -12,8 +12,8 @@ void Status::initialize()
   distSideRight = 0;
   distDiagonalLeft = 0;
   distDiagonalRight = 0;
-  distDiagonalLeft = 20;
-  distDiagonalRight = 20;
+  distSideLeftLast = 0;
+  distSideRightLast = 0;
   
   voltFrontLeft = 0;
   voltFrontRight = 0;
@@ -56,6 +56,8 @@ void Status::initialize()
   countRight = 0;
   countLeftLast = 0;
   countRightLast = 0;
+  countStampLeft = 0;
+  countStampRight = 0;
 
   speedLeft = 0;  speedRight = 0;
   angularSpeed = 0;

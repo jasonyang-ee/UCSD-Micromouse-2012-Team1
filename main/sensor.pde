@@ -11,6 +11,10 @@ void Sensor::runAllSensor()
   status.voltDiagonalLeft = (runSensor(sensorDiagonalLeft));
   status.voltDiagonalRight = (runSensor(sensorDiagonalRight));
  
+  //save last
+  status.distSideLeftLast = status.distSideLeft;
+  status.distSideRightLast = status.distSideRight;
+ 
   //converte voltage to distance
   status.distFrontLeft = convertDistance(status.voltFrontLeft, 1);
   status.distFrontRight = convertDistance(status.voltFrontRight, 2);

@@ -45,6 +45,10 @@ void setup()
 /*=======================================================  Initialize  =======================================================*/
   status.initialize();
   maze.initialize();
+  
+  status.mode = modeStraight;
+  status.scenarioStraight = fishBone;
+  motor.goStraight(speedMap);
 }
 
 void globalInterrupt(void)
