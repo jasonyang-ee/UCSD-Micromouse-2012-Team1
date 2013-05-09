@@ -28,9 +28,9 @@ void Motor::PID()
       case followBoth:
         {
           //Gain values for PID
-          int Kp = 900;
+          int Kp = 1500;
           int Kd = 200;
-          int Ki = 1;
+          int Ki = 0;
 
           /*suitable for 20,000:*/
           int correction = round(Kp * status.errorDiagonal + Kd*(status.errorDiagonalDiff)/.001 + Ki*status.errorDiagonalTotal);
@@ -46,10 +46,10 @@ void Motor::PID()
       case followRight:
         {
           //Gain values for PID
-          int Kp = 900;
+          int Kp = 1500;
           int Kd = 200;
-          int Ki = 1;
-          int correction = round(Kp*status.errorRight + (Kd*(status.errorRightDiff)/(.001)));
+          int Ki = 0;
+          int correction = round(Kp*status.errorRight + Kd*(status.errorRightDiff)/(.001) + Ki*status.errorRightTotal);
           motorRight(status.speedBase - correction);
           motorLeft(status.speedBase + correction); 					
           break;
@@ -59,12 +59,11 @@ void Motor::PID()
       case followLeft: 
         {
           //Gain values for PID
-          int Kp = 1000;
-          int Kd = 5;
-
+          int Kp = 1500;
+          int Kd = 200;
+          int Ki = 0;
           //Correction value from PID
-          int correction = round(Kp*status.errorLeft + (Kd*(status.errorLeftDiff)/(.001)));
-
+          int correction = round(Kp*status.errorLeft + Kd*(status.errorLeftDiff)/(.001) + Ki*status.errorRightTotal);
           motorRight(status.speedBase + correction);
           motorLeft(status.speedBase - correction); 
           break;				
@@ -73,6 +72,9 @@ void Motor::PID()
         //uses side sensors to find an encoder offset, then corrects based off that error
       case fishBone: 
         {
+          int Kp = 1500;
+          int Kd = 200;
+          int Ki = 0;
           status.errorCountDiff = status.errorCountLeft - status.errorCountRight;
           if(status.distSideLeft > distWallExist || status.distSideRight > distWallExist)
           {
@@ -99,8 +101,8 @@ void Motor::PID()
         motor.stop(); 
         break;
       }
-      if(status.distFront < 20 || status.distSideRight >= 20 || status.distSideLeft >= 20)
-          motor.stop();
+      if(status.distFront < 9 || status.distSideRight >= 15 || status.distSideLeft >= 15)
+        motor.stop();
     }
     break;
 
@@ -115,7 +117,7 @@ void Motor::PID()
 
       //Initialization of PID values
       int Kp = 150;
-      int Kd =120;
+      int Kd = 120;
       int Ki = 10;
 
       switch (status.scenarioRotate)
@@ -240,14 +242,24 @@ void Motor::stop()
 { 
 
   //if( status.angularVelocityRight == 0 && status.angularVelocityLeft == 0) //might need to change this later
-  if(status.angularVelocityLeft < 5 && status.angularVelocityLeft < 5)
+  if(status.angularVelocityLeft < 20 && status.angularVelocityLeft < 20)
   {
     status.mode = modeStop; //set modd
     motorLeft(0);  
     motorRight(0);          //set motor=0								              
     status.speedBase = 0;
+    status.countLeftTemp=0;
+    status.countRightTemp=0;
   }
-  else
+  if(status.scenarioStraight == followLeft)
+    if(status.distDiagonalRight < 15)
+      decelerate();
+  
+  if(status.scenarioStraight == followRight)
+    if(status.distDiagonalLeft < 15)
+      decelerate();
+      
+  if(status.angularVelocityLeft > 20 && status.angularVelocityLeft > 20)
     decelerate();
 }
 
@@ -256,19 +268,24 @@ void Motor::decelerate()
   if(status.angularVelocityLeft > 0 && status.angularVelocityRight > 0)
   {
     status.mode = modeDecelerate;
-    int error = status.countLeft - status.countRight;
-    int correction = 5*error;
+    if(status.countLeftTemp!=0 && status.countRightTemp!=0)
+    {
+      status.countLeftTemp=status.countLeft;
+      status.countRightTemp=status.countRight;
+    }
+    int error = (status.countLeft - status.countLeftTemp) - (status.countRight - status.countRightTemp);
+    int correction = 300*error;
    
     int rateDecelerate = ((abs(status.speedLeft)+abs(status.speedRight))/2>10000)? -0.995 : -0.997;  //set different rate
 
     int tempL = status.speedLeft * rateDecelerate - correction;
-    int tempR = status.speedRight * rateDecelerate - correction;
+    int tempR = status.speedRight * rateDecelerate + correction;
     motorLeft(tempL);                     //set opposite speed
     motorRight(tempR);                    //set opposite speed
     status.speedLeft *= -1;
     status.speedRight *= -1;
   }
-  if(status.angularVelocityLeft < 5 && status.angularVelocityRight < 5) //might need to change this too
+  if(status.angularVelocityLeft < 20 && status.angularVelocityRight < 20) //might need to change this too
     status.mode = modeStop;
 }
 

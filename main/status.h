@@ -75,6 +75,9 @@ public:
   int countStampLeft;
   int countStampRight;
 
+  int countLeftTemp;
+  int countRightTemp;
+
   //motor status
   int speedLeft;
   int speedRight;

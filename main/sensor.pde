@@ -21,7 +21,7 @@ void Sensor::runAllSensor()
   status.distFront = (status.distFrontLeft + status.distFrontRight)/2;
   
   angularVelocity();
- // setScenario();
+  setScenario();
   errorRight();
   errorLeft();
   errorDiagonal();
@@ -137,8 +137,8 @@ void Sensor::errorRight()
   //uses diagonal sensor to figure out orientation, horizontal sensor
   //as error measurement
   status.errorRightLast = status.errorRight; // should be errorRight
-  int setpoint1 = 11;
-  int setpoint2 = 3.59;
+  int setpoint1 = 9.84;
+  int setpoint2 = 2.52;
 
   //i dont remember what i was doing here, this might be completely wrong lol
   status.errorRight = (status.distDiagonalRight - setpoint1);
@@ -152,8 +152,8 @@ void Sensor::errorLeft()
   //uses diagonal sensor to figure out orientation, horizontal sensor
   //as error measurement
   status.errorLeftLast = status.errorLeft; // should be errorRight
-  int setpoint1 = 11;
-  int setpoint2 = 3.59;
+  int setpoint1 = 9.47;
+  int setpoint2 = 3.12;
 
   //omg what am i doing
   status.errorLeft = (status.distDiagonalLeft - setpoint1);
