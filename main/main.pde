@@ -48,18 +48,12 @@ void setup()
   status.initialize();
   //maze.initialize();
   
-  //Used to test individual cases in PID
-  //status.mode = modeStraight;
-  //status.scenarioStraight = fishBone;
+  /*
   status.scenarioStraight = followRight;
   motor.goStraight(10000);
   status.distFront = 0;
-//	motor.rotateLeft();
-//	motor.rotateRight();
-//	motor.rotateBack();
+  */
   
-//  status.mode = modeRotate; 
-//  status.scenarioRotate = left;
 
 }
 
@@ -124,7 +118,19 @@ void globalInterrupt(void)
 void loop()
 {
 
-
+  SerialUSB.print(status.distFront);
+  SerialUSB.print("\t");
+  SerialUSB.print(status.distFrontLeft);
+  SerialUSB.print("\t");
+  SerialUSB.print(status.distFrontRight);
+  SerialUSB.print("\t");
+  SerialUSB.print(status.distSideLeft);
+  SerialUSB.print("\t");
+  SerialUSB.print(status.distSideRight);
+  SerialUSB.print("\t");
+  SerialUSB.print(status.distDiagonalLeft);
+  SerialUSB.print("\t");
+  SerialUSB.println(status.distDiagonalRight);
 /*
 SerialUSB.print(status.errorCountLeft);
 SerialUSB.print("\t");

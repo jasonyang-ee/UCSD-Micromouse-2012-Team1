@@ -28,8 +28,6 @@ public:
   Cell *cellCurrent;    //cell pointer
   Cell *currentCell;    //cell pointer
   int compass;
-  int x; //Current X position of Mouse
-  int y; //Current Y position of Mouse
   
   //error
   volatile double errorRight;

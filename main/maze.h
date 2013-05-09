@@ -5,7 +5,8 @@
 
 class Maze{
 public:
-  void decide();
+  int decide();
+  void checkBranch();
   
   void mapping();
   void adjacentWall(Cell*);
@@ -16,6 +17,9 @@ public:
   void eastFlood(int, int, int);
   void southFlood(int, int, int);
   void westFlood(int, int, int);
+  
+  bool returnBranch;
+  int branchValue;
   
   void initialize();
 };
