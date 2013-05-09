@@ -26,15 +26,15 @@ int timesIgnored = 0;
 
 /*=====================  motor constant  =====================*/
 //speed constant
-#define speedFull 65535
+#define speedFull 30000
 #define speedMap 15000
 #define speedRotate 10000
 #define speedTurn 10000
 
 #define turnRatio 6/15
 
-#define countRotateSide 180
-#define countRotateBack 180
+#define countRotateSide 120
+#define countRotateBack 200
 
 /*=====================  pin constant  =====================*/
 //Reciever

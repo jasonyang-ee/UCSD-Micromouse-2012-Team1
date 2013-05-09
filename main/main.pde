@@ -15,14 +15,14 @@ void setup()
   pinMode(ledTwo,OUTPUT);    //int led
   pinMode(ledThree,OUTPUT);  //int led
 
-  pinMode(PWMLeft, PWM);          //PWM control of Left Motor
-  pinMode(motorLeft1, OUTPUT);    //direction control of Left Motor
-  pinMode(motorLeft2, OUTPUT);    //direction control of Left Motor
-  pinMode(PWMRight, PWM);         //PWM control of Right Motor
-  pinMode(motorRight1, OUTPUT);   //direction control of Right Motor
-  pinMode(motorRight2, OUTPUT);   //direction control of Right Motor
-  pwmWrite(PWMLeft, 0);           //initialize speed of 
-  pwmWrite(PWMRight, 0);          //both motors to 0
+  pinMode(PWMLeft, PWM);					  	//PWM control of Left Motor
+  pinMode(motorLeft1, OUTPUT);					//direction control of Left Motor
+  pinMode(motorLeft2, OUTPUT);					//direction control of Left Motor
+  pinMode(PWMRight, PWM);						//PWM control of Right Motor
+  pinMode(motorRight1, OUTPUT);					//direction control of Right Motor
+  pinMode(motorRight2, OUTPUT);  				//direction control of Right Motor
+  pwmWrite(PWMLeft, 0);							//initialize speed of 
+  pwmWrite(PWMRight, 0);						//both motors to 0
 
   pinMode(encoderLeftCLK, INPUT);    //Left encoder clock pin
   pinMode(encoderLeftDirc, INPUT);   //Left encoder direction pin
@@ -48,13 +48,14 @@ void setup()
   status.initialize();
   maze.initialize();
   
+  //Used to test individual cases in PID
   //status.mode = modeStraight;
   //status.scenarioStraight = fishBone;
-  //status.scenarioStraight = followBoth;
-  //motor.goStraight(10000);
-	motor.rotateLeft();
+  status.scenarioStraight = followBoth;
+  motor.goStraight(10000);
+//	motor.rotateLeft();
 //	motor.rotateRight();
-	//motor.rotateBack();
+//	motor.rotateBack();
   
 //  status.mode = modeRotate; 
 //  status.scenarioRotate = left;
@@ -122,14 +123,14 @@ void loop()
 
 SerialUSB.print(status.errorCountLeft);
 SerialUSB.print("\t");
-SerialUSB.println(status.tick);
+SerialUSB.print(status.errorCountRight);
+SerialUSB.print("\t");
+SerialUSB.print(status.tick);
+SerialUSB.print("\t");
+SerialUSB.print(status.speedLeft);
+SerialUSB.print("\t");
+SerialUSB.println(status.speedRight);
 
-	/*
-	SerialUSB.print(status.speedLeft);
-	SerialUSB.print("\t");
-	SerialUSB.println(status.speedRight);
-	*/
-	
 /*===================  Encoder print  =======================*/
 /*if(isButtonPressed())
 //{
