@@ -11,23 +11,23 @@ void setup()
   pinMode(sensorSideLeft,INPUT_ANALOG);       //int sensorSideLeft
   pinMode(sensorSideRight,INPUT_ANALOG);      //int sensorSideRight
 
-  pinMode(ledOne,OUTPUT);    //int led
-  pinMode(ledTwo,OUTPUT);    //int led
-  pinMode(ledThree,OUTPUT);  //int led
+  pinMode(ledOne,OUTPUT);                     //int led
+  pinMode(ledTwo,OUTPUT);                     //int led
+  pinMode(ledThree,OUTPUT);                   //int led
 
-  pinMode(PWMLeft, PWM);					  	//PWM control of Left Motor
-  pinMode(motorLeft1, OUTPUT);					//direction control of Left Motor
-  pinMode(motorLeft2, OUTPUT);					//direction control of Left Motor
-  pinMode(PWMRight, PWM);						//PWM control of Right Motor
-  pinMode(motorRight1, OUTPUT);					//direction control of Right Motor
-  pinMode(motorRight2, OUTPUT);  				//direction control of Right Motor
-  pwmWrite(PWMLeft, 0);							//initialize speed of 
-  pwmWrite(PWMRight, 0);						//both motors to 0
+  pinMode(PWMLeft, PWM);					  	        //PWM control of Left Motor
+  pinMode(motorLeft1, OUTPUT);					      //direction control of Left Motor
+  pinMode(motorLeft2, OUTPUT);					      //direction control of Left Motor
+  pinMode(PWMRight, PWM);						          //PWM control of Right Motor
+  pinMode(motorRight1, OUTPUT);					      //direction control of Right Motor
+  pinMode(motorRight2, OUTPUT);  				      //direction control of Right Motor
+  pwmWrite(PWMLeft, 0);							          //initialize speed of 
+  pwmWrite(PWMRight, 0);						          //both motors to 0
 
-  pinMode(encoderLeftCLK, INPUT);    //Left encoder clock pin
-  pinMode(encoderLeftDirc, INPUT);   //Left encoder direction pin
-  pinMode(encoderRightCLK, INPUT);	 //Right encoder clock pin
-  pinMode(encoderRightDirc, INPUT);	 //Right encoder direction pin
+  pinMode(encoderLeftCLK, INPUT);             //Left encoder clock pin
+  pinMode(encoderLeftDirc, INPUT);            //Left encoder direction pin
+  pinMode(encoderRightCLK, INPUT);	          //Right encoder clock pin
+  pinMode(encoderRightDirc, INPUT);	          //Right encoder direction pin
 
   for (int i = 0; i < 100; i++)
     sensor.runAllSensor();
@@ -47,9 +47,6 @@ void setup()
 /*=======================================================  Initialize  =======================================================*/
   status.initialize();
   maze.initialize();
-  status.mode = modeStraight;
-  status.scenarioStraight = followBoth;
-  motor.goStraight(7000);
   
   //Used to test individual cases in PID
   //status.mode = modeStraight;
@@ -100,7 +97,9 @@ void globalInterrupt(void)
     motor.stop();
   */
   //if (status.countLeft < countCell)
-   motor.PID();
+  motor.PID();
+ // motor.motorRight(10000);
+  //motor.motorLeft(10000);
  /* else
   {    
     motor.stop();
@@ -123,7 +122,7 @@ void globalInterrupt(void)
 
 void loop()
 {
-
+/*
 SerialUSB.print(status.errorCountLeft);
 SerialUSB.print("\t");
 SerialUSB.print(status.errorCountRight);
@@ -133,6 +132,7 @@ SerialUSB.print("\t");
 SerialUSB.print(status.speedLeft);
 SerialUSB.print("\t");
 SerialUSB.println(status.speedRight);
+*/
 
 /*===================  Encoder print  =======================*/
 /*if(isButtonPressed())

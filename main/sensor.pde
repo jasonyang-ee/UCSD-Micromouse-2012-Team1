@@ -11,6 +11,10 @@ void Sensor::runAllSensor()
   status.voltDiagonalLeft = (runSensor(sensorDiagonalLeft));
   status.voltDiagonalRight = (runSensor(sensorDiagonalRight));
  
+  //save last
+  status.distSideLeftLast = status.distSideLeft;
+  status.distSideRightLast = status.distSideRight;
+ 
   //converte voltage to distance
   status.distFrontLeft = convertDistance(status.voltFrontLeft, 1);
   status.distFrontRight = convertDistance(status.voltFrontRight, 2);
@@ -20,8 +24,22 @@ void Sensor::runAllSensor()
   status.distDiagonalRight = convertDistance(status.voltDiagonalRight, 6);
   status.distFront = (status.distFrontLeft + status.distFrontRight)/2;
   
+  //set errors
   angularVelocity();
 //  setScenario();
+  errorDiagonal();
+  errorSide();
+  errorFront();
+  errorRight();
+  errorLeft();
+  
+  errorDiagonalTotal();
+  errorSideTotal();
+  errorFrontTotal();
+  
+  errorDiagonalDiff();
+  errorSideDiff();
+  errorFrontDiff();
 }
 
 
@@ -101,28 +119,17 @@ double Sensor::convertDistance(int volt, int c)
 /*=======================================================  scenario  =======================================================*/
 void Sensor::setScenario()
 {
-  /*------------------------------------------  straight scenario  ------------------------------------------*/
-  if(status.distSideLeft > distWallExist && status.distSideRight > distWallExist)
-    status.scenarioStraight = fishBone;
-  if(status.scenarioStraight == fishBone)  //if fish bone then determine when does it end instead of a post
-    if(status.countLeft - status.countStampLeft > 40 || status.countRight - status.countStampRight > 40)
-    {
-        if(status.distSideLeft > distWallExist && status.distSideRight < distWallExist)
-          status.scenarioStraight = followRight;
-        if(status.distSideLeft < distWallExist && status.distSideRight > distWallExist)
-          status.scenarioStraight = followLeft;
-        if(status.distSideLeft < distWallExist && status.distSideRight < distWallExist)
-          status.scenarioStraight = followBoth;
-    }
-  if(status.scenarioStraight != fishBone)
+  if(status.mode)
   {
-    if(status.distSideLeft > distWallExist && status.distSideRight < distWallExist)
+    /*------------------------------------------  straight scenario  ------------------------------------------*/
+    if(status.distSideLeft > distWallExist && status.distFront > distWallExist)
       status.scenarioStraight = followRight;
-    if(status.distSideLeft < distWallExist && status.distSideRight > distWallExist)
+    else if(status.distSideRight > distWallExist)
       status.scenarioStraight = followLeft;
-    if(status.distSideLeft < distWallExist && status.distSideRight < distWallExist)
-      status.scenarioStraight = followBoth;
+    else if(status.distSideLeft > distWallExist && status.distSideRight > distWallExist)
+      status.scenarioStraight = fishBone;
   }
+
 }
 
 /*=======================================================  error  =======================================================*/
@@ -130,53 +137,52 @@ void Sensor::errorRight()
 {
   //uses diagonal sensor to figure out orientation, horizontal sensor
   //as error measurement
-  status.errorRightLast = status.errorRight;
+  status.errorRightLast = status.errorRight; // should be errorRight
   int setpoint1 = 11;
   int setpoint2 = 3.59;
+
+  //i dont remember what i was doing here, this might be completely wrong lol
   status.errorRight = (status.distDiagonalRight - setpoint1);
   status.errorRight +=( status.errorRight < 0 ? (setpoint2 - status.distSideRight):(status.distSideRight - setpoint2) );
-  status.errorRightTotal +=status.errorRight;
 }
 
 void Sensor::errorLeft()
 {
   //uses diagonal sensor to figure out orientation, horizontal sensor
   //as error measurement
-  status.errorLeftLast = status.errorLeft;
+  status.errorLeftLast = status.errorLeft; // should be errorRight
   int setpoint1 = 11;
   int setpoint2 = 3.59;
+
+  //omg what am i doing
   status.errorLeft = (status.distDiagonalLeft - setpoint1);
-  status.errorLeft +=( status.errorLeft < 0 ? (setpoint2 - status.distSideLeft):(status.distSideLeft - setpoint2) );
-  status.errorRightTotal +=status.errorRight;
+  status.errorLeft +=( status.distDiagonalLeft < 0 ? (setpoint2 - status.distSideLeft):(status.distSideLeft - setpoint2) );
 }
 
 void Sensor::errorDiagonal()
 {
   status.errorDiagonalLast = status.errorDiagonal;
   status.errorDiagonal = (status.distDiagonalLeft - status.distDiagonalRight) * 0.707;
-  status.errorDiagonalDiff = status.errorDiagonal - status.errorDiagonalLast;
-  status.errorDiagonalTotal += status.errorDiagonal;
+  errorDiagonalDiff();
 }
 
 void Sensor::errorSide()
 {
   status.errorSideLast = status.errorSide;
   status.errorSide = status.distSideLeft - status.distSideRight;
-  status.errorSideTotal += status.errorSide;
-  status.errorSideDiff = status.errorSide - status.errorSideLast;
 }
 
 void Sensor::errorFront()
 {
   status.errorFrontLast = status.errorFront;
   status.errorFront = status.distFrontLeft - status.distFrontRight;
-  status.errorFrontTotal += status.errorFront;
-  status.errorFrontDiff = status.errorFront - status.errorFrontLast;
 }
 
 /*=======================================================  PID  =======================================================*/
 void Sensor::angularVelocity()
 {
+  //only calculates angular velocity every 10 counts so we get more than an error of 0 or 1
+  //control loop is kinda faster than encoder interrupts
   status.angSpeedCounter = (++status.angSpeedCounter)%10;
   if( status.angSpeedCounter == 0)
   {
@@ -185,5 +191,18 @@ void Sensor::angularVelocity()
     
     status.countLeftLast = status.countLeft;
     status.countRightLast = status.countRight;
+    
   }
 }
+
+void Sensor::errorDiagonalTotal()  { status.errorDiagonalTotal += status.errorDiagonal; }
+
+void Sensor::errorSideTotal()  { status.errorSideTotal += status.errorSide; }
+
+void Sensor::errorFrontTotal()  { status.errorFrontTotal += status.errorFront; }
+
+void Sensor::errorDiagonalDiff()  { status.errorDiagonalDiff = status.errorDiagonal - status.errorDiagonalLast; }
+
+void Sensor::errorSideDiff()  { status.errorSideDiff = status.errorSide - status.errorSideLast; }
+
+void Sensor::errorFrontDiff()  { status.errorFrontDiff = status.errorFront - status.errorFrontLast; }

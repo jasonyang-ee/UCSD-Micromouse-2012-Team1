@@ -89,10 +89,11 @@ Status status;
 #define modeRotateGo 6
 
 //scenarioStraight
-#define followBoth 0
+#define modeNull 0
 #define followRight 1
 #define followLeft 2
-#define fishBone 3
+#define followBoth 3
+#define fishBone 4
 
 //scenarioRotate
 //scenarioTurn
