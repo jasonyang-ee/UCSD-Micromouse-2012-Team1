@@ -47,12 +47,15 @@ void setup()
 /*=======================================================  Initialize  =======================================================*/
   status.initialize();
   maze.initialize();
+  status.mode = modeStraight;
+  status.scenarioStraight = followBoth;
+  motor.goStraight(7000);
   
   //status.mode = modeStraight;
   //status.scenarioStraight = fishBone;
   //status.scenarioStraight = followBoth;
   //motor.goStraight(10000);
-	motor.rotateLeft();
+//	motor.rotateLeft();
 //	motor.rotateRight();
 	//motor.rotateBack();
   
@@ -119,11 +122,6 @@ void globalInterrupt(void)
 
 void loop()
 {
-
-SerialUSB.print(status.errorCountLeft);
-SerialUSB.print("\t");
-SerialUSB.println(status.tick);
-
 	/*
 	SerialUSB.print(status.speedLeft);
 	SerialUSB.print("\t");

@@ -11,10 +11,6 @@ void Sensor::runAllSensor()
   status.voltDiagonalLeft = (runSensor(sensorDiagonalLeft));
   status.voltDiagonalRight = (runSensor(sensorDiagonalRight));
  
-  //save last
-  status.distSideLeftLast = status.distSideLeft;
-  status.distSideRightLast = status.distSideRight;
- 
   //converte voltage to distance
   status.distFrontLeft = convertDistance(status.voltFrontLeft, 1);
   status.distFrontRight = convertDistance(status.voltFrontRight, 2);
@@ -24,20 +20,8 @@ void Sensor::runAllSensor()
   status.distDiagonalRight = convertDistance(status.voltDiagonalRight, 6);
   status.distFront = (status.distFrontLeft + status.distFrontRight)/2;
   
-  //set errors
   angularVelocity();
 //  setScenario();
-  errorDiagonal();
-  errorSide();
-  errorFront();
-  
-  errorDiagonalTotal();
-  errorSideTotal();
-  errorFrontTotal();
-  
-  errorDiagonalDiff();
-  errorSideDiff();
-  errorFrontDiff();
 }
 
 
@@ -117,17 +101,28 @@ double Sensor::convertDistance(int volt, int c)
 /*=======================================================  scenario  =======================================================*/
 void Sensor::setScenario()
 {
-  if(status.mode)
+  /*------------------------------------------  straight scenario  ------------------------------------------*/
+  if(status.distSideLeft > distWallExist && status.distSideRight > distWallExist)
+    status.scenarioStraight = fishBone;
+  if(status.scenarioStraight == fishBone)  //if fish bone then determine when does it end instead of a post
+    if(status.countLeft - status.countStampLeft > 40 || status.countRight - status.countStampRight > 40)
+    {
+        if(status.distSideLeft > distWallExist && status.distSideRight < distWallExist)
+          status.scenarioStraight = followRight;
+        if(status.distSideLeft < distWallExist && status.distSideRight > distWallExist)
+          status.scenarioStraight = followLeft;
+        if(status.distSideLeft < distWallExist && status.distSideRight < distWallExist)
+          status.scenarioStraight = followBoth;
+    }
+  if(status.scenarioStraight != fishBone)
   {
-    /*------------------------------------------  straight scenario  ------------------------------------------*/
-    if(status.distSideLeft > distWallExist && status.distFront > distWallExist)
+    if(status.distSideLeft > distWallExist && status.distSideRight < distWallExist)
       status.scenarioStraight = followRight;
-    else if(status.distSideRight > distWallExist)
+    if(status.distSideLeft < distWallExist && status.distSideRight > distWallExist)
       status.scenarioStraight = followLeft;
-    else if(status.distSideLeft > distWallExist && status.distSideRight > distWallExist)
-      status.scenarioStraight = fishBone;
+    if(status.distSideLeft < distWallExist && status.distSideRight < distWallExist)
+      status.scenarioStraight = followBoth;
   }
-
 }
 
 /*=======================================================  error  =======================================================*/
@@ -135,30 +130,48 @@ void Sensor::errorRight()
 {
   //uses diagonal sensor to figure out orientation, horizontal sensor
   //as error measurement
-  status.errorDiagonalLast = status.errorDiagonal; // should be errorRight
+  status.errorRightLast = status.errorRight;
   int setpoint1 = 11;
   int setpoint2 = 3.59;
-  status.errorDiagonal = (status.distDiagonalRight - setpoint1);
-  status.errorDiagonal +=( status.errorDiagonal < 0 ? (setpoint2 - status.distSideRight):(status.distSideRight - setpoint2) );
+  status.errorRight = (status.distDiagonalRight - setpoint1);
+  status.errorRight +=( status.errorRight < 0 ? (setpoint2 - status.distSideRight):(status.distSideRight - setpoint2) );
+  status.errorRightTotal +=status.errorRight;
+}
+
+void Sensor::errorLeft()
+{
+  //uses diagonal sensor to figure out orientation, horizontal sensor
+  //as error measurement
+  status.errorLeftLast = status.errorLeft;
+  int setpoint1 = 11;
+  int setpoint2 = 3.59;
+  status.errorLeft = (status.distDiagonalLeft - setpoint1);
+  status.errorLeft +=( status.errorLeft < 0 ? (setpoint2 - status.distSideLeft):(status.distSideLeft - setpoint2) );
+  status.errorRightTotal +=status.errorRight;
 }
 
 void Sensor::errorDiagonal()
 {
   status.errorDiagonalLast = status.errorDiagonal;
   status.errorDiagonal = (status.distDiagonalLeft - status.distDiagonalRight) * 0.707;
-  errorDiagonalDiff();
+  status.errorDiagonalDiff = status.errorDiagonal - status.errorDiagonalLast;
+  status.errorDiagonalTotal += status.errorDiagonal;
 }
 
 void Sensor::errorSide()
 {
   status.errorSideLast = status.errorSide;
   status.errorSide = status.distSideLeft - status.distSideRight;
+  status.errorSideTotal += status.errorSide;
+  status.errorSideDiff = status.errorSide - status.errorSideLast;
 }
 
 void Sensor::errorFront()
 {
   status.errorFrontLast = status.errorFront;
   status.errorFront = status.distFrontLeft - status.distFrontRight;
+  status.errorFrontTotal += status.errorFront;
+  status.errorFrontDiff = status.errorFront - status.errorFrontLast;
 }
 
 /*=======================================================  PID  =======================================================*/
@@ -172,18 +185,5 @@ void Sensor::angularVelocity()
     
     status.countLeftLast = status.countLeft;
     status.countRightLast = status.countRight;
-    
   }
 }
-
-void Sensor::errorDiagonalTotal()  { status.errorDiagonalTotal += status.errorDiagonal; }
-
-void Sensor::errorSideTotal()  { status.errorSideTotal += status.errorSide; }
-
-void Sensor::errorFrontTotal()  { status.errorFrontTotal += status.errorFront; }
-
-void Sensor::errorDiagonalDiff()  { status.errorDiagonalDiff = status.errorDiagonal - status.errorDiagonalLast; }
-
-void Sensor::errorSideDiff()  { status.errorSideDiff = status.errorSide - status.errorSideLast; }
-
-void Sensor::errorFrontDiff()  { status.errorFrontDiff = status.errorFront - status.errorFrontLast; }

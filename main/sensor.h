@@ -15,20 +15,13 @@ public:
   void setScenario();
 /*=======================================================  error  =======================================================*/
   void errorRight();
+  void errorLeft();
   void errorDiagonal();
   void errorSide();
   void errorFront();
   void errorCountLeft();
 /*=======================================================  PID value  =======================================================*/
   void angularVelocity();
-  void errorDiagonalTotal();
-  void errorSideTotal();
-  void errorFrontTotal();
-  void errorCountLeftTotal();
-  void errorDiagonalDiff();
-  void errorSideDiff();
-  void errorFrontDiff();
-  void errorCountLeftDiff();
 };
 
 #endif

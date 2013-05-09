@@ -24,41 +24,53 @@ void Motor::PID()
           /*suitable for 20,000: int correction = round(1500 * status.errorDiagonal + 200*(status.errorDiagonalDiff)/.001 + 35*status.errorDiagonalTotal);*/
           motor.motorRight(status.speedBase + correction);
           motor.motorLeft(status.speedBase - correction);            
-          status.errorDiagonalDiffLast = status.errorDiagonalDiff;
+/*?*/          status.errorDiagonalDiffLast = status.errorDiagonalDiff;
           break;
         }  
 
       case followRight:
         {
-          int correction = round(1000*status.errorDiagonal + ((status.errorDiagonalDiff)/(.001)*5));
+          int correction = round(1000*status.errorRight + ((status.errorRightDiff)/(.001)*5));
           motorRight(status.speedBase + correction);
           motorLeft(status.speedBase - correction); 
           break;
         }
 
       case followLeft: 
+        {
+          int correction = round(1000*status.errorLeft + ((status.errorLeftDiff)/(.001)*5));
+          motorRight(status.speedBase + correction);
+          motorLeft(status.speedBase - correction); 
+          break;
+        }
         break;
+        
       case fishBone: 
         {
-          status.errorCountDiff = status.errorCountLeft - status.errorCountRight;
-          if(status.distSideLeft > distWallExist || status.distSideRight > distWallExist)
+          if(status.distFront > distWallExist)
           {
-            int correction = round(400*(status.errorCountDiff)/.001);
-            motorRight(status.speedBase + correction);
-            motorLeft(status.speedBase - correction);
-          }
-          else
-          {
-            if(status.distSideLeft - status.distSideLeftLast > 4)  status.countStampLeft = status.countLeft;
-            if(status.distSideRight - status.distSideRightLast > 4)  status.countStampRight = status.countRight;
-            if(status.countStampLeft!=0 && status.countStampRight!=0)
+            status.errorCountDiff = status.countLeft - status.countRight;
+            if(status.distSideLeft > distWallExist || status.distSideRight > distWallExist)
             {
-              int correction = round(400*abs(status.countStampLeft-status.countStampRight)/.001);
+              int correction = round(400*(status.errorCountDiff)/.001);
               motorRight(status.speedBase + correction);
               motorLeft(status.speedBase - correction);
             }
+            else
+            {
+              if(status.distSideLeft - status.distSideLeftLast > 4)  status.countStampLeft = status.countLeft;
+              if(status.distSideRight - status.distSideRightLast > 4)  status.countStampRight = status.countRight;
+              if(status.countStampLeft!=0 && status.countStampRight!=0)
+              {
+                int correction = round(400*abs(status.countStampLeft-status.countStampRight)/.001);
+                motorRight(status.speedBase + correction);
+                motorLeft(status.speedBase - correction);
+              }
+            }
+            status.countLeftLast = status.countLeft;
           }
-          status.countLeftLast = status.countLeft;
+          else
+            motor.stop();
         }
 
       default: 
@@ -142,8 +154,6 @@ void Motor::PID()
               status.tick++;
             else
               status.tick = 0;
-
-
           }
           else
           {

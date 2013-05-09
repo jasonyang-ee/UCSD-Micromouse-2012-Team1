@@ -24,55 +24,79 @@ void Status::initialize()
   errorDiagonalDiffLast = 0;
   
   cellCurrent = &cell[0][0];
-  
-  currentCell = &cell[0][0];
   compass = 0;
   x = 0;  y = 0;
   
   speedBase = 0;
   
   errorRight = 0;
+  errorLeft = 0;
+  
   errorDiagonal = 0;
   errorSide = 0;
   errorFront = 0;
-  errorCountLeft = 0;
   
   errorDiagonalLast = 0;
   errorSideLast = 0;
   errorFrontLast = 0;
-  errorCountLeftLast = 0;
+  
+  errorRightLast = 0;
+  errorLeftLast = 0;
+  
+  errorRightTotal = 0;
+  errorLeftTotal = 0;
   
   errorDiagonalTotal = 0;
   errorSideTotal = 0;
   errorFrontTotal = 0;
-  errorCountLeftTotal = 0;
   
+  errorRightDiff = 0;
+  errorLeftDiff = 0;
+
   errorDiagonalDiff = 0;
+  errorDiagonalDiffLast = 0;
   errorSideDiff = 0;
   errorFrontDiff = 0;
-  errorCountLeftDiff = 0;
   
   countLeft = 0;
   countRight = 0;
   countLeftLast = 0;
   countRightLast = 0;
-  countStampLeft = 0;
-  countStampRight = 0;
+  
+  errorCountLeft = 0;
+  errorCountRight = 0;
+  errorCountLeftLast = 0;
+  errorCountRightLast = 0;
+  
+  errorCountLeftTotal = 0;
+  errorCountRightTotal = 0;
+  errorCountLeftDiff = 0;
+  errorCountRightDiff = 0;
+  
+  errorCountTotal = 0;
+  errorCountDiff = 0;
+  
+  countStampLeft;
+  countStampRight;
 
-  speedLeft = 0;  speedRight = 0;
-  angularVelocityLeft = 0;
+  speedLeft = 0;
+  speedRight = 0;
+  speedBase = 0;
+  
   angularVelocityRight = 0;
+  angularVelocityLeft = 0;
+  angSpeedCounter = 0;
   
   mode = modeStop;
   
   scenarioStraight = followBoth;
+  scenarioRotate = 0;
   scenarioPath = 0;
-  scenarioBack = false;
-  angSpeedCounter = 0;
+  scenarioFlag = 0;
   tick = 0;
 }
 
-/*===================  print functions  =======================*/
+/*===================  prfunctions  =======================*/
 void Status::printAll()
 {
   SerialUSB.println("============= Sensor Values =============");

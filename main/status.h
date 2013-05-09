@@ -5,7 +5,8 @@
 
 class Status{
 public:
-  //sensor status
+  /*------------------------------------------  distance  ------------------------------------------*/
+  //set in runAllSensor()
   volatile double distFront;
   volatile double distFrontLeft;
   volatile double distFrontRight;
@@ -16,7 +17,8 @@ public:
   volatile double distSideLeftLast;
   volatile double distSideRightLast;
   
-  //raw sensor status
+  /*------------------------------------------  voltage  ------------------------------------------*/
+  //set in runAllSensor()
   volatile int voltFrontLeft;
   volatile int voltFrontRight;
   volatile int voltSideLeft;
@@ -24,63 +26,86 @@ public:
   volatile int voltDiagonalLeft;
   volatile int voltDiagonalRight;
   
-  //position
+  /*------------------------------------------  position  ------------------------------------------*/
+  //set in mapping()
   Cell *cellCurrent;    //cell pointer
-  Cell *currentCell;    //cell pointer
   int compass;
   int x; //Current X position of Mouse
   int y; //Current Y position of Mouse
   
-  //error
+  /*------------------------------------------  error  ------------------------------------------*/
+  //set in runAllSensor()
   volatile double errorRight;
-  volatile double errorDiagonal;  //error for PID
+  volatile double errorLeft;
+  
+  volatile double errorDiagonal;
   volatile double errorSide;
   volatile double errorFront;
-  volatile double errorCountLeft;
-  volatile double errorCountRight;
   
-  //preveous error
+  /*------------------------------------------  error last  ------------------------------------------*/
   double errorDiagonalLast;
   double errorSideLast;
   double errorFrontLast;
   
-  //PID error
+  double errorRightLast;
+  double errorLeftLast;
+  
+  /*------------------------------------------  error total  ------------------------------------------*/
+  double errorRightTotal;
+  double errorLeftTotal;
+  
   double errorDiagonalTotal;
   double errorSideTotal;
   double errorFrontTotal;
   
+  /*------------------------------------------  error diff  ------------------------------------------*/
+  double errorRightDiff;
+  double errorLeftDiff;
+
   double errorDiagonalDiff;
   double errorDiagonalDiffLast;
   double errorSideDiff;
   double errorFrontDiff;
-  double errorCountDiff;
   
-  //encoder status
-  volatile int countLeft;  //wheel encoder count
+  /*------------------------------------------  encoder  ------------------------------------------*/
+  //for every PID
+  volatile int countLeft;
   volatile int countRight;
-  volatile int countLeftLast;  //wheel encoder count last one
+  volatile int countLeftLast;
   volatile int countRightLast;
+  
+  //for rotate
+  volatile int errorCountLeft;
+  volatile int errorCountRight;
   volatile int errorCountLeftLast;
   volatile int errorCountRightLast;
+  
+  /*------------------------------------------  encoder total diff  ------------------------------------------*/
+  //for rotate
   int errorCountLeftTotal;
   int errorCountRightTotal;
   int errorCountLeftDiff;
   int errorCountRightDiff;
   
+  //for fish bone
+  int errorCountTotal;
+  int errorCountDiff;
+  
+  //for fish bone
   int countStampLeft;
   int countStampRight;
 
-  //motor status
+  /*------------------------------------------  speed  ------------------------------------------*/
   int speedLeft;
   int speedRight;
-  int speedBase;
+  int speedBase;    //abs value of speed base
   
   //angular velocity
   int angularVelocityRight;
   int angularVelocityLeft;
   int angSpeedCounter;
   
-  //control PID drive type
+  /*------------------------------------------  mode  ------------------------------------------*/
   int mode;
   
   //control drive detail
@@ -88,9 +113,9 @@ public:
   int scenarioRotate;
   int scenarioPath;
   int scenarioFlag;
-  bool scenarioBack;
   int tick;
   
+  /*------------------------------------------  function  ------------------------------------------*/
 public:
   void initialize();
   void printAll();
