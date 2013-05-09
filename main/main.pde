@@ -46,13 +46,14 @@ void setup()
   
 /*=======================================================  Initialize  =======================================================*/
   status.initialize();
-  maze.initialize();
+  //maze.initialize();
   
   //Used to test individual cases in PID
   //status.mode = modeStraight;
   //status.scenarioStraight = fishBone;
-  status.scenarioStraight = followBoth;
+  status.scenarioStraight = followRight;
   motor.goStraight(10000);
+  status.distFront = 0;
 //	motor.rotateLeft();
 //	motor.rotateRight();
 //	motor.rotateBack();
@@ -92,12 +93,12 @@ void globalInterrupt(void)
     - run until the instruction finished, and stop the mouse
     - stop then wait for next instruction
   --------------------------------------------------------------*/
-  /*
-  if(status.distFront < distWallExist)  
-    motor.stop();
-  */
+  
+  
+    motor.PID();
+
   //if (status.countLeft < countCell)
-  motor.PID();
+  
  // motor.motorRight(10000);
   //motor.motorLeft(10000);
  /* else
@@ -122,6 +123,7 @@ void globalInterrupt(void)
 
 void loop()
 {
+
 /*
 SerialUSB.print(status.errorCountLeft);
 SerialUSB.print("\t");

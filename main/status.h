@@ -93,9 +93,12 @@ public:
   int scenarioRotate;
   int scenarioPath;
   int scenarioFlag;
-  bool scenarioBack;
   int tick;
-  
+
+  double errorRightTotal;
+  double errorLeftTotal;
+  double errorCountTotal;
+
 public:
   void initialize();
   void printAll();
