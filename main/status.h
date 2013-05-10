@@ -54,7 +54,6 @@ public:
   double errorDiagonalDiffLast;
   double errorSideDiff;
   double errorFrontDiff;
-  double errorCountDiff;
   double errorRightDiff;
   double errorLeftDiff;
   
@@ -69,6 +68,11 @@ public:
   int errorCountRightTotal;
   int errorCountLeftDiff;
   int errorCountRightDiff;
+  
+  int errorCount;
+  int errorCountLast;
+  int errorCountDiff;
+  int errorCountTotal;
   
   int countStampLeft;
   int countStampRight;
@@ -95,10 +99,10 @@ public:
   int scenarioPath;
   int scenarioFlag;
   int tick;
+  int offsetFishBone;
 
   double errorRightTotal;
   double errorLeftTotal;
-  double errorCountTotal;
 
 public:
   void initialize();

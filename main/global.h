@@ -33,8 +33,8 @@ int timesIgnored = 0;
 
 #define turnRatio 6/15
 
-#define countRotateSide 120
-#define countRotateBack 200
+#define countRotateSide 90
+#define countRotateBack 240
 
 /*=====================  pin constant  =====================*/
 //Reciever

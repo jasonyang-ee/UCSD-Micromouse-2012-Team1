@@ -64,36 +64,43 @@ void Motor::PID()
           int Ki = 0;
           //Correction value from PID
           int correction = round(Kp*status.errorLeft + Kd*(status.errorLeftDiff)/(.001) + Ki*status.errorRightTotal);
-          motorRight(status.speedBase + correction);
-          motorLeft(status.speedBase - correction); 
+          motorRight(status.speedBase - correction);
+          motorLeft(status.speedBase + correction); 
           break;				
         }
 
         //uses side sensors to find an encoder offset, then corrects based off that error
       case fishBone: 
         {
-          int Kp = 1500;
-          int Kd = 200;
+          int Kp = 800;
+          int Kd = 30;
           int Ki = 0;
-          status.errorCountDiff = status.errorCountLeft - status.errorCountRight;
-          if(status.distSideLeft > distWallExist || status.distSideRight > distWallExist)
-          {
-            int correction = round(400*(status.errorCountDiff)/.001);
-            motorRight(status.speedBase + correction);
-            motorLeft(status.speedBase - correction);
-          }
-          else
-          {
-            if(status.distSideLeft - status.distSideLeftLast > 4)  status.countStampLeft = status.countLeft;
-            if(status.distSideRight - status.distSideRightLast > 4)  status.countStampRight = status.countRight;
-            if(status.countStampLeft!=0 && status.countStampRight!=0)
-            {
-              int correction = round(400*abs(status.countStampLeft-status.countStampRight)/.001);
-              motorRight(status.speedBase + correction);
-              motorLeft(status.speedBase - correction);
-            }
-          }
-          status.countLeftLast = status.countLeft;
+        
+        //checks if no wall and stamp not initialized, initialize stamp
+          if(status.distSideLeft - status.distSideLeftLast < 9 && status.countStampLeft==0)
+            status.countStampLeft = status.countLeft;
+          if(status.distSideRight - status.distSideRightLast < 9 && status.countStampRight==0)
+            status.countStampRight = status.countRight;
+         //if no post and stamp has value, set offset
+         if (status.countStampLeft !=0 && status.countStampRight != 0)
+         {
+           status.offsetFishBone = status.countStampLeft - status.countStampRight;
+           status.countStampLeft = 0;
+           status.countStampRight = 0;
+         }
+
+          status.errorCount = (status.countLeft - status.countRight - status.offsetFishBone);
+          status.errorCountDiff = status.errorCount - status.errorCountLast;
+          status.errorCountTotal += status.errorCount;
+          int correction = round( Kp*status.errorCount + Kd*status.errorCountDiff + Ki*status.errorCountTotal);
+
+          motorRight(status.speedBase + correction);
+          motorLeft(status.speedBase - correction);
+          
+          status.errorCountLast = status.errorCount;
+          
+          if(status.distFront < 9)
+            status.mode = modeStop;
           break;
         }
 
@@ -101,7 +108,12 @@ void Motor::PID()
         motor.stop(); 
         break;
       }
-      if(status.distFront < 9 || status.distSideRight >= 15 || status.distSideLeft >= 15)
+      if(status.distSideLeft >= 20)
+        turnLeft(20000);
+      if(status.distSideRight >= 20)
+        turnRight(20000);
+
+      if(status.distFront < 9 )//|| status.distSideRight >= 15 || status.distSideLeft >= 15)
         motor.stop();
     }
     break;
@@ -109,15 +121,9 @@ void Motor::PID()
     //all the in place turn functions
   case modeRotate:
     {
-      //initialization of errors for side turns
-      status.errorCountLeftLast = status.errorCountLeft;
-      status.errorCountRightLast = status.errorCountRight;
-      status.errorCountLeft = countRotateSide  - abs(status.countLeft);
-      status.errorCountRight = countRotateSide - abs(status.countRight);
-
       //Initialization of PID values
-      int Kp = 150;
-      int Kd = 120;
+      int Kp = 100;
+      int Kd = 20;
       int Ki = 10;
 
       switch (status.scenarioRotate)
@@ -125,15 +131,26 @@ void Motor::PID()
         //left rotate
       case left: 
         {
-          if (status.tick < 10000) //&& status.errorCountRight != 0)
+           //initialization of errors for side turns
+          if (status.angSpeedCounter == 0)
+          {
+            status.errorCountLeftLast = status.errorCountLeft;
+            status.errorCountRightLast = status.errorCountRight;
+          }
+          status.errorCountLeft = countRotateSide  - abs(status.countLeft);
+          status.errorCountRight = countRotateSide - abs(status.countRight);
+
+          if (status.tick < 200) //&& status.errorCountRight != 0)
           {
             //only uses the integration value while within 10% of the setpoint value to avoid integral windup
-            if (abs(status.errorCountLeft) < countRotateSide/10)
+           // if (abs(status.errorCountLeft) < countRotateSide/10)
               status.errorCountLeftTotal += status.errorCountLeft;
-            else
+            /*else
               status.errorCountLeftTotal = 0;
+            */
 
             //status.tick = correction;status.errorCountRightDiff = status.errorCountRight - status.errorCountRightLast;
+
             status.errorCountLeftDiff = status.errorCountLeft - status.errorCountLeftLast;
             int correctionLeft = round(Kp*status.errorCountLeft + Kd*status.errorCountLeftDiff);// + Ki*status.errorCountLeftTotal);
             int correctionRight = round(Kp * status.errorCountRight + Kd * status.errorCountRightDiff);
@@ -143,7 +160,7 @@ void Motor::PID()
             motor.motorLeft(-correctionLeft);
             //as long as 
 
-            if (abs(status.errorCountLeft) < 10)
+            if (status.errorCountLeft == status.errorCountLeftLast && status.errorCountLeft < 10)
               status.tick++;
             else
               status.tick = 0;
@@ -161,13 +178,22 @@ void Motor::PID()
         //right rotate
       case right:
         {
-          if (status.tick < 10000) //&& status.errorCountRight != 0)
+          //initialization of errors for side turns
+          if (status.angSpeedCounter == 0)
+          {
+            status.errorCountLeftLast = status.errorCountLeft;
+            status.errorCountRightLast = status.errorCountRight;
+          }
+          status.errorCountLeft = countRotateSide  - abs(status.countLeft);
+          status.errorCountRight = countRotateSide - abs(status.countRight);
+
+          if (status.tick < 200) //&& status.errorCountRight != 0)
           {
             //only builds the integration term if the error is within 10% of the setpoint
-            if (abs(status.errorCountRight) < countRotateSide/10)
+           // if (abs(status.errorCountRight) < countRotateSide/10)
               status.errorCountRightTotal += status.errorCountRight;
-            else
-              status.errorCountRightTotal = 0;
+            //else
+            //  status.errorCountRightTotal = 0;
 
             status.errorCountRightDiff = status.errorCountRight - status.errorCountRightLast;
             status.errorCountRightDiff = status.errorCountRight - status.errorCountRightLast;
@@ -176,7 +202,7 @@ void Motor::PID()
             motor.motorRight(-correctionRight);
             motor.motorLeft(correctionLeft);
 
-            if (status.errorCountRight == status.errorCountRightLast )
+            if (status.errorCountRight == status.errorCountRightLast && status.errorCountRight < 10 )
               status.tick++;
             else
               status.tick = 0;
@@ -194,15 +220,19 @@ void Motor::PID()
         //180 degree rotate
       case back: 
         {
-          status.errorCountLeftLast = status.errorCountLeft;
-          status.errorCountRightLast = status.errorCountRight;
+          if (status.angSpeedCounter == 0)
+          {
+            status.errorCountLeftLast = status.errorCountLeft;
+            status.errorCountRightLast = status.errorCountRight;
+          }
+
           status.errorCountLeft = countRotateBack - abs(status.countLeft);
           status.errorCountRight = countRotateBack - abs(status.countRight);
-          if (status.tick < 10000)
+          if (status.tick < 200)
           {
             if (abs(status.errorCountLeft) < countRotateBack/10)
               status.errorCountLeftTotal += status.errorCountLeft;
-            else
+            //else
               status.errorCountLeftTotal = 0;
 
             status.errorCountRightDiff = status.errorCountRight - status.errorCountRightLast;
@@ -214,7 +244,7 @@ void Motor::PID()
 
             //as long as 
 
-            if (status.errorCountLeft == status.errorCountLeftLast )
+            if (status.errorCountLeft == status.errorCountLeftLast && status.errorCountLeft < 10)
               status.tick++;
             else
               status.tick = 0;
@@ -233,8 +263,40 @@ void Motor::PID()
         break;
       }
       break;
+    }    
+    case modeTurn:
+    {
+      status.tick++;
+      switch(status.scenarioRotate)
+      {
+        case left:
+        { 
+          //decrease inner speed, increase outer speed
+          if (status.tick < 100)
+          {
+            motorRight(status.speedBase + 10000);
+            motorLeft(status.speedBase - 10000)  ;
+          }
+          else if (status.tick < 200)
+          {
+            motorRight(status.speedBase);
+            motorLeft(status.speedBase);
+          }
+          else
+            motor.stop();
+
+          break;
+        }
+        case right:
+        {
+          break;
+        } 
+
+      }
+      break;
     }
   }
+
 }
 
 /*=======================================================  stop  =======================================================*/
@@ -380,18 +442,24 @@ void Motor::rotateBack()
 /*=======================================================  turn  =======================================================*/
 void Motor::turnLeft(int speed)
 {
+  status.speedBase = speed;
   status.errorDiagonalTotal=0;
   status.errorSideTotal=0;
   status.errorFrontTotal=0;
+  status.scenarioRotate = left;
+  status.tick = 0;
   status.mode = modeTurn;                  		//set mode
   status.compass = (status.compass+3)%4;        //set compass
 }
 
 void Motor::turnRight(int speed)
 {
+  status.scenarioRotate = right;
+  status.speedBase = speed;
   status.errorDiagonalTotal=0;
   status.errorSideTotal=0;
   status.errorFrontTotal=0;
+  status.tick = 0;
   status.mode = modeTurn;                  		//set mode
   status.compass = (status.compass+1)%4;        //set compass 
 }

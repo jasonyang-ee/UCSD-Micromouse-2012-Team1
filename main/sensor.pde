@@ -21,7 +21,7 @@ void Sensor::runAllSensor()
   status.distFront = (status.distFrontLeft + status.distFrontRight)/2;
   
   angularVelocity();
-  setScenario();
+//  setScenario();
   errorRight();
   errorLeft();
   errorDiagonal();
@@ -193,9 +193,12 @@ void Sensor::angularVelocity()
   //control loop is kinda faster than encoder interrupts
   status.angSpeedCounter = (++status.angSpeedCounter)%100;
   if( status.angSpeedCounter == 0)
-  {
+  { 
     status.angularVelocityLeft = status.countLeft - status.countLeftLast;
     status.angularVelocityRight = status.countRight - status.countRightLast;
+    
+    status.errorCountLeftTotal = status.errorCountLeftDiff;
+    status.errorCountRightTotal = status.errorCountRightDiff;
     
     status.countLeftLast = status.countLeft;
     status.countRightLast = status.countRight;

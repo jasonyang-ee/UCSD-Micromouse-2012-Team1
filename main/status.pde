@@ -72,11 +72,14 @@ void Status::initialize()
   errorCountLeftDiff = 0;
   errorCountRightDiff = 0;
   
+  errorCount = 0;
+  errorCountLast = 0;
   errorCountTotal = 0;
   errorCountDiff = 0;
   
-  countStampLeft;
-  countStampRight;
+  countStampLeft = 0;
+  countStampRight = 0;
+  offsetFishBone = 0;
 
   speedLeft = 0;
   speedRight = 0;

@@ -15,14 +15,14 @@ void setup()
   pinMode(ledTwo,OUTPUT);                     //int led
   pinMode(ledThree,OUTPUT);                   //int led
 
-  pinMode(PWMLeft, PWM);					  	        //PWM control of Left Motor
-  pinMode(motorLeft1, OUTPUT);					      //direction control of Left Motor
-  pinMode(motorLeft2, OUTPUT);					      //direction control of Left Motor
-  pinMode(PWMRight, PWM);						          //PWM control of Right Motor
-  pinMode(motorRight1, OUTPUT);					      //direction control of Right Motor
-  pinMode(motorRight2, OUTPUT);  				      //direction control of Right Motor
-  pwmWrite(PWMLeft, 0);							          //initialize speed of 
-  pwmWrite(PWMRight, 0);						          //both motors to 0
+  pinMode(PWMLeft, PWM);                      //PWM control of Left Motor
+  pinMode(motorLeft1, OUTPUT);		      //direction control of Left Motor
+  pinMode(motorLeft2, OUTPUT);		      //direction control of Left Motor
+  pinMode(PWMRight, PWM);                     //PWM control of Right Motor
+  pinMode(motorRight1, OUTPUT);  	      //direction control of Right Motor
+  pinMode(motorRight2, OUTPUT);		      //direction control of Right Motor
+  pwmWrite(PWMLeft, 0);                       //initialize speed of 
+  pwmWrite(PWMRight, 0);                      //both motors to 0
 
   pinMode(encoderLeftCLK, INPUT);             //Left encoder clock pin
   pinMode(encoderLeftDirc, INPUT);            //Left encoder direction pin
@@ -46,16 +46,10 @@ void setup()
   
 /*=======================================================  Initialize  =======================================================*/
   status.initialize();
-  //maze.initialize();
+  maze.initialize();
   
-  /*
-  status.scenarioStraight = followRight;
-  motor.goStraight(10000);
-  status.distFront = 0;
-  */
-  
-
 }
+
 
 /* Encoder Interrupts */
 void encoderLeftInterrupts(void)
@@ -71,7 +65,7 @@ void encoderRightInterrupts(void)
 }
 
 
-int j = 0;
+
 void globalInterrupt(void)
 {
   /*--------------------------------------------------------------
@@ -87,17 +81,8 @@ void globalInterrupt(void)
     - run until the instruction finished, and stop the mouse
     - stop then wait for next instruction
   --------------------------------------------------------------*/
-  
-  
   motor.PID();
 
-  //if (status.countLeft < countCell)
-  
- // motor.motorRight(10000);
-  //motor.motorLeft(10000);
- /* else
-  {    
-    motor.stop();
 
   /*--------------------------------------------------------------
   mapping: traverse back to the straight path and update wall info
@@ -118,31 +103,23 @@ void globalInterrupt(void)
 void loop()
 {
 
-  SerialUSB.print(status.distFront);
-  SerialUSB.print("\t");
-  SerialUSB.print(status.distFrontLeft);
-  SerialUSB.print("\t");
-  SerialUSB.print(status.distFrontRight);
-  SerialUSB.print("\t");
-  SerialUSB.print(status.distSideLeft);
-  SerialUSB.print("\t");
-  SerialUSB.print(status.distSideRight);
-  SerialUSB.print("\t");
-  SerialUSB.print(status.distDiagonalLeft);
-  SerialUSB.print("\t");
-  SerialUSB.println(status.distDiagonalRight);
 /*
-SerialUSB.print(status.errorCountLeft);
+SerialUSB.print(status.offsetFishBone);
 SerialUSB.print("\t");
-SerialUSB.print(status.errorCountRight);
+SerialUSB.print(status.errorCount);
 SerialUSB.print("\t");
-SerialUSB.print(status.tick);
+SerialUSB.print(status.countStampLeft);
+SerialUSB.print("\t");
+SerialUSB.print(status.countStampRight);
 SerialUSB.print("\t");
 SerialUSB.print(status.speedLeft);
 SerialUSB.print("\t");
-SerialUSB.println(status.speedRight);
+SerialUSB.print(status.speedRight);
+SerialUSB.print("\t");
+SerialUSB.print(status.countRight);
+SerialUSB.print("\t");
+SerialUSB.println(status.countLeft);
 */
-
 /*===================  Encoder print  =======================*/
 /*if(isButtonPressed())
 //{
