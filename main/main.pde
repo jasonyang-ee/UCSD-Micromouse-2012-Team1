@@ -26,8 +26,8 @@ void setup()
 
   pinMode(encoderLeftCLK, INPUT);             //Left encoder clock pin
   pinMode(encoderLeftDirc, INPUT);            //Left encoder direction pin
-  pinMode(encoderRightCLK, INPUT);	      //Right encoder clock pin
-  pinMode(encoderRightDirc, INPUT);	      //Right encoder direction pin
+  pinMode(encoderRightCLK, INPUT);	          //Right encoder clock pin
+  pinMode(encoderRightDirc, INPUT);	          //Right encoder direction pin
 
   for (int i = 0; i < 100; i++)
     sensor.runAllSensor();
@@ -46,11 +46,10 @@ void setup()
   
 /*=======================================================  Initialize  =======================================================*/
   status.initialize();
-  maze.initialize();
-  
-  status.mode = modeStraight;
-  status.scenarioStraight = fishBone;
-  motor.goStraight(10000);
+  motor.rotateLeft();
+  //maze.initialize();
+  //motor.goStraight(10000);
+  status.scenarioStraight = followRight;  
 }
 
 
@@ -68,6 +67,7 @@ void encoderRightInterrupts(void)
 }
 
 
+bool motorCheck = false;
 
 void globalInterrupt(void)
 {
@@ -118,8 +118,6 @@ SerialUSB.print("   |   ");
 SerialUSB.print(status.countLeft);
 SerialUSB.print("\t");
 SerialUSB.println(status.countRight);
-
-
 
 /*===================  Encoder print  =======================*/
 /*if(isButtonPressed())

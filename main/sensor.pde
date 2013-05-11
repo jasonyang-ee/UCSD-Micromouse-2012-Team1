@@ -202,5 +202,7 @@ void Sensor::angularVelocity()
     
     status.countLeftLast = status.countLeft;
     status.countRightLast = status.countRight;
+
+    maxSpeed = (status.angularVelocityLeft > maxSpeed ? status.angularVelocityLeft:maxSpeed);
   }
 }

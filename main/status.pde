@@ -80,9 +80,6 @@ void Status::initialize()
   countStampLeft = 0;
   countStampRight = 0;
   offsetFishBone = 0;
-  
-  virtualCountLeft = 0;
-  virtualCountRight = 0;
 
   speedLeft = 0;
   speedRight = 0;
@@ -102,6 +99,7 @@ void Status::initialize()
   scenarioPath = 0;
   scenarioFlag = 0;
   tick = 0;
+  maxSpeed = 0;
 }
 
 /*===================  prfunctions  =======================*/

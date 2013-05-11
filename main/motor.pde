@@ -76,18 +76,10 @@ void Motor::PID()
           int Kd = 150;
           int Ki = 0;
         
-          if(status.distSideLeft < 10 || status.distSideRight < 10)
-          {
-            status.edgeFalling = true;
-            status.edgeRising = false;
-          }
-          else
-            status.edgeRising = true;
-        
         //checks if no wall and stamp not initialized, initialize stamp
-          if(status.edgeRising==true && status.edgeFalling==true && status.countStampLeft==0)
+          if(status.distSideLeft - status.distSideLeftLast < 9 && status.countStampLeft==0)
             status.countStampLeft = status.countLeft;
-          if(status.edgeRising==true && status.edgeFalling==true && status.countStampRight==0)
+          if(status.distSideRight - status.distSideRightLast < 9 && status.countStampRight==0)
             status.countStampRight = status.countRight;
          //if no post and stamp has value, set offset
          if (status.countStampLeft !=0 && status.countStampRight != 0)
@@ -117,11 +109,13 @@ void Motor::PID()
       }
       /*
       if(status.distSideLeft >= 20)
-        turnLeft(20000);
-      if(status.distSideRight >= 20)
-        turnRight(20000);
-      */
-      if(status.distFront < 14 )//|| status.distSideRight >= 15 || status.distSideLeft >= 15)
+        turnLeft(10000);
+      else
+        if(status.distSideRight >= 20)
+          turnRight(10000);
+          */
+
+      if(status.distFront < 13  || status.distSideRight >= 15 || status.distSideLeft >= 15)
         motor.stop();
     }
     break;
@@ -130,9 +124,9 @@ void Motor::PID()
   case modeRotate:
     {
       //Initialization of PID values
-      int Kp = 100;
+      int Kp = 300;
       int Kd = 20;
-      int Ki = 10;
+      int Ki = 30;
 
       switch (status.scenarioRotate)
       {
@@ -160,14 +154,14 @@ void Motor::PID()
             //status.tick = correction;status.errorCountRightDiff = status.errorCountRight - status.errorCountRightLast;
 
             status.errorCountLeftDiff = status.errorCountLeft - status.errorCountLeftLast;
-            int correctionLeft = round(Kp*status.errorCountLeft + Kd*status.errorCountLeftDiff);// + Ki*status.errorCountLeftTotal);
+            int correctionLeft = round(Kp*status.errorCountLeft + Kd*status.errorCountLeftDiff/.01);// + Ki*status.errorCountLeftTotal);
             int correctionRight = round(Kp * status.errorCountRight + Kd * status.errorCountRightDiff);
 
             //apply PID control over both motors to ensure rotation about center axis
             motor.motorRight(correctionRight);
             motor.motorLeft(-correctionLeft);
-            //as long as 
-
+            
+            //if motor is.. stalling or something, and within 10 counts of setpoint
             if (status.errorCountLeft == status.errorCountLeftLast && status.errorCountLeft < 10)
               status.tick++;
             else
@@ -280,12 +274,12 @@ void Motor::PID()
         case left:
         { 
           //decrease inner speed, increase outer speed
-          if (status.tick < 100)
+          if (status.tick < 127)
           {
-            motorRight(status.speedBase + 10000);
-            motorLeft(status.speedBase - 10000)  ;
+            motorLeft( 5200);
+            motorRight(14800) ;
           }
-          else if (status.tick < 200)
+          else if (status.tick < 1000)
           {
             motorRight(status.speedBase);
             motorLeft(status.speedBase);
@@ -344,9 +338,9 @@ void Motor::decelerate()
       status.countRightTemp=status.countRight;
     }
     int error = (status.countLeft - status.countLeftTemp) - (status.countRight - status.countRightTemp);
-    int correction = 500*error;
+    int correction = 300*error;
    
-    int rateDecelerate = ((abs(status.speedLeft)+abs(status.speedRight))/2>10000)? -0.9997 : -0.9995;  //set different rate
+    int rateDecelerate = ((abs(status.speedLeft)+abs(status.speedRight))/2>10000)? -0.995 : -0.997;  //set different rate
 
     int tempL = status.speedLeft * rateDecelerate - correction;
     int tempR = status.speedRight * rateDecelerate + correction;

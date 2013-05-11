@@ -22,7 +22,7 @@ int timesIgnored = 0;
 #define sampleNum 20
 
 //minimun distance between wall and mouse in one cell
-#define distWallExist 13
+#define distWallExist 20
 
 /*=====================  motor constant  =====================*/
 //speed constant
@@ -33,7 +33,7 @@ int timesIgnored = 0;
 
 #define turnRatio 6/15
 
-#define countRotateSide 90
+#define countRotateSide 120
 #define countRotateBack 240
 
 /*=====================  pin constant  =====================*/

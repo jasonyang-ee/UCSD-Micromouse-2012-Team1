@@ -106,9 +106,6 @@ public:
 
   double errorRightTotal;
   double errorLeftTotal;
-  
-  int virtualCountLeft;
-  int virtualCountRight;
 
 public:
   void initialize();
