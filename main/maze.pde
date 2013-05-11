@@ -3,20 +3,20 @@
 
 /*=======================================================  decide  =======================================================*/
 int Maze::decide()
-{  
+{
   /*------------------------------------------  set scenario  ------------------------------------------*/
   status.scenarioPath = 0;
   if(status.cellCurrent->wall[(status.compass+north) % 4] == false)  status.scenarioPath += openNorth;
   if(status.cellCurrent->wall[(status.compass+east) % 4] == false)  status.scenarioPath += openEast;
   if(status.cellCurrent->wall[(status.compass+west) % 4] == false)  status.scenarioPath += openWest;
   
-  /*------------------------------------------  singal open  ------------------------------------------*/
+  /*------------------------------------------  single open  ------------------------------------------*/
   if(status.scenarioPath == openNone)  motor.rotateBack();
   if(status.scenarioPath == openNorth)  motor.goStraight(speedMap);
   if(status.scenarioPath == openEast)  motor.rotateRight();
   if(status.scenarioPath == openWest)  motor.rotateLeft();
   
-   /*------------------------------------------  multiple open  ------------------------------------------*/
+  /*------------------------------------------  multiple open  ------------------------------------------*/
   if(status.scenarioPath == openNorthEast) //FrontRight
   {
     if (returnBranch) //Return to current branch by going straight. (Already turned)
@@ -73,22 +73,22 @@ int Maze::decide()
     {
       case north:
         if(status.cellCurrent->cellNorth->visit == false)  motor.goStraight(speedMap);
-        else if(status.cellCurrent->cellWest->visit == false)  motor.rotateRight();
+        else if(status.cellCurrent->cellWest->visit == false)  motor.rotateLeft();
         else checkBranch();
         break;
       case east:
         if(status.cellCurrent->cellEast->visit == false)  motor.goStraight(speedMap);
-        else if(status.cellCurrent->cellNorth->visit == false)  motor.rotateRight();
+        else if(status.cellCurrent->cellNorth->visit == false)  motor.rotateLeft();
         else checkBranch();
         break;
       case south:
         if(status.cellCurrent->cellSouth->visit == false)  motor.goStraight(speedMap);
-        else if(status.cellCurrent->cellEast->visit == false)  motor.rotateRight();
+        else if(status.cellCurrent->cellEast->visit == false)  motor.rotateLeft();
         else checkBranch();
         break;
       case west:
         if(status.cellCurrent->cellWest->visit == false)  motor.goStraight(speedMap);
-        else if(status.cellCurrent->cellSouth->visit == false)  motor.rotateRight();
+        else if(status.cellCurrent->cellSouth->visit == false)  motor.rotateLeft();
         else checkBranch();
         break;
     }
@@ -110,22 +110,22 @@ int Maze::decide()
     switch (status.compass)
     {
       case north:
-        if(status.cellCurrent->cellWest->visit == false)  motor.rotateRight();
+        if(status.cellCurrent->cellWest->visit == false)  motor.rotateLeft();
         else if(status.cellCurrent->cellEast->visit == false)  motor.rotateRight();
         else checkBranch();
         break;
       case east:
-        if(status.cellCurrent->cellNorth->visit == false)  motor.rotateRight();
+        if(status.cellCurrent->cellNorth->visit == false)  motor.rotateLeft();
         else if(status.cellCurrent->cellSouth->visit == false)  motor.rotateRight();
         else checkBranch();
         break;
       case south:
-        if(status.cellCurrent->cellEast->visit == false)  motor.rotateRight();
+        if(status.cellCurrent->cellEast->visit == false)  motor.rotateLeft();
         else if(status.cellCurrent->cellWest->visit == false)  motor.rotateRight();
         else checkBranch();
         break;
       case west:
-        if(status.cellCurrent->cellSouth->visit == false)  motor.rotateRight();
+        if(status.cellCurrent->cellSouth->visit == false)  motor.rotateLeft();
         else if(status.cellCurrent->cellNorth->visit == false)  motor.rotateRight();
         else checkBranch();
         break;
@@ -149,25 +149,25 @@ int Maze::decide()
     {
       case north:
         if(status.cellCurrent->cellNorth->visit == false)  motor.goStraight(speedMap);
-        else if(status.cellCurrent->cellWest->visit == false)  motor.rotateRight();
+        else if(status.cellCurrent->cellWest->visit == false)  motor.rotateLeft();
         else if(status.cellCurrent->cellEast->visit == false)  motor.rotateRight();
         else checkBranch();
         break;
       case east:
         if(status.cellCurrent->cellEast->visit == false)  motor.goStraight(speedMap);
-        else if(status.cellCurrent->cellNorth->visit == false)  motor.rotateRight();
+        else if(status.cellCurrent->cellNorth->visit == false)  motor.rotateLeft();
         else if(status.cellCurrent->cellSouth->visit == false)  motor.rotateRight();
         else checkBranch();
         break;
       case south:
         if(status.cellCurrent->cellSouth->visit == false)  motor.goStraight(speedMap);
-        else if(status.cellCurrent->cellEast->visit == false)  motor.rotateRight();
+        else if(status.cellCurrent->cellEast->visit == false)  motor.rotateLeft();
         else if(status.cellCurrent->cellWest->visit == false)  motor.rotateRight();
         else checkBranch();
         break;
       case west:
         if(status.cellCurrent->cellWest->visit == false)  motor.goStraight(speedMap);
-        else if(status.cellCurrent->cellSouth->visit == false)  motor.rotateRight();
+        else if(status.cellCurrent->cellSouth->visit == false)  motor.rotateLeft();
         else if(status.cellCurrent->cellNorth->visit == false)  motor.rotateRight();
         else checkBranch();
         break;
@@ -175,91 +175,14 @@ int Maze::decide()
   }
 }
 
-/*------------------------------------------ decide mini-functions ------------------------------------*/
-void Maze::checkBranch()
-{
-  switch (status.compass)
-  {
-    case north:
-        if(status.cellCurrent->branch == (branchValue-1))
-        {
-          if(status.cellCurrent->compassHome == north) /*will move forward*/ ;
-          if(status.cellCurrent->compassHome == east)  motor.rotateRight();
-          if(status.cellCurrent->compassHome == south) motor.rotateRight();
-          if(status.cellCurrent->compassHome == west)  motor.rotateRight();
-          branchValue--;
-        }
-        else 
-          motor.rotateRight();
-        break;
-    case east:
-        if(status.cellCurrent->branch == (branchValue-1))
-        {
-          if(status.cellCurrent->compassHome == east) /*will move forward*/ ;
-          if(status.cellCurrent->compassHome == south)  motor.rotateRight();
-          if(status.cellCurrent->compassHome == west) motor.rotateRight();
-          if(status.cellCurrent->compassHome == north)  motor.rotateRight();
-          branchValue--;
-        }
-        else 
-          motor.rotateRight();
-        break;
-    case south:
-        if(status.cellCurrent->branch == (branchValue-1))
-        {
-          if(status.cellCurrent->compassHome == south) /*will move forward*/ ;
-          if(status.cellCurrent->compassHome == west)  motor.rotateRight();
-          if(status.cellCurrent->compassHome == north) motor.rotateRight();
-          if(status.cellCurrent->compassHome == east)  motor.rotateRight();
-          branchValue--;
-        }
-        else
-          motor.rotateRight();
-        break;
-    case west:
-        if(status.cellCurrent->branch == (branchValue-1))
-        {
-          if(status.cellCurrent->compassHome == west) /*will move forward*/ ;
-          if(status.cellCurrent->compassHome == north)  motor.rotateRight();
-          if(status.cellCurrent->compassHome == east) motor.rotateRight();
-          if(status.cellCurrent->compassHome == south)  motor.rotateRight();
-          branchValue--;
-        }
-        else 
-          motor.rotateRight();
-        break;
-  }
-  
-  returnBranch = true; //Sets flag to go straight.
-}
+
 
 /*=======================================================  mapping  =======================================================*/
 void Maze::mapping()
 {
   /*------------------------------------------  set position  ------------------------------------------*/
-  int cellTraveled = (status.countLeft+status.countRight) /2 / countCell;
+  int cellTraveled = status.countLeft / countCell;
   Cell *cellMarker = status.cellCurrent;
-  
-  /*------------------------------------------  mark go one cell forward  ------------------------------------------*/
-  if(status.compass==north)  cellMarker = cellMarker->cellNorth;
-  if(status.compass==east)  cellMarker = cellMarker->cellEast;
-  if(status.compass==south)  cellMarker = cellMarker->cellSouth;
-  if(status.compass==west)  cellMarker = cellMarker->cellWest;
-  cellTraveled--;
-
-  /*------------------------------------------  loop traveled  ------------------------------------------*/
-  while(cellTraveled>0)
-  {
-    cellMarker->wall[(status.compass+east) % 4] = true;
-    cellMarker->wall[(status.compass+west) % 4] = true;
-    adjacentWall(cellMarker);
-    cellMarker->visit = true;
-    if(status.compass==north)  cellMarker = cellMarker->cellNorth;
-    if(status.compass==east)  cellMarker = cellMarker->cellEast;
-    if(status.compass==south)  cellMarker = cellMarker->cellSouth;
-    if(status.compass==west)  cellMarker = cellMarker->cellWest;
-    cellTraveled--;
-  }
   
   /*------------------------------------------  set arrived cell  ------------------------------------------*/
   if(status.distFront < distWallExist)  cellMarker->wall[(status.compass+north) % 4] = true;
@@ -267,7 +190,27 @@ void Maze::mapping()
   if(status.distSideLeft < distWallExist)  cellMarker->wall[(status.compass+west) % 4] = true;
   adjacentWall(cellMarker);
   cellMarker->visit = true;
-  status.cellCurrent = cellMarker;
+  cellTraveled--;
+  
+  /*------------------------------------------  go one cell back  ------------------------------------------*/
+  if(status.compass==north)  cellMarker = cellMarker->cellSouth;
+  if(status.compass==east)  cellMarker = cellMarker->cellWest;
+  if(status.compass==south)  cellMarker = cellMarker->cellNorth;
+  if(status.compass==west)  cellMarker = cellMarker->cellEast;
+  
+  /*------------------------------------------  loop traveled  ------------------------------------------*/
+  while(cellTraveled>0)
+  {
+    cellMarker->wall[(status.compass+east) % 4] = true;
+    cellMarker->wall[(status.compass+west) % 4] = true;
+    adjacentWall(cellMarker);
+    cellMarker->visit = true;
+    if(status.compass==north)  cellMarker = cellMarker->cellSouth;
+    if(status.compass==east)  cellMarker = cellMarker->cellWest;
+    if(status.compass==south)  cellMarker = cellMarker->cellNorth;
+    if(status.compass==west)  cellMarker = cellMarker->cellEast;
+    cellTraveled--;
+  }
   
   /*------------------------------------------  aquire instruction  ------------------------------------------*/
   status.mode = modeDecide;
@@ -286,14 +229,76 @@ void Maze::adjacentWall(Cell *cellMarker)
   if(cellMarker->wall[west]==true)  adjacentWest->wall[east]=true;
 }
 
+
+/*------------------------------------------ decide mini-functions ------------------------------------*/
+
+void Maze::checkBranch()
+{
+  switch (status.compass)
+  {
+    case north:
+        if(status.cellCurrent->branch == (branchValue-1))
+        {
+          if(status.cellCurrent->compassHome == north) /*will move forward*/ ;
+          if(status.cellCurrent->compassHome == east)  motor.rotateRight();
+          if(status.cellCurrent->compassHome == south) motor.rotateBack();
+          if(status.cellCurrent->compassHome == west)  motor.rotateLeft();
+          branchValue--;
+        }
+        else 
+          motor.rotateBack();
+        break;
+    case east:
+        if(status.cellCurrent->branch == (branchValue-1))
+        {
+          if(status.cellCurrent->compassHome == east) /*will move forward*/ ;
+          if(status.cellCurrent->compassHome == south)  motor.rotateRight();
+          if(status.cellCurrent->compassHome == west) motor.rotateBack();
+          if(status.cellCurrent->compassHome == north)  motor.rotateLeft();
+          branchValue--;
+        }
+        else 
+          motor.rotateBack();
+        break;
+    case south:
+        if(status.cellCurrent->branch == (branchValue-1))
+        {
+          if(status.cellCurrent->compassHome == south) /*will move forward*/ ;
+          if(status.cellCurrent->compassHome == west)  motor.rotateRight();
+          if(status.cellCurrent->compassHome == north) motor.rotateBack();
+          if(status.cellCurrent->compassHome == east)  motor.rotateLeft();
+          branchValue--;
+        }
+        else
+          motor.rotateBack();
+        break;
+    case west:
+        if(status.cellCurrent->branch == (branchValue-1))
+        {
+          if(status.cellCurrent->compassHome == west) /*will move forward*/ ;
+          if(status.cellCurrent->compassHome == north)  motor.rotateRight();
+          if(status.cellCurrent->compassHome == east) motor.rotateBack();
+          if(status.cellCurrent->compassHome == south)  motor.rotateLeft();
+          branchValue--;
+        }
+        else 
+          motor.rotateBack();
+        break;
+  }
+  
+  returnBranch = true; //Sets flag to go straight.
+}
+
+
 /*=======================================================  flood fill  =======================================================*/
 void Maze::flood()
 {
-  //All cells floodValues are initially set to -1.
+  //All cells floodValues are initially set to -1. Set Center to 0.
   cell[mazeSize/2-1][mazeSize/2-1].floodValue = 0;
   cell[mazeSize/2-1][mazeSize/2].floodValue = 0;
   cell[mazeSize/2][mazeSize/2-1].floodValue = 0;
   cell[mazeSize/2][mazeSize/2].floodValue = 0;
+  
   for (int curr_step=1; curr_step < mazeSize*mazeSize; curr_step++)
     for (int y=0; y<mazeSize; y++)
       for (int x=0; x<mazeSize; x++)
@@ -370,7 +375,7 @@ void Maze::initialize()
       for(int i=0; i<4; i++)  cell[y][x].wall[i] = false;
       cell[y][x].goal = false;
       cell[y][x].existance = true;
-      cell[y][x].dead = false;
+      cell[y][x].floodValue = -1;
     } 
   
   /*------------------------------------------  goal  ------------------------------------------*/
@@ -389,7 +394,7 @@ void Maze::initialize()
   for(int i=0; i<4; i++) emptyCell.wall[i] = false;
   emptyCell.goal = false;
   emptyCell.existance = false;
-
+  
   /*------------------------------------------ initial values --------------------------------------------*/
   branchValue = 1;
   returnBranch = false;
