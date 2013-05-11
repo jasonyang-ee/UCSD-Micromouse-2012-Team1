@@ -6,7 +6,7 @@
 class Maze{
 public:
   int decide();
-  void checkBranch();
+  void goHome();
   
   void mapping();
   void adjacentWall(Cell*);

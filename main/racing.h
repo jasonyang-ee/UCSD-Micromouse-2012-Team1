@@ -6,10 +6,12 @@
 class Racing{
 public: 
   void easyRun(int);
+  void homeRun(int);
   void speedRun(int);
 
   void next(Cell*);
   void neighbor(Cell*);
+  void initialize();
   
   int step;
   int numbStraight;
@@ -35,3 +37,4 @@ public:
 };
 
 #endif
+

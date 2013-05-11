@@ -1,10 +1,8 @@
 #include "racing.h"
 
 /*---------------------------------------------Easy Run----------------------------------------------*/
-void Racing::easyRun(int speed)     //Easy way to do this, one cell at a time (and straight-ways) 
+void Racing::easyRun(int speed)     //Easy way to do this, one cell at a time (and straight-ways)
 { 
-  //This function can be used both for going to center and returning home. (Based on FloodFill)
-  
   int cellTraveled = ((status.countLeft+status.countRight) /2) / countCell;
   for (int i = cellTraveled; i > 0; i--)
   {
@@ -14,28 +12,41 @@ void Racing::easyRun(int speed)     //Easy way to do this, one cell at a time (a
     if(status.compass==west)  status.currentCell = status.currentCell->cellWest;
   }
   
-  step = status.currentCell->floodValue;
-  int nextStep = step - 1;
+  if(status.currentCell->goal == false)   //Goes one cell at a time
+  {
+    step = status.currentCell->floodValue;
+    int nextStep = step - 1;
     
-  Cell *cellMarker = status.currentCell;
+    Cell *cellMarker = status.currentCell;
     
-  neighbor (cellMarker);
+    neighbor (cellMarker);
     
-  if (rightCell->floodValue == nextStep)     motor.rotateRight();
-  else if (leftCell->floodValue == nextStep) motor.rotateLeft();
-  else if (frontCell->floodValue == nextStep)motor.goStraight(speed);
-  
-  if (nextStep == 0) /*Changes Mode to return Home?*/ ; //Also, rotate back?
+    if (rightCell->floodValue == nextStep)     motor.rotateRight();
+    else if (leftCell->floodValue == nextStep) motor.rotateLeft();
+    else if (frontCell->floodValue == nextStep)motor.goStraight(speed);
+  }
+  else if (status.currentCell->goal == true) ;//Set mode to Home Run?
   
 }
 
+/*---------------------------------------Home Run-------------------------------------*/
+void Racing::homeRun(int speed)   //From Home to Center, walk back
+{
+  
+  
+
+  
+  
+  
+}
 
 /*----------------------------------- Speed Run --------------------------------------*/
 
 void Racing::speedRun(int speed)
-{  
-  /*
-  step = status.currentCell->floodValue;
+{
+  status.currentCell = &cell[0][0]; //Resets current cell to starting cell
+  
+  step = cell[0][0].floodValue;  //Sets current step
   
   numbStraight = 0;
   nextRight = false;
@@ -52,14 +63,12 @@ void Racing::speedRun(int speed)
     else if (nextLeft)
       motor.turnLeft(speed); //Turns Left while going Straight   
   }
-  */
 }
 
 
 
 void Racing::next(Cell *cellMarker)
 {
-  /*
   step--;
   
   neighbor (cellMarker);
@@ -91,9 +100,7 @@ void Racing::next(Cell *cellMarker)
   }
   
   status.currentCell = cellMarker;   
-  */
 }
-
 
 
 /*-----------------------------------------------Sub-Functions-------------------------------------------------*/
@@ -123,4 +130,9 @@ void Racing::neighbor(Cell *cellMarker)
         leftCell = cellMarker->cellSouth;
         break;
     }
+}
+
+void Racing::initialize()
+{
+  status.currentCell = &cell[0][0]; //Resets current cell to starting cell
 }
