@@ -196,7 +196,7 @@ void Maze::mapping()
   {
     cellMarker->wall[(status.compass+east) % 4] = true;
     cellMarker->wall[(status.compass+west) % 4] = true;
-    adjacentWall(cellMarker);
+    //adjacentWall(cellMarker);
     cellMarker->visit = true;
     if(status.compass==north)  cellMarker = cellMarker->cellNorth;
     if(status.compass==east)  cellMarker = cellMarker->cellEast;
@@ -209,7 +209,7 @@ void Maze::mapping()
   if(status.distFront < distWallExist)  cellMarker->wall[(status.compass+north) % 4] = true;
   if(status.distSideRight < distWallExist)  cellMarker->wall[(status.compass+east) % 4] = true;
   if(status.distSideLeft < distWallExist)  cellMarker->wall[(status.compass+west) % 4] = true;
-  adjacentWall(cellMarker);
+  //adjacentWall(cellMarker);
   cellMarker->visit = true;
   status.cellCurrent = cellMarker;
   
@@ -349,20 +349,21 @@ void Maze::westFlood(int y, int x, int curr_step)
 void Maze::initialize()
 {  
   /*------------------------------------------  set sibling  ------------------------------------------*/
+
   for(int y=0; y<mazeSize; y++)
     for(int x=0; x<mazeSize; x++)
     {
       if(y+1 < mazeSize)
-        cell[y][x].cellNorth = &cell[y+1][x];
+        (cell[y][x]).cellNorth = &cell[y+1][x];
       else  cell[y][x].cellNorth = &emptyCell;
       if(y-1 >= 0)
-        cell[y][x].cellSouth = &cell[y-1][x];
+        (cell[y][x]).cellSouth = &cell[y-1][x];
       else  cell[y][x].cellSouth = &emptyCell;
       if(x+1 < mazeSize)
-        cell[y][x].cellEast = &cell[y][x+1];
+        (cell[y][x]).cellEast = &cell[y][x+1];
       else  cell[y][x].cellEast = &emptyCell;
       if(x-1 >= 0)
-        cell[y][x].cellWest = &cell[y][x-1];
+        (cell[y][x]).cellWest = &cell[y][x-1];
       else  cell[y][x].cellWest = &emptyCell;
     }
   

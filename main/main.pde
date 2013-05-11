@@ -46,13 +46,9 @@ void setup()
   
 /*=======================================================  Initialize  =======================================================*/
   status.initialize();
-  //maze.initialize();
+  maze.initialize();
 
-/*--- last 24 hr code  ---*/
-  status.scenarioStraight = followEncoder;
-/*--- last 24 hr code  ---*/
 
-  motor.goStraight(10000);
 
 }
 
@@ -74,6 +70,10 @@ void encoderRightInterrupts(void)
 
 void globalInterrupt(void)
 {
+  /*any tic timer*/
+  status.timeBetweenStop++;    //for global encoder error
+  
+  
   /*--------------------------------------------------------------
   runAllSensor: reads distance, converte all raw data
     - error from distance
@@ -97,18 +97,19 @@ void globalInterrupt(void)
     - reset encoder
     - set modeWait
   --------------------------------------------------------------*/
-//  if(status.mode == modeStop)  maze.mapping();
+  //if(status.mode == modeStop)  maze.mapping();
   
   /*--------------------------------------------------------------
   decide: determine the next path to go after mapping
     - give motor instruciton
   --------------------------------------------------------------*/
-//  if(status.mode == modeWait)  maze.decide();
+  if(status.mode == modeDecide)  maze.decide();
   
 }
 
 void loop()
 {
+  
   
 /*=======================================================  End  =======================================================*/
 

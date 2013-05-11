@@ -21,7 +21,7 @@ void Sensor::runAllSensor()
   status.distFront = (status.distFrontLeft + status.distFrontRight)/2;
   
   angularVelocity();
-//  setScenario();
+  setScenario();
   setEdge();
   errorRight();
   errorLeft();
@@ -126,30 +126,24 @@ void Sensor::setEdge()
 void Sensor::setScenario()
 {
   /*------------------------------------------  straight scenario  ------------------------------------------*/
-  if(status.distFront < 13)
+  if(status.distFront < distWallExist)      //always stop with wall in the front
     status.mode = modeStop;
-  if(status.distSideLeft > distWallExist && status.distSideRight > distWallExist)
+  
+  if(status.edgeLeft == false && status.edgeRight == false)    //no wall, always drive with encoder
     status.scenarioStraight = fishBone;
-  if(status.scenarioStraight == fishBone)  //if fish bone then determine when does it end instead of a post
-    if(status.countLeft - status.countStampLeft > 40 || status.countRight - status.countStampRight > 40)
-    {
-      if(status.distSideLeft > distWallExist && status.distSideRight < distWallExist)
-        status.scenarioStraight = followRight;
-      if(status.distSideLeft < distWallExist && status.distSideRight > distWallExist)
-        status.scenarioStraight = followLeft;
-      if(status.distSideLeft < distWallExist && status.distSideRight < distWallExist)
-        status.scenarioStraight = followBoth;
-      status.countStampLeft = 0; status.countStampRight = 0;
-    }
-  if(status.scenarioStraight != fishBone)
+  
+  if(status.mode == fishBone)    //if in fishbone case, and wall apears for 40 tic, switch scenario
   {
-    if(status.distSideLeft > distWallExist && status.distSideRight < distWallExist)
-      status.scenarioStraight = followRight;
-    if(status.distSideLeft < distWallExist && status.distSideRight > distWallExist)
+    if(status.edgeLeft==true && status.countLeft - status.countStampLeft > 40)
       status.scenarioStraight = followLeft;
-    if(status.distSideLeft < distWallExist && status.distSideRight < distWallExist)
-      status.scenarioStraight = followBoth;
+    if(status.edgeRight==true && status.countRight - status.countStampRight > 40)
+      status.scenarioStraight = followRight;
   }
+  
+  if(status.mode == followLeft || status.mode == followRight)    //switch to both only if was in follow one side
+    if(status.edgeLeft==true && status.edgeRight==true)
+      status.scenarioStraight = followBoth;
+
 }
 
 /*=======================================================  error  =======================================================*/
@@ -228,8 +222,3 @@ void Sensor::angularVelocity()
   }
 }
 
-void Sensor::globalOffset()
-{
-  status.
-  
-}

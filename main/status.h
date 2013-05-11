@@ -108,6 +108,8 @@ public:
   int offsetLast;
   int offsetDiff;
   int offsetTotal;
+  
+  int timeBetweenStop;
 /*--- last 24 hr code  ---*/
 
   int offsetFishBone;

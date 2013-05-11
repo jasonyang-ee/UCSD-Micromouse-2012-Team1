@@ -7,6 +7,7 @@
 #include "sensor.h"
 #include "status.h"
 
+int instructionC = 0;
 int timesIgnored = 0;
 int maxSpeed;
 /*=====================  maze constant  =====================*/

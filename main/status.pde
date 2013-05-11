@@ -87,6 +87,8 @@ void Status::initialize()
   offsetLast = 0;      // last entire offset
   offsetDiff = 0;      // diff for Kd
   offsetTotal = 0;     // total for Ki
+  
+  timeBetweenStop = 0;
 /*--- last 24 hr code  ---*/
 
   offsetFishBone = 0;
@@ -106,7 +108,7 @@ void Status::initialize()
   
   mode = modeStraight;
   
-  scenarioStraight = fishBone;
+  scenarioStraight = followEncoder;
   scenarioRotate = 0;
   scenarioPath = 0;
   scenarioFlag = 0;

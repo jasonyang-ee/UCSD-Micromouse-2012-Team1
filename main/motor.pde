@@ -119,10 +119,7 @@ void Motor::PID()
         int Kdc = 600;
         int Kic = 0.0001;
         
-        // entire offset then take the difference for error
-        status.offset = status.offsetLeft - status.offsetRight;
-        status.offsetDiff = status.offset - status.offsetLast;
-        status.offsetTotal += status.offset;
+        // entire offset setting is in motor.goStraight()
         
         // current count difference used as error
         status.errorCount = (status.countLeft - status.countRight - status.offset);
@@ -130,8 +127,9 @@ void Motor::PID()
         status.errorCountTotal += status.errorCount;
         
         //two correction with different pid value
-        int correctionOffset = round( Kp*status.offset + Kd*status.offsetDiff/0.01 + Ki*status.offsetTotal);
-        int correctionCurrent = round( Kp*status.errorCount + Kd*status.errorCountDiff/0.01 + Ki*status.errorCountTotal);
+        //timeBetweenStop ++ in globalInterrupts, and reset before goStraight
+        int correctionOffset = round( Kpo*status.offset + Kdo*status.offsetDiff/status.timeBetweenStop + Kio*status.offsetTotal);
+        int correctionCurrent = round( Kpc*status.errorCount + Kdc*status.errorCountDiff/0.01 + Kic*status.errorCountTotal);
         
         //apply both correction to base speed
         motorRight(status.speedBase + correctionOffset + correctionCurrent);
@@ -140,15 +138,18 @@ void Motor::PID()
         //update last offset for Kd computation
         status.offsetLast = status.offset;
         status.errorCountLast = status.errorCount;
+        
+        break;
       }
 /*--- last 24 hr code  ---*/
+
 
       default: 
         motor.stop(); 
         break;
       }
 
-      if(status.distFront < 20)
+      if(status.distFront < 9)
         motor.stop();
     }
     break;
@@ -214,7 +215,7 @@ void Motor::PID()
             motor.motorLeft(-correctionLeft);
             
             //if motor is.. stalling or something, and within 10 counts of setpoint
-            if (status.errorCountLeft == status.errorCountLeftLast && status.errorCountLeft < 10)
+            if (status.errorCountLeft < 10)//status.errorCountLeft == status.errorCountLeftLast && status.errorCountLeft < 10)
               status.tick++;
             else
               status.tick = 0;
@@ -224,7 +225,7 @@ void Motor::PID()
             // togglePin(33);
             motor.motorRight(0);
             motor.motorLeft(0);
-            //motor.stop();
+            status.mode=modeStop;
           }
           break;
         }
@@ -263,7 +264,7 @@ void Motor::PID()
             motor.motorLeft(correctionLeft);
 
             //if motor stalls 200 times in a row kinda close to setpoint, give up
-            if (status.errorCountRight == status.errorCountRightLast && status.errorCountRight < 10 )
+            if (status.errorCountRight < 10)//status.errorCountRight == status.errorCountRightLast && status.errorCountRight < 10 )
               status.tick++;
             else
               status.tick = 0;
@@ -273,7 +274,7 @@ void Motor::PID()
             // togglePin(33);
             motor.motorRight(0);
             motor.motorLeft(0);
-            //motor.stop();
+            status.mode=modeStop;
           }				
           break;
         }
@@ -321,7 +322,7 @@ void Motor::PID()
             //        togglePin(33);
             motor.motorRight(0);
             motor.motorLeft(0);
-            motor.stop();
+            status.mode=modeStop;
           }					
           break;
         }
@@ -429,11 +430,13 @@ void Motor::goStraight(int speed)
 
 /*--- last 24 hr code  ---*/
 //store entire offset before reset encoder
-  status.offsetLeft += status.countLeft;
-  status.offsetRight += status.countRight;
-
+  status.timeBetweenStop = 0;
+  status.offsetLast = status.offset;
+  status.offsetLeft = (status.offsetLeft + status.countLeft) % 10000;
+  status.offsetRight = (status.offsetRight + status.countRight) % 10000;
+  status.offset = status.offsetLeft - status.offsetRight;
+  status.offsetTotal += status.offset;
 /*--- last 24 hr code  ---*/
-
 
   //Encoder initialization
   status.countRight = 0;
