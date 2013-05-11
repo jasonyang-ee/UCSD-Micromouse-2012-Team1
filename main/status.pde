@@ -108,7 +108,7 @@ void Status::initialize()
   
   mode = modeStraight;
   
-  scenarioStraight = followEncoder;
+  scenarioStraight = followRight;
   scenarioRotate = 0;
   scenarioPath = 0;
   scenarioFlag = 0;

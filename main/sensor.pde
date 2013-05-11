@@ -21,7 +21,7 @@ void Sensor::runAllSensor()
   status.distFront = (status.distFrontLeft + status.distFrontRight)/2;
   
   angularVelocity();
-  setScenario();
+//  setScenario();
   setEdge();
   errorRight();
   errorLeft();
@@ -102,6 +102,7 @@ double Sensor::convertDistance(int volt, int c)
     if(volt>10)  return  (173.96*x*x + 156.82*x + 0.0099);
     else  return 20;
   }
+  return 20;
 }
 
 /*=======================================================  scenario  =======================================================*/

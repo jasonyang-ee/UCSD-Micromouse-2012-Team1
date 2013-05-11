@@ -97,7 +97,7 @@ void globalInterrupt(void)
     - reset encoder
     - set modeWait
   --------------------------------------------------------------*/
-  //if(status.mode == modeStop)  maze.mapping();
+
   
   /*--------------------------------------------------------------
   decide: determine the next path to go after mapping
@@ -109,7 +109,18 @@ void globalInterrupt(void)
 
 void loop()
 {
+  ASSERT(1);
+  waitForButtonPress();
+  motor.goStraight(10000);
+  if(status.mode == modeStop)  maze.mapping();
   
+  /*
+  SerialUSB.print(status.mode);
+  SerialUSB.print("\t");
+  SerialUSB.print(status.scenarioStraight);
+  SerialUSB.print("\t");
+  SerialUSB.println(status.distFront);
+  */
   
 /*=======================================================  End  =======================================================*/
 
