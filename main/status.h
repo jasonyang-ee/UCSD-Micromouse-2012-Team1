@@ -99,10 +99,23 @@ public:
   int scenarioPath;
   int scenarioFlag;
   int tick;
-  int offsetFishBone;
+  
+/*--- last 24 hr code  ---*/
+//explained in status.pde
+  int offset;
+  int offsetLeft;
+  int offsetRight;
+  int offsetLast;
+  int offsetDiff;
+  int offsetTotal;
+/*--- last 24 hr code  ---*/
 
-  bool edgeRising;
-  bool edgeFalling;
+  int offsetFishBone;
+  int offsetFishBoneLast;
+  int offsetFishBoneDiff;
+
+  bool edgeLeft;
+  bool edgeRight;
 
   double errorRightTotal;
   double errorLeftTotal;

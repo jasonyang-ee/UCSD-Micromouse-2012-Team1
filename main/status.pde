@@ -79,22 +79,34 @@ void Status::initialize()
   
   countStampLeft = 0;
   countStampRight = 0;
+
+/*--- last 24 hr code  ---*/
+  offset = 0;          // the entire offset difference of left and right, treated as error for Kp
+  offsetLeft = 0;      // the entire offset from starting of left
+  offsetRight = 0;     // same as above
+  offsetLast = 0;      // last entire offset
+  offsetDiff = 0;      // diff for Kd
+  offsetTotal = 0;     // total for Ki
+/*--- last 24 hr code  ---*/
+
   offsetFishBone = 0;
+  offsetFishBoneLast = 0;
+  offsetFishBoneDiff = 0;
 
   speedLeft = 0;
   speedRight = 0;
   speedBase = 0;
   
-  edgeRising = false;
-  edgeFalling = false; 
+  edgeLeft = false;
+  edgeRight = false; 
   
   angularVelocityRight = 0;
   angularVelocityLeft = 0;
   angSpeedCounter = 0;
   
-  mode = modeStop;
+  mode = modeStraight;
   
-  scenarioStraight = followBoth;
+  scenarioStraight = fishBone;
   scenarioRotate = 0;
   scenarioPath = 0;
   scenarioFlag = 0;

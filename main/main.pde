@@ -46,10 +46,14 @@ void setup()
   
 /*=======================================================  Initialize  =======================================================*/
   status.initialize();
-  motor.rotateLeft();
   //maze.initialize();
-  //motor.goStraight(10000);
-  status.scenarioStraight = followRight;  
+
+/*--- last 24 hr code  ---*/
+  status.scenarioStraight = followEncoder;
+/*--- last 24 hr code  ---*/
+
+  motor.goStraight(10000);
+
 }
 
 
@@ -67,7 +71,6 @@ void encoderRightInterrupts(void)
 }
 
 
-bool motorCheck = false;
 
 void globalInterrupt(void)
 {
@@ -77,6 +80,7 @@ void globalInterrupt(void)
     - angularVelocity
     - converted error sum, error diff
   --------------------------------------------------------------*/
+
   sensor.runAllSensor();
 
   /*--------------------------------------------------------------
@@ -104,39 +108,10 @@ void globalInterrupt(void)
 }
 
 void loop()
-{  
+{
   
-
-SerialUSB.print(status.offsetFishBone);
-SerialUSB.print("\t");
-SerialUSB.print(status.errorCount);
-SerialUSB.print("   |   ");
-SerialUSB.print(status.countStampLeft);
-SerialUSB.print("\t");
-SerialUSB.print(status.countStampRight);
-SerialUSB.print("   |   ");
-SerialUSB.print(status.countLeft);
-SerialUSB.print("\t");
-SerialUSB.println(status.countRight);
-
-/*===================  Encoder print  =======================*/
-/*if(isButtonPressed())
-//{
-  SerialUSB.print(status.countLeft);
-  SerialUSB.print("\t");
-
-  SerialUSB.print(status.countRight);
-  SerialUSB.println("\t");
-//}
-//  SerialUSB.println(status.speedLeft);
-
 /*=======================================================  End  =======================================================*/
-/*
-SerialUSB.print(status.distFrontRight);
-SerialUSB.print("\t");
-SerialUSB.println(status.distFrontLeft);
-*/
-//SerialUSB.println(status.distDiagonalLeft);
+
 }
 
 

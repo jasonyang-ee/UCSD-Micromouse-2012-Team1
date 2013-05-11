@@ -95,12 +95,16 @@ Status status;
 #define followLeft 2
 #define followBoth 3
 #define fishBone 4
+#define followEncoder 5
 
 //scenarioRotate
 //scenarioTurn
 #define left 1
 #define right 2
 #define back 3
+
+#define falling false
+#define raising true
 
 /*=====================  scenarioDecide  =====================*/
 #define openNone 0

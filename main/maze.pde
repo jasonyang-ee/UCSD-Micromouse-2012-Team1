@@ -181,23 +181,16 @@ int Maze::decide()
 void Maze::mapping()
 {
   /*------------------------------------------  set position  ------------------------------------------*/
-  int cellTraveled = status.countLeft / countCell;
+  int cellTraveled = (status.countLeft+status.countRight) /2 / countCell;
   Cell *cellMarker = status.cellCurrent;
   
-  /*------------------------------------------  set arrived cell  ------------------------------------------*/
-  if(status.distFront < distWallExist)  cellMarker->wall[(status.compass+north) % 4] = true;
-  if(status.distSideRight < distWallExist)  cellMarker->wall[(status.compass+east) % 4] = true;
-  if(status.distSideLeft < distWallExist)  cellMarker->wall[(status.compass+west) % 4] = true;
-  adjacentWall(cellMarker);
-  cellMarker->visit = true;
+  /*------------------------------------------  mark go one cell forward  ------------------------------------------*/
+  if(status.compass==north)  cellMarker = cellMarker->cellNorth;
+  if(status.compass==east)  cellMarker = cellMarker->cellEast;
+  if(status.compass==south)  cellMarker = cellMarker->cellSouth;
+  if(status.compass==west)  cellMarker = cellMarker->cellWest;
   cellTraveled--;
-  
-  /*------------------------------------------  go one cell back  ------------------------------------------*/
-  if(status.compass==north)  cellMarker = cellMarker->cellSouth;
-  if(status.compass==east)  cellMarker = cellMarker->cellWest;
-  if(status.compass==south)  cellMarker = cellMarker->cellNorth;
-  if(status.compass==west)  cellMarker = cellMarker->cellEast;
-  
+
   /*------------------------------------------  loop traveled  ------------------------------------------*/
   while(cellTraveled>0)
   {
@@ -205,12 +198,20 @@ void Maze::mapping()
     cellMarker->wall[(status.compass+west) % 4] = true;
     adjacentWall(cellMarker);
     cellMarker->visit = true;
-    if(status.compass==north)  cellMarker = cellMarker->cellSouth;
-    if(status.compass==east)  cellMarker = cellMarker->cellWest;
-    if(status.compass==south)  cellMarker = cellMarker->cellNorth;
-    if(status.compass==west)  cellMarker = cellMarker->cellEast;
+    if(status.compass==north)  cellMarker = cellMarker->cellNorth;
+    if(status.compass==east)  cellMarker = cellMarker->cellEast;
+    if(status.compass==south)  cellMarker = cellMarker->cellSouth;
+    if(status.compass==west)  cellMarker = cellMarker->cellWest;
     cellTraveled--;
   }
+  
+  /*------------------------------------------  set arrived cell  ------------------------------------------*/
+  if(status.distFront < distWallExist)  cellMarker->wall[(status.compass+north) % 4] = true;
+  if(status.distSideRight < distWallExist)  cellMarker->wall[(status.compass+east) % 4] = true;
+  if(status.distSideLeft < distWallExist)  cellMarker->wall[(status.compass+west) % 4] = true;
+  adjacentWall(cellMarker);
+  cellMarker->visit = true;
+  status.cellCurrent = cellMarker;
   
   /*------------------------------------------  aquire instruction  ------------------------------------------*/
   status.mode = modeDecide;

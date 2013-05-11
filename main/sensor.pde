@@ -22,6 +22,7 @@ void Sensor::runAllSensor()
   
   angularVelocity();
 //  setScenario();
+  setEdge();
   errorRight();
   errorLeft();
   errorDiagonal();
@@ -74,7 +75,7 @@ double Sensor::convertDistance(int volt, int c)
   if(c==3)
   {
     // dist = -414.6(1/V)^2 + 143(1/V) - 0.9423
-    if(volt>8)  return ( (-414.6*x*x + 143*x - 0.9423));// - status.distSideLeft) < 2 ? -414.6*x*x + 143*x - 0.9423 : status.distSideLeft );
+    if(volt>6)  return ( (-414.6*x*x + 143*x - 0.9423));// - status.distSideLeft) < 2 ? -414.6*x*x + 143*x - 0.9423 : status.distSideLeft );
     else return 20;
   }
   
@@ -101,6 +102,24 @@ double Sensor::convertDistance(int volt, int c)
     if(volt>10)  return  (173.96*x*x + 156.82*x + 0.0099);
     else  return 20;
   }
+}
+
+/*=======================================================  scenario  =======================================================*/
+void Sensor::setEdge()
+{
+  if(status.edgeLeft==raising)
+    if(status.distSideLeft > distWallExist)
+      status.edgeLeft = falling;
+  if(status.edgeLeft==falling)
+    if(status.distSideLeft < distWallExist)
+      status.edgeLeft = raising;
+      
+  if(status.edgeRight==raising)
+    if(status.distSideRight > distWallExist)
+      status.edgeRight = falling;
+  if(status.edgeRight==falling)
+    if(status.distSideRight < distWallExist)
+      status.edgeRight = raising;
 }
 
 /*=======================================================  scenario  =======================================================*/
@@ -194,7 +213,7 @@ void Sensor::angularVelocity()
   //only calculates angular velocity every 10 counts so we get more than an error of 0 or 1
   //control loop is kinda faster than encoder interrupts
   status.angSpeedCounter = (++status.angSpeedCounter)%10;
-  if( status.angSpeedCounter == 0)
+  if(status.angSpeedCounter == 0)
   { 
     status.angularVelocityLeft = status.countLeft - status.countLeftLast;
     status.angularVelocityRight = status.countRight - status.countRightLast;
@@ -207,4 +226,10 @@ void Sensor::angularVelocity()
 
     maxSpeed = (status.angularVelocityLeft > maxSpeed ? status.angularVelocityLeft:maxSpeed);
   }
+}
+
+void Sensor::globalOffset()
+{
+  status.
+  
 }
