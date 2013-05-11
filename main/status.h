@@ -101,8 +101,14 @@ public:
   int tick;
   int offsetFishBone;
 
+  bool edgeRising;
+  bool edgeFalling;
+
   double errorRightTotal;
   double errorLeftTotal;
+  
+  int virtualCountLeft;
+  int virtualCountRight;
 
 public:
   void initialize();

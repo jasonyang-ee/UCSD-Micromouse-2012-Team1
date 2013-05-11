@@ -80,10 +80,16 @@ void Status::initialize()
   countStampLeft = 0;
   countStampRight = 0;
   offsetFishBone = 0;
+  
+  virtualCountLeft = 0;
+  virtualCountRight = 0;
 
   speedLeft = 0;
   speedRight = 0;
   speedBase = 0;
+  
+  edgeRising = false;
+  edgeFalling = false; 
   
   angularVelocityRight = 0;
   angularVelocityLeft = 0;

@@ -58,7 +58,7 @@ double Sensor::convertDistance(int volt, int c)
   if(c==1)
   {
     // dist = -714.98(1/v)^2 + 216.11(1/v) - 0.7782
-    if(volt>9)  return ((-714.98*x*x + 216.11*x + 0.7782)); //- status.distFrontLeft) < 2 ? -714.98*x*x + 216.11*x + 0.7782 : status.distFrontLeft  );  
+    if(volt>7)  return ((-714.98*x*x + 216.11*x + 0.7782)); //- status.distFrontLeft) < 2 ? -714.98*x*x + 216.11*x + 0.7782 : status.distFrontLeft  );  
     else  return 20;
   }
   
@@ -74,7 +74,7 @@ double Sensor::convertDistance(int volt, int c)
   if(c==3)
   {
     // dist = -414.6(1/V)^2 + 143(1/V) - 0.9423
-    if(volt>9)  return ( (-414.6*x*x + 143*x - 0.9423));// - status.distSideLeft) < 2 ? -414.6*x*x + 143*x - 0.9423 : status.distSideLeft );
+    if(volt>8)  return ( (-414.6*x*x + 143*x - 0.9423));// - status.distSideLeft) < 2 ? -414.6*x*x + 143*x - 0.9423 : status.distSideLeft );
     else return 20;
   }
   
@@ -82,7 +82,7 @@ double Sensor::convertDistance(int volt, int c)
   if(c==4)
   {
     // dist = 773.41(1/V)^2 + 96.525(1/V) - 0.6535
-    if(volt>9)  return ( 773.41*x*x + 96.525*x - 0.6535);// - status.distSideRight) < 2 ? 773.41*x*x + 96.525*x - 0.6535: status.distSideRight );
+    if(volt>8)  return ( 773.41*x*x + 96.525*x - 0.6535);// - status.distSideRight) < 2 ? 773.41*x*x + 96.525*x - 0.6535: status.distSideRight );
     else  return 20;
   }
   
@@ -90,15 +90,15 @@ double Sensor::convertDistance(int volt, int c)
   if(c==5)
   {
     // dist = -189.78(1/v)^2 + 156.48(1/v) + 0.1224
-    if(volt>9)  return ( -189.78*x*x + 156.48*x - 0.1224);
+    if(volt>7)  return ( -189.78*x*x + 156.48*x - 0.1224);
     else  return 20;
   }
   
-  //Diagonal Left
+  //Diagonal Right
   if(c==6)
   {
     // dist = 173.96(1/v)^2 + 156.82(1/v) - 0.0099
-    if(volt>9)  return  (173.96*x*x + 156.82*x + 0.0099);
+    if(volt>10)  return  (173.96*x*x + 156.82*x + 0.0099);
     else  return 20;
   }
 }
@@ -191,7 +191,7 @@ void Sensor::angularVelocity()
 {
   //only calculates angular velocity every 10 counts so we get more than an error of 0 or 1
   //control loop is kinda faster than encoder interrupts
-  status.angSpeedCounter = (++status.angSpeedCounter)%100;
+  status.angSpeedCounter = (++status.angSpeedCounter)%10;
   if( status.angSpeedCounter == 0)
   { 
     status.angularVelocityLeft = status.countLeft - status.countLeftLast;

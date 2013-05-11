@@ -72,19 +72,27 @@ void Motor::PID()
         //uses side sensors to find an encoder offset, then corrects based off that error
       case fishBone: 
         {
-          int Kp = 800;
-          int Kd = 30;
+          int Kp = 2000;
+          int Kd = 150;
           int Ki = 0;
         
+          if(status.distSideLeft < 10 || status.distSideRight < 10)
+          {
+            status.edgeFalling = true;
+            status.edgeRising = false;
+          }
+          else
+            status.edgeRising = true;
+        
         //checks if no wall and stamp not initialized, initialize stamp
-          if(status.distSideLeft - status.distSideLeftLast < 9 && status.countStampLeft==0)
+          if(status.edgeRising==true && status.edgeFalling==true && status.countStampLeft==0)
             status.countStampLeft = status.countLeft;
-          if(status.distSideRight - status.distSideRightLast < 9 && status.countStampRight==0)
+          if(status.edgeRising==true && status.edgeFalling==true && status.countStampRight==0)
             status.countStampRight = status.countRight;
          //if no post and stamp has value, set offset
          if (status.countStampLeft !=0 && status.countStampRight != 0)
          {
-           status.offsetFishBone = status.countStampLeft - status.countStampRight;
+           status.offsetFishBone = round((status.countStampLeft - status.countStampRight)*0.05);
            status.countStampLeft = 0;
            status.countStampRight = 0;
          }
@@ -92,15 +100,14 @@ void Motor::PID()
           status.errorCount = (status.countLeft - status.countRight - status.offsetFishBone);
           status.errorCountDiff = status.errorCount - status.errorCountLast;
           status.errorCountTotal += status.errorCount;
-          int correction = round( Kp*status.errorCount + Kd*status.errorCountDiff + Ki*status.errorCountTotal);
-
+          int correction = round( Kp*status.errorCount + Kd*status.errorCountDiff/0.01 + Ki*status.errorCountTotal);
+          
+          
           motorRight(status.speedBase + correction);
           motorLeft(status.speedBase - correction);
           
           status.errorCountLast = status.errorCount;
           
-          if(status.distFront < 9)
-            status.mode = modeStop;
           break;
         }
 
@@ -108,12 +115,13 @@ void Motor::PID()
         motor.stop(); 
         break;
       }
+      /*
       if(status.distSideLeft >= 20)
         turnLeft(20000);
       if(status.distSideRight >= 20)
         turnRight(20000);
-
-      if(status.distFront < 9 )//|| status.distSideRight >= 15 || status.distSideLeft >= 15)
+      */
+      if(status.distFront < 14 )//|| status.distSideRight >= 15 || status.distSideLeft >= 15)
         motor.stop();
     }
     break;
@@ -336,9 +344,9 @@ void Motor::decelerate()
       status.countRightTemp=status.countRight;
     }
     int error = (status.countLeft - status.countLeftTemp) - (status.countRight - status.countRightTemp);
-    int correction = 300*error;
+    int correction = 500*error;
    
-    int rateDecelerate = ((abs(status.speedLeft)+abs(status.speedRight))/2>10000)? -0.995 : -0.997;  //set different rate
+    int rateDecelerate = ((abs(status.speedLeft)+abs(status.speedRight))/2>10000)? -0.9997 : -0.9995;  //set different rate
 
     int tempL = status.speedLeft * rateDecelerate - correction;
     int tempR = status.speedRight * rateDecelerate + correction;
