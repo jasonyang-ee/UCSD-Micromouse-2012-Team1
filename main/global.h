@@ -6,6 +6,7 @@
 #include "motor.h"
 #include "sensor.h"
 #include "status.h"
+#include "racing.h"
 
 int instructionC = 0;
 int timesIgnored = 0;

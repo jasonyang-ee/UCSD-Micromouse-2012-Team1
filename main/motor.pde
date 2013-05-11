@@ -215,7 +215,7 @@ void Motor::PID()
             motor.motorLeft(-correctionLeft);
             
             //if motor is.. stalling or something, and within 10 counts of setpoint
-            if (status.errorCountLeft < 10)//status.errorCountLeft == status.errorCountLeftLast && status.errorCountLeft < 10)
+            if (status.errorCountLeft < 20)//status.errorCountLeft == status.errorCountLeftLast && status.errorCountLeft < 10)
               status.tick++;
             else
               status.tick = 0;
@@ -264,7 +264,7 @@ void Motor::PID()
             motor.motorLeft(correctionLeft);
 
             //if motor stalls 200 times in a row kinda close to setpoint, give up
-            if (status.errorCountRight < 10)//status.errorCountRight == status.errorCountRightLast && status.errorCountRight < 10 )
+            if (status.errorCountRight < 20)//status.errorCountRight == status.errorCountRightLast && status.errorCountRight < 10 )
               status.tick++;
             else
               status.tick = 0;
