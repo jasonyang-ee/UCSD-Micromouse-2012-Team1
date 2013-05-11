@@ -107,6 +107,8 @@ double Sensor::convertDistance(int volt, int c)
 void Sensor::setScenario()
 {
   /*------------------------------------------  straight scenario  ------------------------------------------*/
+  if(status.distFront < 13)
+    status.mode = modeStop;
   if(status.distSideLeft > distWallExist && status.distSideRight > distWallExist)
     status.scenarioStraight = fishBone;
   if(status.scenarioStraight == fishBone)  //if fish bone then determine when does it end instead of a post

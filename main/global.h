@@ -8,6 +8,7 @@
 #include "status.h"
 
 int timesIgnored = 0;
+int maxSpeed;
 /*=====================  maze constant  =====================*/
 //cell per side
 #define mazeSize 16

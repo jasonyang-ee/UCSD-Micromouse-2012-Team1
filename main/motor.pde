@@ -107,13 +107,14 @@ void Motor::PID()
         motor.stop(); 
         break;
       }
+      
       /*
       if(status.distSideLeft >= 20)
         turnLeft(10000);
       else
         if(status.distSideRight >= 20)
           turnRight(10000);
-          */
+      */
 
       if(status.distFront < 13  || status.distSideRight >= 15 || status.distSideLeft >= 15)
         motor.stop();
