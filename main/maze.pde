@@ -315,7 +315,7 @@ void Maze::mapping()
 {
   /*------------------------------------------  set position  ------------------------------------------*/
   int cellTraveled = (status.countLeft+status.countRight) /2 / countCell;
-  Cell *cellMarker = status.cellCurrent;
+  volatile Cell *cellMarker = status.cellCurrent;
   
   /*------------------------------------------  mark go one cell forward  ------------------------------------------*/
   if(cellTraveled > 0)
@@ -332,6 +332,7 @@ void Maze::mapping()
   {
     cellMarker->wall[(status.compass+east) % 4] = true;
     cellMarker->wall[(status.compass+west) % 4] = true;
+    cellMarker->visit = true;
     adjacentWall(cellMarker);
     cellMarker->visit = true;
     if(status.compass==north)  cellMarker = cellMarker->cellNorth;
@@ -354,7 +355,7 @@ void Maze::mapping()
 }
 
 /*------------------------------------------  update adjacent  ------------------------------------------*/
-void Maze::adjacentWall(Cell *cellMarker)
+void Maze::adjacentWall(volatile Cell *cellMarker)
 {
   Cell *adjacentNorth=cellMarker->cellNorth;
   Cell *adjacentEast=cellMarker->cellEast;

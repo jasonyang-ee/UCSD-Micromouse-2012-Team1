@@ -127,11 +127,9 @@ void Sensor::setEdge()
 void Sensor::setScenario()
 {
   /*------------------------------------------  straight scenario  ------------------------------------------*/
-  if(status.distFront < distWallExist)      //always stop with wall in the front
-    status.mode = modeStop;
   
   if(status.edgeLeft == false && status.edgeRight == false)    //no wall, always drive with encoder
-    status.scenarioStraight = fishBone;
+    status.scenarioStraight = followEncoder;
   
   if(status.mode == fishBone)    //if in fishbone case, and wall apears for 40 tic, switch scenario
   {

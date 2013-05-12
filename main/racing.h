@@ -10,7 +10,7 @@ public:
   void speedRun(int);
 
   void next(Cell*);
-  void neighbor(Cell*);
+  void neighbor(volatile Cell*);
   void initialize();
   
   int step;

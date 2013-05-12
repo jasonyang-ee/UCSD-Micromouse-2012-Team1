@@ -10,6 +10,7 @@
 
 int timesIgnored = 0;
 int maxSpeed;
+bool stopCheck = false;
 /*=====================  maze constant  =====================*/
 //cell per side
 #define mazeSize 16
@@ -24,7 +25,7 @@ int maxSpeed;
 #define sampleNum 20
 
 //minimun distance between wall and mouse in one cell
-#define distWallExist 20
+#define distWallExist 15
 
 /*=====================  motor constant  =====================*/
 //speed constant

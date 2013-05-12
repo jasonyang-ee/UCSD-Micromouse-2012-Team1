@@ -25,8 +25,7 @@ public:
   volatile int voltDiagonalRight;
   
   //position
-  Cell *cellCurrent;    //cell pointer
-  Cell *currentCell;    //cell pointer
+  volatile Cell *cellCurrent;    //cell pointer
   int compass;
   
   //error

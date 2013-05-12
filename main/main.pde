@@ -49,7 +49,6 @@ void setup()
   maze.initialize();
 
 
-
 }
 
 
@@ -72,7 +71,17 @@ void globalInterrupt(void)
 {
   /*any tic timer*/
   status.timeBetweenStop++;    //for global encoder error
-  
+
+  /*--------------------------------------------------------------
+  stop: 
+    - 
+  --------------------------------------------------------------*/
+
+  if( (status.distFront <= distWallExist || status.distSideRight >= distWallExist || status.distSideLeft >= distWallExist) && stopCheck)
+    motor.stop();
+  else if(status.distFront > distWallExist && status.distSideRight < distWallExist && status.distSideLeft < distWallExist)
+    stopCheck = true;
+
   
   /*--------------------------------------------------------------
   runAllSensor: reads distance, converte all raw data
@@ -109,7 +118,8 @@ void globalInterrupt(void)
 
 void loop()
 {
-  if(status.mode == modeStop)  maze.mapping();
+  
+  if(status.mode == modeStop && stopCheck == true)  maze.mapping();
   
   
   /*

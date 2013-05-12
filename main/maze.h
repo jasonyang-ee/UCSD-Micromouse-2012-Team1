@@ -9,7 +9,7 @@ public:
   void goHome();
   
   void mapping();
-  void adjacentWall(Cell*);
+  void adjacentWall(volatile Cell*);
   
   void flood();
   void expand(int, int, int);

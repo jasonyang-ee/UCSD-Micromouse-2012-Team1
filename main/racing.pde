@@ -6,18 +6,18 @@ void Racing::easyRun(int speed)     //Easy way to do this, one cell at a time (a
   int cellTraveled = ((status.countLeft+status.countRight) /2) / countCell;
   for (int i = cellTraveled; i > 0; i--)
   {
-    if(status.compass==north)  status.currentCell = status.currentCell->cellNorth;
-    if(status.compass==east)  status.currentCell = status.currentCell->cellEast;
-    if(status.compass==south)  status.currentCell = status.currentCell->cellSouth;
-    if(status.compass==west)  status.currentCell = status.currentCell->cellWest;
+    if(status.compass==north)  status.cellCurrent = status.cellCurrent->cellNorth;
+    if(status.compass==east)  status.cellCurrent = status.cellCurrent->cellEast;
+    if(status.compass==south)  status.cellCurrent = status.cellCurrent->cellSouth;
+    if(status.compass==west)  status.cellCurrent = status.cellCurrent->cellWest;
   }
   
-  if(status.currentCell->goal == false)   //Goes one cell at a time
+  if(status.cellCurrent->goal == false)   //Goes one cell at a time
   {
-    step = status.currentCell->floodValue;
+    step = status.cellCurrent->floodValue;
     int nextStep = step - 1;
     
-    Cell *cellMarker = status.currentCell;
+    volatile Cell *cellMarker = status.cellCurrent;
     
     neighbor (cellMarker);
     
@@ -25,7 +25,7 @@ void Racing::easyRun(int speed)     //Easy way to do this, one cell at a time (a
     else if (leftCell->floodValue == nextStep) motor.rotateLeft();
     else if (frontCell->floodValue == nextStep)motor.goStraight(speed);
   }
-  else if (status.currentCell->goal == true) ;//Set mode to Home Run?
+  else if (status.cellCurrent->goal == true) ;//Set mode to Home Run?
   
 }
 
@@ -45,7 +45,7 @@ void Racing::homeRun(int speed)   //From Home to Center, walk back
 /*
 void Racing::speedRun(int speed)
 {
-  status.currentCell = &cell[0][0]; //Resets current cell to starting cell
+  status.cellCurrent = &cell[0][0]; //Resets current cell to starting cell
   
   step = cell[0][0].floodValue;  //Sets current step
   
@@ -53,9 +53,9 @@ void Racing::speedRun(int speed)
   nextRight = false;
   nextLeft = false;
   
-  while (status.currentCell->goal == false)
+  while (status.cellCurrent->goal == false)
   {
-    next(status.currentCell); //Decides next movements and updates position within
+    next(status.cellCurrent); //Decides next movements and updates position within
     
     while ((status.countLeft/countCell) < (numbStraight-1))  //Goes to the cell right before the turn so that it can turn while going straight
       motor.goStraight (speed); //Accelerating Straight Function for Straight-ways Needed      
@@ -99,14 +99,14 @@ void Racing::next(Cell *cellMarker)
       step--;
     }
   }
-  
-  status.currentCell = cellMarker;   
+    
+  status.cellCurrent = cellMarker;   
 }
 */
 
 /*-----------------------------------------------Sub-Functions-------------------------------------------------*/
 
-void Racing::neighbor(Cell *cellMarker)
+void Racing::neighbor(volatile Cell *cellMarker)
 {
   switch (status.compass)  //Sets Neighboring Cells
     {
@@ -135,5 +135,5 @@ void Racing::neighbor(Cell *cellMarker)
 
 void Racing::initialize()
 {
-  status.currentCell = &cell[0][0]; //Resets current cell to starting cell
+  status.cellCurrent = &cell[0][0]; //Resets current cell to starting cell
 }
