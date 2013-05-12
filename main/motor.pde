@@ -112,14 +112,17 @@ void Motor::PID()
       {
         // pid of entire offset/error
         int Kpo = 4000;
-        int Kdo = 3200;
+        int Kdo = 1400;
         int Kio = 0.05;
         // pid of current count error
-        int Kpc = 1700;
+        int Kpc = 2400;
         int Kdc = 600;
         int Kic = 0.0001;
         
-        // entire offset setting is in motor.goStraight()
+        // entire offset then take the difference for error
+        status.offset = status.offsetLeft - status.offsetRight;
+        status.offsetDiff = status.offset - status.offsetLast;
+        status.offsetTotal += status.offset;
         
         // current count difference used as error
         status.errorCount = (status.countLeft - status.countRight - status.offset);
@@ -127,8 +130,7 @@ void Motor::PID()
         status.errorCountTotal += status.errorCount;
         
         //two correction with different pid value
-        //timeBetweenStop ++ in globalInterrupts, and reset before goStraight
-        int correctionOffset = round( Kpo*status.offset + Kdo*status.offsetDiff/status.timeBetweenStop + Kio*status.offsetTotal);
+        int correctionOffset = round( Kpo*status.offset + Kdo*status.offsetDiff/0.01 + Kio*status.offsetTotal);
         int correctionCurrent = round( Kpc*status.errorCount + Kdc*status.errorCountDiff/0.01 + Kic*status.errorCountTotal);
         
         //apply both correction to base speed
@@ -138,24 +140,21 @@ void Motor::PID()
         //update last offset for Kd computation
         status.offsetLast = status.offset;
         status.errorCountLast = status.errorCount;
-        
-        break;
       }
 /*--- last 24 hr code  ---*/
-
 
       default: 
         motor.stop(); 
         break;
       }
 
-      if(status.distFront < 9)
+      if(status.distFront < 20)
         motor.stop();
     }
     break;
 
     //all the in place turn functions
-  case modeRotate:
+case modeRotate:
     {
       //Initialization of PID values
       int Kp = 300;
@@ -215,7 +214,7 @@ void Motor::PID()
             motor.motorLeft(-correctionLeft);
             
             //if motor is.. stalling or something, and within 10 counts of setpoint
-            if (status.errorCountLeft < 20)//status.errorCountLeft == status.errorCountLeftLast && status.errorCountLeft < 10)
+            if (status.errorCountLeft < 20)
               status.tick++;
             else
               status.tick = 0;
@@ -225,7 +224,7 @@ void Motor::PID()
             // togglePin(33);
             motor.motorRight(0);
             motor.motorLeft(0);
-            status.mode=modeStop;
+            status.mode = modeStop;
           }
           break;
         }
@@ -264,7 +263,7 @@ void Motor::PID()
             motor.motorLeft(correctionLeft);
 
             //if motor stalls 200 times in a row kinda close to setpoint, give up
-            if (status.errorCountRight < 20)//status.errorCountRight == status.errorCountRightLast && status.errorCountRight < 10 )
+            if (status.errorCountRight < 20)
               status.tick++;
             else
               status.tick = 0;
@@ -274,7 +273,7 @@ void Motor::PID()
             // togglePin(33);
             motor.motorRight(0);
             motor.motorLeft(0);
-            status.mode=modeStop;
+            status.mode = modeStop;
           }				
           break;
         }
@@ -312,7 +311,7 @@ void Motor::PID()
 
             //as long as 
 
-            if (status.errorCountLeft == status.errorCountLeftLast && status.errorCountLeft < 10)
+            if (status.errorCountLeft <20)
               status.tick++;
             else
               status.tick = 0;
@@ -322,7 +321,7 @@ void Motor::PID()
             //        togglePin(33);
             motor.motorRight(0);
             motor.motorLeft(0);
-            status.mode=modeStop;
+            status.mode = modeStop;
           }					
           break;
         }
@@ -331,7 +330,8 @@ void Motor::PID()
         break;
       }
       break;
-    }    
+    }
+    
     case modeTurn:
     {
       status.tick++;
@@ -430,13 +430,11 @@ void Motor::goStraight(int speed)
 
 /*--- last 24 hr code  ---*/
 //store entire offset before reset encoder
-  status.timeBetweenStop = 0;
-  status.offsetLast = status.offset;
-  status.offsetLeft = (status.offsetLeft + status.countLeft) % 10000;
-  status.offsetRight = (status.offsetRight + status.countRight) % 10000;
-  status.offset = status.offsetLeft - status.offsetRight;
-  status.offsetTotal += status.offset;
+  status.offsetLeft += status.countLeft;
+  status.offsetRight += status.countRight;
+
 /*--- last 24 hr code  ---*/
+
 
   //Encoder initialization
   status.countRight = 0;

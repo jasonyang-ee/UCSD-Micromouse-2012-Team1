@@ -29,7 +29,7 @@ int maxSpeed;
 /*=====================  motor constant  =====================*/
 //speed constant
 #define speedFull 30000
-#define speedMap 15000
+#define speedMap 10000
 #define speedRotate 10000
 #define speedTurn 10000
 

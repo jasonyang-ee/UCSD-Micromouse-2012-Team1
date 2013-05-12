@@ -42,6 +42,7 @@ void Racing::homeRun(int speed)   //From Home to Center, walk back
 
 /*----------------------------------- Speed Run --------------------------------------*/
 
+/*
 void Racing::speedRun(int speed)
 {
   status.currentCell = &cell[0][0]; //Resets current cell to starting cell
@@ -101,7 +102,7 @@ void Racing::next(Cell *cellMarker)
   
   status.currentCell = cellMarker;   
 }
-
+*/
 
 /*-----------------------------------------------Sub-Functions-------------------------------------------------*/
 
