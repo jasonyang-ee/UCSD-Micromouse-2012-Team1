@@ -8,10 +8,9 @@
 #include "status.h"
 #include "racing.h"
 
-int timesIgnored = 0;
+
 int maxSpeed;
 bool stopCheck = false;
-int temp=1;
 int offset = 0;
 /*=====================  maze constant  =====================*/
 //cell per side
@@ -27,7 +26,7 @@ int offset = 0;
 #define sampleNum 20
 
 //minimun distance between wall and mouse in one cell
-#define distWallExist 15
+#define distWallExist 20
 
 /*=====================  motor constant  =====================*/
 //speed constant
@@ -38,8 +37,9 @@ int offset = 0;
 
 #define turnRatio 6/15
 
+int countRotateBack;
 #define countRotateSide 120
-#define countRotateBack 240
+#define countRotateBack 255
 
 /*=====================  pin constant  =====================*/
 //Reciever

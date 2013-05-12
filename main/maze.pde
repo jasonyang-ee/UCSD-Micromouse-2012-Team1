@@ -4,11 +4,12 @@
 /*=======================================================  decide  =======================================================*/
 int Maze::decide()
 {
+  delay(100);
   /*------------------------------------------  set scenario  ------------------------------------------*/
   status.scenarioPath = 0;
-  if(status.cellCurrent->wall[(status.compass+north) % 4] == false)  status.scenarioPath += openNorth;
-  if(status.cellCurrent->wall[(status.compass+east) % 4] == false)  status.scenarioPath += openEast;
-  if(status.cellCurrent->wall[(status.compass+west) % 4] == false)  status.scenarioPath += openWest;
+  if(status.distFront > 7)  status.scenarioPath += openNorth;
+  if(status.distSideRight > 9)  status.scenarioPath += openEast;
+  if(status.distSideLeft > 9)  status.scenarioPath += openWest;
   
   /*------------------------------------------  single open  ------------------------------------------*/
   if(status.scenarioPath == openNone)  motor.rotateBack();

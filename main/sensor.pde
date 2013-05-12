@@ -157,6 +157,7 @@ void Sensor::errorRight()
   //i dont remember what i was doing here, this might be completely wrong lol
   status.errorRight = (status.distDiagonalRight - setpoint1);
   status.errorRight +=( status.errorRight < 0 ? (setpoint2 - status.distSideRight):(status.distSideRight - setpoint2) );
+  status.errorRight /= 2;
   status.errorRightDiff = status.errorRight - status.errorRightLast;
   status.errorRightTotal +=status.errorRight;
 }
@@ -172,6 +173,7 @@ void Sensor::errorLeft()
   //omg what am i doing
   status.errorLeft = (status.distDiagonalLeft - setpoint1);
   status.errorLeft +=( status.errorLeft < 0 ? (setpoint2 - status.distSideLeft):(status.distSideLeft - setpoint2) );
+  status.errorLeft /= 2;
   status.errorLeftDiff = status.errorLeft - status.errorLeftLast;
   status.errorLeftTotal +=status.errorLeft;
 }

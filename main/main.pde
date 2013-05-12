@@ -48,7 +48,6 @@ void setup()
   status.initialize();
   maze.initialize();
 
-
 }
 
 
@@ -69,23 +68,15 @@ void encoderRightInterrupts(void)
 
 void globalInterrupt(void)
 {
-  /*any tic timer*/
-  status.timeBetweenStop++;    //for global encoder error
 
-  if(temp==1)
-  {
-    motor.goStraight(10000);
-    temp=0;
-    status.speedBase = 10000;
-  }
+
 
   /*--------------------------------------------------------------
   stop: 
-    - 
   --------------------------------------------------------------*/
-  if( (status.distFront <= distWallExist) && stopCheck)// || status.distSideRight >= distWallExist || status.distSideLeft >= distWallExist) && stopCheck)
+  if( (status.distFront < distWallExist && stopCheck || status.distSideRight >= distWallExist || status.distSideLeft >= distWallExist) && stopCheck)
     motor.stop();
-  else if(status.distFront > distWallExist)// && status.distSideRight < distWallExist && status.distSideLeft < distWallExist)
+  else if(status.distFront > distWallExist && status.distSideRight < distWallExist && status.distSideLeft < distWallExist)
     stopCheck = true;
     
 
@@ -114,13 +105,13 @@ void globalInterrupt(void)
     - reset encoder
     - set modeWait
   --------------------------------------------------------------*/
-//  if(status.mode == modeStop)  maze.mapping();
+  if(status.mode == modeStop)  maze.mapping();
 
   /*--------------------------------------------------------------
   decide: determine the next path to go after mapping
     - give motor instruciton
   --------------------------------------------------------------*/
-//  if(status.mode == modeDecide)  maze.decide();
+  if(status.mode == modeDecide)  maze.decide();
   
 }
   
