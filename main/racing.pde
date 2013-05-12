@@ -105,7 +105,7 @@ void Racing::next(Cell *cellMarker)
 */
 
 /*-----------------------------------------------Sub-Functions-------------------------------------------------*/
-
+/*
 void Racing::neighbor(volatile Cell *cellMarker)
 {
   switch (status.compass)  //Sets Neighboring Cells
@@ -137,3 +137,5 @@ void Racing::initialize()
 {
   status.cellCurrent = &cell[0][0]; //Resets current cell to starting cell
 }
+
+*/

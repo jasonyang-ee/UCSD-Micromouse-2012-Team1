@@ -72,9 +72,9 @@ void Motor::PID()
         //uses side sensors to find an encoder offset, then corrects based off that error
       case fishBone: 
         {
-          int Kp = 2320;
-          int Kd = 900;
-          int Ki = 0.002;
+          int Kp = 1500;
+          int Kd = 440;
+          int Ki = 0.07;
 
           //checks if no wall and stamp not initialized, initialize stamp
           if(status.edgeLeft==raising && status.countStampLeft==0)
@@ -82,26 +82,27 @@ void Motor::PID()
           if(status.edgeRight==raising  && status.countStampRight==0)
             status.countStampRight = status.countRight;
           //if no post and stamp has value, set offset
-          if (status.countStampLeft !=0 && status.countStampRight !=0)
+          if (status.countStampLeft !=0 && status.countStampRight !=0 && status.edgeLeft==falling && status.edgeRight==falling)
           {
             status.offsetFishBone = status.countStampLeft - status.countStampRight;
             status.countStampLeft = 0;
             status.countStampRight = 0;
           }
+          status.offsetFishBoneTotal += status.offsetFishBone;
 
-          status.offsetFishBoneDiff = status.offsetFishBone - status.offsetFishBoneLast;
-
-
-          status.errorCount = (status.countLeft - status.countRight - status.offsetFishBone * 0.65);
+          status.errorCount = (status.countLeft - status.countRight);
           status.errorCountDiff = status.errorCount - status.errorCountLast;
           status.errorCountTotal += status.errorCount;
-          int correction = round( Kp*status.errorCount + Kd*status.errorCountDiff/0.01 + Ki*status.errorCountTotal);
 
+          int error = status.offsetFishBone + status.errorCount;
+          int diff = status.errorCountDiff;
+          int total = status.offsetFishBoneTotal - status.errorCountTotal;
 
-          motorRight(status.speedBase + correction);
-          motorLeft(status.speedBase - correction );
+          int correction = round( Kp*error + Kd*diff/0.01 + Ki*total);
 
-          status.offsetFishBoneLast = status.offsetFishBone;
+          motorRight(status.speedBase + correction );
+          motorLeft(status.speedBase - correction);
+
           status.errorCountLast = status.errorCount;
 
           break;
@@ -129,7 +130,7 @@ void Motor::PID()
           status.errorCountTotal += status.errorCount;
 
           //two correction with different pid value
-         // int correctionOffset = round( Kpo*status.offset + Kdo*status.offsetDiff/0.01 + Kio*status.offsetTotal);
+          // int correctionOffset = round( Kpo*status.offset + Kdo*status.offsetDiff/0.01 + Kio*status.offsetTotal);
           int correctionCurrent = round( Kpc*status.errorCount + Kdc*status.errorCountDiff/0.01 + Kic*status.errorCountTotal);
 
           //apply both correction to base speed
@@ -355,54 +356,62 @@ void Motor::PID()
 
 /*=======================================================  stop  =======================================================*/
 void Motor::stop()
-{ 
+//180 counts from sideRight flagging high
+{   
+  //used to detect high-low transitions
+  //so if we start in a cell with a stop condition, we can skip it and move to the next cell
+  stopCheck = false;
 
-  //if( status.angularVelocityRight == 0 && status.angularVelocityLeft == 0) //might need to change this later
-  if(status.angularVelocityLeft < 1 && status.angularVelocityLeft < 1)
-  {
-    status.mode = modeStop; //set modd
-    motorLeft(0);  
-    motorRight(0);          //set motor=0								              
-    status.speedBase = 0;
-    status.countLeftTemp=0;
-    status.countRightTemp=0;
+
+  if (offset == 0)
+  {    
+    //initialization of offset
+    //need to travel 180 counts to reach the center of the cell
+    status.tick = 0;
+    offset = 180 + (status.countLeft + status.countRight)/2;
+
+    //so from now on, controlled by deceleration PID
+    status.mode = modeDecelerate;
+    //used to affirm we have completely stopped
+    status.tick =  0;    
+    status.errorCountLeft = 0;
+    status.errorCountRight = 0;    
   }
-  if(status.scenarioStraight == followLeft)
-    if(status.distDiagonalRight < 15)
-      decelerate();
+  else if (abs(status.errorCount) < 5)
+  {
+    status.mode = modeStop;
+    motorLeft(0);
+    motorRight(0);
+    status.speedBase = 0;  
+  }
 
-  if(status.scenarioStraight == followRight)
-    if(status.distDiagonalLeft < 15)
-      decelerate();
-
-  if(status.angularVelocityLeft >= 1 && status.angularVelocityLeft >= 1)
-    decelerate();
 }
-
+int j = 0;
 void Motor::decelerate()
 {
-  if(status.angularVelocityLeft >= 1 && status.angularVelocityRight >= 1)
-  {
-    status.mode = modeDecelerate;
-    if(status.countLeftTemp!=0 && status.countRightTemp!=0)
-    {
-      status.countLeftTemp=status.countLeft;
-      status.countRightTemp=status.countRight;
-    }
-    int error = (status.countLeft - status.countLeftTemp) - (status.countRight - status.countRightTemp);
-    int correction = 25*error;
 
-    int rateDecelerate = ((abs(status.speedLeft)+abs(status.speedRight))/2>10000)? -0.995 : -0.997;  //set different rate
-
-    int tempL = status.speedLeft * rateDecelerate - correction - status.speedBase/10;
-    int tempR = status.speedRight * rateDecelerate + correction - status.speedBase/10;
-    motorLeft(tempL);                     //set opposite speed
-    motorRight(tempR);                    //set opposite speed
-    status.speedLeft *= -1;
-    status.speedRight *= -1;
+  if (status.offset - status.countLeft < 0)
+  {           
+    status.tick++;        
+    motor.motorRight(-status.speedBase);
+    motor.motorLeft(-status.speedBase);           
   }
-  if(status.angularVelocityLeft < 1 && status.angularVelocityRight < 1) //might need to change this too
+  else if (status.offset - status.countLeft > 0)
+  {
+    status.tick++;
+    motor.motorRight(status.speedBase);
+    motor.motorLeft(status.speedBase);
+  }          
+  //initialization of errors for stop
+
+  if (status.tick > 400)
+  {
+    offset = 0;
     status.mode = modeStop;
+    motorRight(0);
+    motorLeft(0);
+  }
+
 }
 
 /* The following functions set the mode and scenario for PID control */
@@ -420,11 +429,10 @@ void Motor::goStraight(int speed)
   status.offsetRight += status.countRight;
   /*--- last 24 hr code  ---*/
 
-  
-
   //Encoder initialization
+  status.offsetFishBoneTotal = 0;
   status.errorCountTotal=0;
-  
+
   status.countRight = 0;
   status.countLeft = 0;
 
@@ -544,15 +552,11 @@ void Motor::motorLeft(int speed)
   {
     digitalWrite(motorLeft1, HIGH);
     digitalWrite(motorLeft2, LOW);
-    //pwmWrite(PWMLeft, status.speedLeft);		
-    //pwmWrite(PWMLeft, speed);
   }
   else                              //backward
   {
     digitalWrite(motorLeft1, LOW);
-    digitalWrite(motorLeft2, HIGH);
-    //pwmWrite(PWMLeft, -speed);		
-    //pwmWrite(PWMLeft, -status.speedLeft);  //set speed	
+    digitalWrite(motorLeft2, HIGH);	
   }
 
   int absspeed = abs(speed);
@@ -571,21 +575,16 @@ void Motor::motorRight(int speed)
   {
     digitalWrite(motorRight1, LOW);
     digitalWrite(motorRight2, LOW);
-    //pwmWrite(PWMRight, 0);          //set speed
   }
   else if(speed > 0)                //forward
   {
     digitalWrite(motorRight1, HIGH);
-    digitalWrite(motorRight2, LOW);
-    //pwmWrite(PWMRight, speed);	
-    //pwmWrite(PWMRight, status.speedRight);      //set speed		
+    digitalWrite(motorRight2, LOW);	
   }
   else                              //backward
   {
     digitalWrite(motorRight1, LOW);
     digitalWrite(motorRight2, HIGH);
-    //pwmWrite(PWMRight, -speed);		
-    //pwmWrite(PWMRight, -(status.speedRight)); //set speed
   }
 
   int absspeed = abs(speed);
@@ -594,6 +593,7 @@ void Motor::motorRight(int speed)
   else
     pwmWrite(PWMRight, speedFull);
 }
+
 
 
 

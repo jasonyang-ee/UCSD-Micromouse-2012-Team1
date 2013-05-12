@@ -21,7 +21,7 @@ void Sensor::runAllSensor()
   status.distFront = (status.distFrontLeft + status.distFrontRight)/2;
   
   angularVelocity();
-//  setScenario();
+  setScenario();
   setEdge();
   errorRight();
   errorLeft();
@@ -127,22 +127,22 @@ void Sensor::setEdge()
 void Sensor::setScenario()
 {
   /*------------------------------------------  straight scenario  ------------------------------------------*/
-  
   if(status.edgeLeft == false && status.edgeRight == false)    //no wall, always drive with encoder
-    status.scenarioStraight = followEncoder;
+    status.scenarioStraight = fishBone;
   
-  if(status.mode == fishBone)    //if in fishbone case, and wall apears for 40 tic, switch scenario
+  else if(status.mode == fishBone)    //if in fishbone case, and wall apears for 40 tic, switch scenario
   {
-    if(status.edgeLeft==true && status.countLeft - status.countStampLeft > 40)
+    if(status.edgeLeft==true && status.distDiagonalLeft < 20 && status.countLeft - status.countStampLeft > 40)
       status.scenarioStraight = followLeft;
-    if(status.edgeRight==true && status.countRight - status.countStampRight > 40)
+    if(status.edgeRight==true && status.distDiagonalRight < 20 && status.countRight - status.countStampRight > 40)
       status.scenarioStraight = followRight;
   }
   
-  if(status.mode == followLeft || status.mode == followRight)    //switch to both only if was in follow one side
+  else if(status.distDiagonalLeft < 20 && status.distDiagonalRight < 20)    //switch to both only if was in follow one side
     if(status.edgeLeft==true && status.edgeRight==true)
       status.scenarioStraight = followBoth;
-
+  else
+    status.scenarioStraight = fishBone;
 }
 
 /*=======================================================  error  =======================================================*/

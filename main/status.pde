@@ -92,8 +92,7 @@ void Status::initialize()
 /*--- last 24 hr code  ---*/
 
   offsetFishBone = 0;
-  offsetFishBoneLast = 0;
-  offsetFishBoneDiff = 0;
+  offsetFishBoneTotal = 0;
 
   speedLeft = 0;
   speedRight = 0;
@@ -108,7 +107,7 @@ void Status::initialize()
   
   mode = modeStraight;
   
-  scenarioStraight = followRight;
+  scenarioStraight = fishBone;
   scenarioRotate = 0;
   scenarioPath = 0;
   scenarioFlag = 0;

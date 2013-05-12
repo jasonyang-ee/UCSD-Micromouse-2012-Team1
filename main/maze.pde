@@ -357,10 +357,10 @@ void Maze::mapping()
 /*------------------------------------------  update adjacent  ------------------------------------------*/
 void Maze::adjacentWall(volatile Cell *cellMarker)
 {
-  Cell *adjacentNorth=cellMarker->cellNorth;
-  Cell *adjacentEast=cellMarker->cellEast;
-  Cell *adjacentSouth=cellMarker->cellSouth;
-  Cell *adjacentWest=cellMarker->cellWest;
+  volatile Cell *adjacentNorth=cellMarker->cellNorth;
+  volatile Cell *adjacentEast=cellMarker->cellEast;
+  volatile Cell *adjacentSouth=cellMarker->cellSouth;
+  volatile Cell *adjacentWest=cellMarker->cellWest;
   if(cellMarker->wall[north]==true)  adjacentNorth->wall[south]=true;
   if(cellMarker->wall[east]==true)  adjacentEast->wall[west]=true;
   if(cellMarker->wall[south]==true)  adjacentSouth->wall[north]=true;

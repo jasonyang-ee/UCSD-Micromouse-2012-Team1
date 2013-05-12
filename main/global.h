@@ -11,6 +11,8 @@
 int timesIgnored = 0;
 int maxSpeed;
 bool stopCheck = false;
+int temp=1;
+int offset = 0;
 /*=====================  maze constant  =====================*/
 //cell per side
 #define mazeSize 16
@@ -71,8 +73,8 @@ bool stopCheck = false;
 Maze maze;
 Sensor sensor;
 Motor motor;
-Cell cell[16][16];  //CELL cell[y][x];
-Cell emptyCell;
+volatile Cell cell[16][16];  //CELL cell[y][x];
+volatile Cell emptyCell;
 Status status;
 
 /*=====================  compass value  =====================*/

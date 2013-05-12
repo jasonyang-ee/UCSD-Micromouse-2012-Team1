@@ -17,10 +17,10 @@ public:
   bool goal;
   bool existance;
 
-  Cell *cellNorth;
-  Cell *cellSouth;
-  Cell *cellEast;
-  Cell *cellWest;
+  volatile Cell *cellNorth;
+  volatile Cell *cellSouth;
+  volatile Cell *cellEast;
+  volatile Cell *cellWest;
 };
 
 #endif

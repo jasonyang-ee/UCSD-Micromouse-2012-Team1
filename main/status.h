@@ -112,8 +112,7 @@ public:
 /*--- last 24 hr code  ---*/
 
   int offsetFishBone;
-  int offsetFishBoneLast;
-  int offsetFishBoneDiff;
+  int offsetFishBoneTotal;
 
   bool edgeLeft;
   bool edgeRight;
